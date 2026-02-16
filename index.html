@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>René Bohm | KI für Lehrkräfte — Endlich Feierabend</title>
+<meta name="description" content="KI-Fortbildungen für Lehrkräfte: Spare 10-12 Stunden pro Woche mit systematischer KI-Integration. Workshops, Online-Kurse und praxisnahe Lösungen.">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #1B4D3E;
+    --primary-light: #2A7A5F;
+    --accent: #E8A838;
+    --accent-dark: #C4891E;
+    --bg: #FAFAF5;
+    --bg-warm: #F5F0E8;
+    --bg-dark: #1B4D3E;
+    --text: #2C2C2C;
+    --text-light: #666;
+    --text-on-dark: #F5F0E8;
+    --border: #E0DDD5;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* === NAVIGATION === */
+  .nav {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--primary);
+  }
+  .nav-logo img {
+    height: 40px;
+  }
+  .nav-brand {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    font-weight: 400;
+  }
+  .nav-menu {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-link {
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 500;
+    font-size: 15px;
+    transition: color 0.2s;
+  }
+  .nav-link:hover {
+    color: var(--primary);
+  }
+  .nav-cta {
+    background: var(--accent);
+    color: var(--primary);
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s;
+  }
+  .nav-cta:hover {
+    background: var(--accent-dark);
+    transform: translateY(-1px);
+  }
+
+  /* Mobile Menu */
+  .menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--primary);
+  }
+
+  /* === CONTAINER === */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+  /* === HERO SECTION === */
+  .hero {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: var(--text-on-dark);
+    padding: 100px 0 80px;
+    text-align: center;
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(36px, 5vw, 56px);
+    line-height: 1.15;
+    margin-bottom: 24px;
+  }
+  .hero h1 em {
+    color: var(--accent);
+    font-style: italic;
+  }
+  .hero .lead {
+    font-size: clamp(18px, 2.5vw, 22px);
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto 40px;
+    opacity: 0.95;
+  }
+  .hero-cta {
+    display: inline-flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .btn {
+    display: inline-block;
+    padding: 16px 32px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--primary);
+  }
+  .btn-primary:hover {
+    background: var(--accent-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(232,168,56,0.3);
+  }
+  .btn-secondary {
+    background: rgba(255,255,255,0.15);
+    color: white;
+    border: 2px solid rgba(255,255,255,0.3);
+  }
+  .btn-secondary:hover {
+    background: rgba(255,255,255,0.25);
+  }
+
+  /* === STATS BAR === */
+  .stats {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 40px 0;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+    text-align: center;
+  }
+  .stat-number {
+    font-family: 'DM Serif Display', serif;
+    font-size: 42px;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .stat-label {
+    font-size: 14px;
+    color: var(--text-light);
+    font-weight: 500;
+  }
+
+  /* === SECTIONS === */
+  .section {
+    padding: 80px 0;
+  }
+  .section-warm {
+    background: var(--bg-warm);
+  }
+  .section-header {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 50px;
+  }
+  .label {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--primary-light);
+    margin-bottom: 12px;
+  }
+  .section-header h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(32px, 4vw, 42px);
+    line-height: 1.2;
+    color: var(--primary);
+    margin-bottom: 16px;
+  }
+  .section-header p {
+    font-size: 17px;
+    color: var(--text-light);
+    line-height: 1.7;
+  }
+
+  /* === CARDS === */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+  }
+  .card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px 30px;
+    transition: all 0.3s;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(27,77,62,0.12);
+  }
+  .card-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+    display: block;
+  }
+  .card h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    color: var(--primary);
+    margin-bottom: 12px;
+  }
+  .card p {
+    color: var(--text-light);
+    font-size: 15px;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 14px;
+    transition: gap 0.2s;
+  }
+  .card-link:hover {
+    gap: 10px;
+  }
+
+  /* === CTA SECTION === */
+  .cta-section {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: var(--text-on-dark);
+    padding: 80px 0;
+    text-align: center;
+  }
+  .cta-section h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(32px, 4vw, 42px);
+    margin-bottom: 20px;
+  }
+  .cta-section p {
+    font-size: 18px;
+    max-width: 600px;
+    margin: 0 auto 32px;
+    opacity: 0.95;
+  }
+
+  /* === FOOTER === */
+  .footer {
+    background: var(--primary);
+    color: rgba(255,255,255,0.7);
+    padding: 50px 0 30px;
+  }
+  .footer-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 50px;
+    margin-bottom: 40px;
+  }
+  .footer h4 {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 16px;
+    font-size: 16px;
+  }
+  .footer p {
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+  .footer-links {
+    list-style: none;
+  }
+  .footer-links a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    font-size: 14px;
+    display: block;
+    margin-bottom: 10px;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover {
+    color: var(--accent);
+  }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 30px;
+    text-align: center;
+    font-size: 13px;
+  }
+  .social-links {
+    display: flex;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+  }
+  .social-link:hover {
+    color: var(--accent);
+  }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 768px) {
+    .nav-menu {
+      display: none;
+    }
+    .menu-toggle {
+      display: block;
+    }
+    .footer-content {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+    .hero {
+      padding: 60px 0 50px;
+    }
+    .section {
+      padding: 60px 0;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav class="nav">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <img src="images/logo.png" alt="Endlich Feierabend Logo">
+      <span class="nav-brand">Endlich Feierabend</span>
+    </a>
+    <ul class="nav-menu">
+      <li><a href="index.html" class="nav-link">Start</a></li>
+      <li><a href="workshops.html" class="nav-link">Workshops</a></li>
+      <li><a href="endlich-feierabend.html" class="nav-link">Online-Kurs</a></li>
+      <li><a href="ueber-mich.html" class="nav-link">Über mich</a></li>
+    </ul>
+    <a href="ki-kickstart.html" class="nav-cta">PDF für 14,99€</a>
+    <button class="menu-toggle">☰</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <h1>Spare 10–12 Stunden pro Woche mit <em>systematischer KI-Integration</em></h1>
+    <p class="lead">
+      Als Mathe- und Informatiklehrer in NRW zeige ich dir, wie du KI DSGVO-konform in deinen Arbeitsalltag integrierst — ohne Qualitätsverlust, mit messbaren Zeitersparnissen.
+    </p>
+    <div class="hero-cta">
+      <a href="ki-kickstart.html" class="btn btn-primary">📥 PDF-Guide für 14,99€</a>
+      <a href="workshops.html" class="btn btn-secondary">🎓 Workshop buchen</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div>
+        <div class="stat-number">10–12h</div>
+        <div class="stat-label">Zeitersparnis pro Woche</div>
+      </div>
+      <div>
+        <div class="stat-number">1 Mio.</div>
+        <div class="stat-label">Lehrkräfte im DACH-Raum</div>
+      </div>
+      <div>
+        <div class="stat-number">72%</div>
+        <div class="stat-label">benötigen KI-Training</div>
+      </div>
+      <div>
+        <div class="stat-number">100%</div>
+        <div class="stat-label">DSGVO-konform</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ANGEBOTE -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <div class="label">Meine Angebote</div>
+      <h2>Drei Wege zu mehr Feierabend</h2>
+      <p>Egal ob du schnell starten willst oder tiefgehende Begleitung suchst — hier findest du den passenden Einstieg.</p>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <span class="card-icon">📄</span>
+        <h3>KI-Kickstart PDF</h3>
+        <p>Die 6-Elemente-Prompting-Formel, 10+ fertige Prompt-Vorlagen, DSGVO-Ampelsystem und sofort umsetzbare Beispiele. Perfekt für den schnellen Einstieg.</p>
+        <a href="ki-kickstart.html" class="card-link">Jetzt für 14,99€ →</a>
+      </div>
+
+      <div class="card">
+        <span class="card-icon">🎓</span>
+        <h3>Workshops an Schulen</h3>
+        <p>Ich komme direkt zu euch an die Schule und führe praxisnahe Fortbildungen durch. Von Prompting-Grundlagen bis zur vollständigen Workflow-Integration.</p>
+        <a href="workshops.html" class="card-link">Workshop anfragen →</a>
+      </div>
+
+      <div class="card">
+        <span class="card-icon">🎯</span>
+        <h3>Online-Kurs "Endlich Feierabend"</h3>
+        <p>Der komplette Weg zur systematischen KI-Integration: 4 Module, Schritt-für-Schritt-Anleitungen, Vorlagen und persönlicher Support.</p>
+        <a href="endlich-feierabend.html" class="card-link">Mehr erfahren →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM/LÖSUNG -->
+<section class="section section-warm">
+  <div class="container">
+    <div class="section-header">
+      <div class="label">Das Problem</div>
+      <h2>78% der Lehrkräfte fühlen sich stark belastet</h2>
+      <p>70-Stunden-Wochen, Wochenendkorrekturen, permanente Überlastung — und gleichzeitig soll KI jetzt auch noch gelernt werden?</p>
+    </div>
+
+    <div style="max-width: 800px; margin: 0 auto;">
+      <div class="card" style="border-left: 4px solid var(--accent);">
+        <h3>Die Lösung: Systematische KI-Integration</h3>
+        <p style="margin-bottom: 16px;">Statt noch mehr Belastung bringt KI <strong>messbare Entlastung</strong> — wenn sie richtig eingesetzt wird. Meine Workshops und Kurse zeigen dir:</p>
+        <ul style="color: var(--text-light); line-height: 2; padding-left: 20px;">
+          <li>Wie du mit der 6-Elemente-Formel sofort bessere Ergebnisse erzielst</li>
+          <li>Welche Tools DSGVO-konform sind (und welche nicht)</li>
+          <li>Wie du KI für Materialerstellung, Differenzierung und Korrektur nutzt</li>
+          <li>Wie du 10–12 Stunden pro Woche sparst — ohne Qualitätsverlust</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="cta-section">
+  <div class="container">
+    <h2>Bereit für mehr Feierabend?</h2>
+    <p>Starte heute mit dem KI-Kickstart PDF oder buche einen Workshop für deine Schule.</p>
+    <div class="hero-cta">
+      <a href="ki-kickstart.html" class="btn btn-primary">📥 PDF für 14,99€ kaufen</a>
+      <a href="workshops.html" class="btn btn-secondary">🎓 Workshop anfragen</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div>
+        <h4>Endlich Feierabend</h4>
+        <p>KI-Fortbildungen für Lehrkräfte im DACH-Raum. Systematisch, praxisnah und DSGVO-konform.</p>
+        <p><strong>René Bohm</strong><br>
+        Mathe- & Informatiklehrer in NRW<br>
+        KI-Fortbildner</p>
+        <div class="social-links">
+          <a href="https://instagram.com/endlich.feierabend.ki" target="_blank" class="social-link">
+            📸 Instagram
+          </a>
+        </div>
+      </div>
+      <div>
+        <h4>Angebote</h4>
+        <ul class="footer-links">
+          <li><a href="ki-kickstart.html">KI-Kickstart PDF</a></li>
+          <li><a href="workshops.html">Workshops</a></li>
+          <li><a href="endlich-feierabend.html">Online-Kurs</a></li>
+          <li><a href="ueber-mich.html">Über mich</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Rechtliches</h4>
+        <ul class="footer-links">
+          <li><a href="impressum.html">Impressum</a></li>
+          <li><a href="impressum.html#datenschutz">Datenschutz</a></li>
+          <li><a href="impressum.html#agb">AGB</a></li>
+          <li><a href="impressum.html#widerruf">Widerruf</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 René Bohm · Endlich Feierabend · Alle Rechte vorbehalten</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
