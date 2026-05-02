@@ -31,34 +31,74 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* === HEADER (standalone, no nav) === */
-  .site-header {
+  /* === NAVIGATION === */
+  .nav {
     background: white;
     border-bottom: 1px solid var(--border);
-    padding: 18px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
   }
-  .header-container {
+  .nav-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 24px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    height: 70px;
   }
-  .header-logo {
+  .nav-logo {
     display: flex;
     align-items: center;
     gap: 12px;
     text-decoration: none;
     color: var(--primary);
   }
-  .header-logo img {
+  .nav-logo img {
     height: 40px;
   }
-  .header-brand {
+  .nav-brand {
     font-family: 'DM Serif Display', serif;
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 400;
+  }
+  .nav-menu {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-link {
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 500;
+    font-size: 15px;
+    transition: color 0.2s;
+  }
+  .nav-link:hover, .nav-link.active {
+    color: var(--primary);
+  }
+  .nav-cta {
+    background: var(--accent);
+    color: var(--primary);
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s;
+  }
+  .nav-cta:hover {
+    background: var(--accent-dark);
+    transform: translateY(-1px);
+  }
+  .menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--primary);
   }
 
   /* === CONTAINER === */
@@ -465,6 +505,25 @@
 
   /* === RESPONSIVE === */
   @media (max-width: 768px) {
+    .nav-menu {
+      display: none;
+      position: absolute;
+      top: 70px;
+      left: 0;
+      right: 0;
+      background: white;
+      flex-direction: column;
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      gap: 16px;
+    }
+    .nav-menu.active {
+      display: flex;
+    }
+    .menu-toggle {
+      display: block;
+    }
     .module-grid {
       grid-template-columns: 1fr;
     }
@@ -492,14 +551,22 @@
 </head>
 <body>
 
-<!-- HEADER (standalone, centered logo) -->
-<header class="site-header">
-  <div class="header-container">
-    <div class="header-logo">
-      <span class="header-brand">Endlich Feierabend</span>
-    </div>
+<!-- NAVIGATION -->
+<nav class="nav">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-brand">Endlich Feierabend</span>
+    </a>
+    <ul class="nav-menu">
+      <li><a href="index.html" class="nav-link">Start</a></li>
+      <li><a href="workshops.html" class="nav-link active">Workshops</a></li>
+      <li><a href="endlich-feierabend.html" class="nav-link">Online-Kurs</a></li>
+      <li><a href="ueber-mich.html" class="nav-link">Über mich</a></li>
+    </ul>
+    <a href="ki-kickstart.html" class="nav-cta">PDF für 14,99€</a>
+    <button class="menu-toggle">☰</button>
   </div>
-</header>
+</nav>
 
 <!-- HERO -->
 <section class="hero">
@@ -755,6 +822,23 @@
     <p class="footer-legal">&copy; 2026 Endlich Feierabend</p>
   </div>
 </footer>
+
+
+<script>
+const menuToggle = document.querySelector('.menu-toggle');
+const navMenu = document.querySelector('.nav-menu');
+
+if (menuToggle && navMenu) {
+  menuToggle.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+  });
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.nav-container')) {
+      navMenu.classList.remove('active');
+    }
+  });
+}
+</script>
 
 </body>
 </html>
