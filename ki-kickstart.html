@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KI-Kickstart für Lehrkräfte — Shopify Produktseite Konzept</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #1B4D3E;
+    --primary-light: #2A7A5F;
+    --accent: #E8A838;
+    --accent-dark: #C4891E;
+    --bg: #FAFAF5;
+    --bg-warm: #F5F0E8;
+    --bg-dark: #1B4D3E;
+    --text: #2C2C2C;
+    --text-light: #666;
+    --text-on-dark: #F5F0E8;
+    --red: #C0392B;
+    --red-light: #FFE8E5;
+    --green: #27AE60;
+    --border: #E0DDD5;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* === NAVIGATION === */
+  .nav {
+    background: white;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 101;
+  }
+  .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--primary);
+  }
+  .nav-logo img {
+    height: 40px;
+  }
+  .nav-brand {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    font-weight: 400;
+  }
+  .nav-menu {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+  .nav-link {
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 500;
+    font-size: 15px;
+    transition: color 0.2s;
+  }
+  .nav-link:hover {
+    color: var(--primary);
+  }
+  .menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--primary);
+  }
+
+  /* === SHOPIFY NAV BAR === */
+  .shopify-nav {
+    background: var(--primary);
+    padding: 12px 0;
+    text-align: center;
+    position: sticky;
+    top: 70px;
+    z-index: 100;
+  }
+  .shopify-nav span {
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  /* === ANNOUNCEMENT BAR (Dringlichkeit) === */
+  .announcement {
+    background: var(--red);
+    color: white;
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .announcement strong { color: var(--accent); }
+  .countdown {
+    display: inline-flex;
+    gap: 4px;
+    margin-left: 8px;
+    font-variant-numeric: tabular-nums;
+  }
+  .countdown-unit {
+    background: rgba(255,255,255,0.2);
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  /* === CONTAINER === */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+  /* === HERO SECTION === */
+  .hero {
+    padding: 60px 0 50px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .hero-image {
+    position: relative;
+  }
+  .ebook-mockup {
+    width: 100%;
+    max-width: 380px;
+    aspect-ratio: 3/4;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    border-radius: 8px;
+    box-shadow: 20px 20px 60px rgba(27,77,62,0.25), 0 0 0 1px rgba(27,77,62,0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 30px;
+    color: white;
+    text-align: center;
+    position: relative;
+    margin: 0 auto;
+  }
+  .ebook-mockup::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    border-radius: 8px;
+  }
+  .ebook-mockup .icon { font-size: 48px; margin-bottom: 20px; position: relative; z-index: 1; }
+  .ebook-mockup h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    line-height: 1.3;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .ebook-mockup p {
+    font-size: 13px;
+    opacity: 0.8;
+    position: relative;
+    z-index: 1;
+  }
+  .badge-bestseller {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    background: var(--accent);
+    color: var(--primary);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgba(232,168,56,0.4);
+    z-index: 2;
+  }
+
+  /* === HERO TEXT === */
+  .hero-text .subtitle {
+    color: var(--primary-light);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+  }
+  .hero-text h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 38px;
+    line-height: 1.2;
+    color: var(--primary);
+    margin-bottom: 16px;
+  }
+  .hero-text h1 em {
+    color: var(--accent-dark);
+    font-style: italic;
+  }
+  .hero-text .lead {
+    font-size: 17px;
+    color: var(--text-light);
+    margin-bottom: 28px;
+    line-height: 1.7;
+  }
+
+  /* === PRICING BOX === */
+  .price-box {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .price-old {
+    font-size: 20px;
+    color: var(--text-light);
+    text-decoration: line-through;
+  }
+  .price-new {
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  .price-save {
+    background: var(--red-light);
+    color: var(--red);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+  .price-tax {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-bottom: 16px;
+  }
+
+  .btn-buy {
+    display: block;
+    width: 100%;
+    background: var(--accent);
+    color: var(--primary);
+    border: none;
+    padding: 18px 24px;
+    font-size: 18px;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(232,168,56,0.35);
+  }
+  .btn-buy:hover {
+    background: var(--accent-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(232,168,56,0.45);
+  }
+  .btn-sub {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 10px;
+  }
+
+  .trust-badges {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .trust-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-light);
+  }
+  .trust-badge .icon { font-size: 16px; }
+
+  /* === PROBLEM SECTION === */
+  .section { padding: 70px 0; }
+  .section-dark { background: var(--bg-dark); color: var(--text-on-dark); }
+  .section-warm { background: var(--bg-warm); }
+
+  .section-header {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 50px;
+  }
+  .section-header .label {
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+  .section-header h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 34px;
+    line-height: 1.25;
+    margin-bottom: 16px;
+  }
+  .section-dark .section-header h2 { color: white; }
+  .section-header p {
+    font-size: 17px;
+    color: var(--text-light);
+    line-height: 1.7;
+  }
+  .section-dark .section-header p { color: rgba(255,255,255,0.7); }
+
+  /* === PROBLEMS GRID === */
+  .problems-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .problem-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 28px 24px;
+  }
+  .problem-card .icon {
+    font-size: 28px;
+    margin-bottom: 14px;
+  }
+  .problem-card h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: white;
+  }
+  .problem-card p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.6;
+  }
+
+  /* === BENEFITS === */
+  .benefits-list {
+    max-width: 750px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .benefit-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    border: 1px solid var(--border);
+  }
+  .benefit-check {
+    width: 32px;
+    height: 32px;
+    background: #E8F5E9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+  }
+  .benefit-item h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .benefit-item p {
+    font-size: 14px;
+    color: var(--text-light);
+  }
+
+  /* === FEATURES / EIGENSCHAFTEN === */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .feature-card {
+    background: white;
+    border-radius: 12px;
+    padding: 28px 24px;
+    border: 1px solid var(--border);
+  }
+  .feature-card .icon { font-size: 28px; margin-bottom: 12px; }
+  .feature-card h4 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .feature-card p { font-size: 14px; color: var(--text-light); }
+
+  /* === AUTHOR === */
+  .author-section {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 40px;
+    align-items: center;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .author-photo {
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 64px;
+    color: white;
+    box-shadow: 0 12px 30px rgba(27,77,62,0.2);
+  }
+  .author-info h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    margin-bottom: 4px;
+  }
+  .author-info .role {
+    color: var(--primary-light);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 14px;
+  }
+  .author-info p {
+    font-size: 15px;
+    color: var(--text-light);
+    line-height: 1.7;
+  }
+
+  /* === TESTIMONIALS === */
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .testimonial-card {
+    background: white;
+    border-radius: 12px;
+    padding: 28px;
+    border: 1px solid var(--border);
+    position: relative;
+  }
+  .testimonial-card::before {
+    content: '„';
+    font-family: 'DM Serif Display', serif;
+    font-size: 60px;
+    color: var(--accent);
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    line-height: 1;
+    opacity: 0.3;
+  }
+  .testimonial-card p {
+    font-size: 14px;
+    color: var(--text-light);
+    line-height: 1.7;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+    font-style: italic;
+  }
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .testimonial-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--bg-warm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+  .testimonial-name {
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .testimonial-detail {
+    font-size: 11px;
+    color: var(--text-light);
+  }
+  .stars { color: var(--accent); font-size: 13px; margin-bottom: 12px; }
+
+  /* === GUARANTEE === */
+  .guarantee-box {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+    background: white;
+    border: 2px solid var(--green);
+    border-radius: 16px;
+    padding: 40px;
+  }
+  .guarantee-box .icon { font-size: 48px; margin-bottom: 16px; }
+  .guarantee-box h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    margin-bottom: 12px;
+  }
+  .guarantee-box p {
+    font-size: 15px;
+    color: var(--text-light);
+    line-height: 1.7;
+  }
+
+  /* === FINAL CTA === */
+  .final-cta {
+    text-align: center;
+    padding: 80px 0;
+    background: linear-gradient(180deg, var(--bg-warm) 0%, var(--bg) 100%);
+  }
+  .final-cta h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px;
+    margin-bottom: 12px;
+    color: var(--primary);
+  }
+  .final-cta .lead {
+    font-size: 17px;
+    color: var(--text-light);
+    margin-bottom: 30px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .final-cta .price-inline {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .final-cta .btn-buy {
+    display: inline-block;
+    width: auto;
+    padding: 18px 48px;
+  }
+
+  /* === FAQ === */
+  .faq-list {
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .faq-item {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .faq-q {
+    padding: 20px 24px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .faq-a {
+    padding: 0 24px 20px;
+    font-size: 14px;
+    color: var(--text-light);
+    line-height: 1.7;
+  }
+
+  /* === DESIGN NOTE BANNER === */
+  .design-note {
+    background: #FFF3CD;
+    border: 2px dashed #F0C36D;
+    border-radius: 12px;
+    padding: 20px 28px;
+    margin: 30px auto;
+    max-width: 1100px;
+    font-size: 14px;
+    color: #856404;
+  }
+  .design-note strong { color: #6D4C00; }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 768px) {
+    .nav-menu {
+      display: none;
+      position: absolute;
+      top: 70px;
+      left: 0;
+      right: 0;
+      background: white;
+      flex-direction: column;
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      gap: 16px;
+    }
+    .nav-menu.active {
+      display: flex;
+    }
+    .menu-toggle {
+      display: block;
+    }
+    .hero { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+    .hero-image { order: -1; }
+    .hero-text h1 { font-size: 30px; }
+    .problems-grid { grid-template-columns: 1fr; }
+    .features-grid { grid-template-columns: 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .author-section { grid-template-columns: 1fr; text-align: center; }
+    .trust-badges { justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav class="nav">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <img src="images/logo.png" alt="Endlich Feierabend Logo">
+      <span class="nav-brand">Endlich Feierabend</span>
+    </a>
+    <ul class="nav-menu">
+      <li><a href="index.html" class="nav-link">Start</a></li>
+      <li><a href="workshops.html" class="nav-link">Workshops</a></li>
+      <li><a href="endlich-feierabend.html" class="nav-link">Online-Kurs</a></li>
+      <li><a href="ueber-mich.html" class="nav-link">Über mich</a></li>
+    </ul>
+    <button class="menu-toggle">☰</button>
+  </div>
+</nav>
+
+<!-- ===== SHOPIFY NAVIGATION ===== -->
+<nav class="shopify-nav">
+  <span>🎓 KI für Lehrkräfte — von einem Lehrer, der es selbst macht</span>
+</nav>
+
+<!-- ===== ANNOUNCEMENT BAR (Dringlichkeit + Rabattgrund) ===== -->
+<div class="announcement">
+  ⏰ <strong>Einführungspreis:</strong> Spare 50% — nur noch für kurze Zeit!
+  <span class="countdown">
+    <span class="countdown-unit" id="hours">07</span>:
+    <span class="countdown-unit" id="minutes">42</span>:
+    <span class="countdown-unit" id="seconds">18</span>
+  </span>
+</div>
+
+<!-- ===== HERO SECTION ===== -->
+<div class="container">
+  <section class="hero">
+    <div class="hero-image">
+      <div class="ebook-mockup">
+        <span class="badge-bestseller">Neu 2026</span>
+        <div class="icon">🧠</div>
+        <h3>Der KI-Kickstart für Lehrkräfte</h3>
+        <p>3 Tricks, die dir sofort 2–3 Stunden pro Woche sparen</p>
+        <p style="margin-top: 16px; font-size: 12px; opacity: 0.6;">Von René · Mathe- & Informatiklehrer</p>
+      </div>
+    </div>
+
+    <div class="hero-text">
+      <!-- Produktname nach eBook-Methode: Verlangen + kurzer Zeithorizont + geringer Aufwand -->
+      <div class="subtitle">Für Lehrkräfte aller Fächer</div>
+      <h1>3 KI-Tricks, die dir ab <em>nächster Woche</em> 2–3 Stunden pro Woche sparen</h1>
+      <p class="lead">
+        Die Prompting-Grundlagen, mit denen ein Mathe- und Informatiklehrer sich selbst 10–12 Stunden pro Woche zurückgeholt hat — jetzt als kompakte PDF-Anleitung. 100% DSGVO-konform. Kein Vorwissen nötig.
+      </p>
+
+      <!-- PREIS-BOX (Offerte: Rabatt + Grund für Rabatt) -->
+      <div class="price-box">
+        <div class="price-row">
+          <span class="price-old">29,99 €</span>
+          <span class="price-new">14,99 €</span>
+          <span class="price-save">−50%</span>
+        </div>
+        <div class="price-tax">inkl. 7% MwSt. · Sofort-Download nach Kauf</div>
+        <a href="https://www.checkout-ds24.com/product/669015" class="btn-buy">🛒 Jetzt kaufen — Sofortiger Download</a>
+        <div class="btn-sub">Sichere Zahlung via Shopify Payments · Kein Abo</div>
+      </div>
+
+      <!-- Trust Badges -->
+      <div class="trust-badges">
+        <div class="trust-badge"><span class="icon">🔒</span> Sichere Zahlung</div>
+        <div class="trust-badge"><span class="icon">📧</span> Sofort per E-Mail</div>
+        <div class="trust-badge"><span class="icon">✅</span> 30 Tage Garantie</div>
+        <div class="trust-badge"><span class="icon">🇩🇪</span> DSGVO-konform</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ===== PROBLEME (Verlangen aktivieren) ===== -->
+<section class="section section-dark">
+  <div class="container">
+    <div class="section-header">
+      <div class="label">Kommt dir das bekannt vor?</div>
+      <h2>84% der Lehrkräfte berichten von hoher Belastung</h2>
+      <p>Du bist nicht allein — aber du musst nicht so weitermachen.</p>
+    </div>
+
+    <div class="problems-grid">
+      <div class="problem-card">
+        <div class="icon">😰</div>
+        <h4>Sonntagabend-Panik</h4>
+        <p>Jedes Wochenende das gleiche Spiel: Abends am Schreibtisch sitzen, weil die Woche wieder nicht gereicht hat.</p>
+      </div>
+      <div class="problem-card">
+        <div class="icon">⏰</div>
+        <h4>Korrekturen bis Mitternacht</h4>
+        <p>Stapelweise Hefte, endlose Rückmeldungen — und das Gefühl, nie wirklich fertig zu werden.</p>
+      </div>
+      <div class="problem-card">
+        <div class="icon">🤯</div>
+        <h4>Differenzierung als Zusatzlast</h4>
+        <p>30 Schüler*innen, 5 Niveaustufen — und du sollst für alle individuelle Materialien erstellen?</p>
+      </div>
+      <div class="problem-card">
+        <div class="icon">😤</div>
+        <h4>KI ausprobiert — enttäuscht</h4>
+        <p>ChatGPT getestet, aber die Ergebnisse waren unbrauchbar. 50% der Lehrkräfte kennen dieses Gefühl.</p>
+      </div>
+      <div class="problem-card">
+        <div class="icon">⚖️</div>
+        <h4>DSGVO-Unsicherheit</h4>
+        <p>Du würdest KI nutzen — aber weißt nicht, was erlaubt ist und was nicht. Lieber Finger weg?</p>
+      </div>
+      <div class="problem-card">
+        <div class="icon">💔</div>
+        <h4>Keine Zeit für das, was zählt</h4>
+        <p>Familie, Hobbys, Erholung — alles leidet unter der Arbeitsbelastung. Dabei bist du Lehrer geworden, um zu unterrichten.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== VORTEILE (Verlangen greifbar machen) ===== -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <div class="label" style="color: var(--primary-light);">Was sich für dich ändert</div>
+      <h2 style="color: var(--primary);">Ab nächster Woche 2–3 Stunden weniger arbeiten</h2>
+      <p>Keine Theorie — sondern 3 sofort umsetzbare KI-Tricks, die deinen Alltag verändern.</p>
+    </div>
+
+    <div class="benefits-list">
+      <div class="benefit-item">
+        <div class="benefit-check">✅</div>
+        <div>
+          <h4>Arbeitsblätter in 5 Minuten statt 45</h4>
+          <p>Mit der 6-Elemente-Formel erstellst du differenzierte Materialien auf Knopfdruck — für jedes Fach und jede Stufe.</p>
+        </div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-check">✅</div>
+        <div>
+          <h4>Erwartungshorizonte sofort generieren</h4>
+          <p>Nie wieder stundenlang Bewertungskriterien formulieren. KI liefert dir den Entwurf, du prüfst und passt an.</p>
+        </div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-check">✅</div>
+        <div>
+          <h4>DSGVO-Sicherheit in 2 Minuten verstanden</h4>
+          <p>Das Ampelsystem (grün/gelb/rot) zeigt dir sofort, was erlaubt ist — ohne juristisches Studium.</p>
+        </div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-check">✅</div>
+        <div>
+          <h4>Fertige Prompt-Vorlagen zum Sofort-Kopieren</h4>
+          <p>10+ getestete Prompts für die häufigsten Lehrer-Aufgaben. Einfach kopieren, anpassen, Zeit sparen.</p>
+        </div>
+      </div>
+      <div class="benefit-item">
+        <div class="benefit-check">✅</div>
+        <div>
+          <h4>Kein Vorwissen nötig — auch für KI-Skeptiker</h4>
+          <p>Du brauchst kein technisches Wissen. Wenn du eine E-Mail schreiben kannst, kannst du auch prompten.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== EIGENSCHAFTEN (Was im PDF drin ist) ===== -->
+<section class="section section-warm">
+  <div class="container">
+    <div class="section-header">
+      <div class="label" style="color: var(--primary-light);">Was du bekommst</div>
+      <h2 style="color: var(--primary);">Alles in einer kompakten PDF</h2>
+      <p>Kein 300-Seiten-Wälzer — sondern genau das, was du brauchst, um morgen loszulegen.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="icon">🎯</div>
+        <h4>Die 6-Elemente-Prompting-Formel</h4>
+        <p>Rolle, Kontext, Aufgabe, Format, Einschränkungen, Beispiel — das System, das aus mittelmäßigen KI-Ergebnissen exzellente macht.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📋</div>
+        <h4>10+ fertige Prompt-Vorlagen</h4>
+        <p>Kopierfertige Prompts für Arbeitsblätter, Klausurerwartungen, Differenzierung, Elternbriefe und mehr.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🚦</div>
+        <h4>DSGVO-Ampelsystem</h4>
+        <p>In einer Seite verstehst du, was im grünen, gelben und roten Bereich liegt. Inklusive der 3 goldenen Regeln.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🔄</div>
+        <h4>Vorher/Nachher-Beispiele</h4>
+        <p>Sieh den direkten Vergleich: schlechter Prompt → unbrauchbares Ergebnis vs. 6-Elemente-Prompt → sofort einsetzbar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BONUS (Offerte: Bonusprodukte) ===== -->
+<section class="section">
+  <div class="container">
+    <div style="max-width: 700px; margin: 0 auto; text-align: center;">
+      <div style="background: linear-gradient(135deg, #FFF8E7 0%, #FFF3CD 100%); border: 2px solid var(--accent); border-radius: 16px; padding: 40px;">
+        <div style="font-size: 40px; margin-bottom: 12px;">🎁</div>
+        <h3 style="font-family: 'DM Serif Display', serif; font-size: 24px; margin-bottom: 8px; color: var(--primary);">Gratis-Bonus: Prompt-Spickzettel</h3>
+        <p style="color: var(--text-light); font-size: 15px; margin-bottom: 16px; line-height: 1.7;">
+          Bestelle jetzt und erhalte zusätzlich den <strong>1-Seiten-Spickzettel</strong> mit der 6-Elemente-Formel — zum Ausdrucken und neben den Computer legen. Damit musst du nie wieder überlegen, wie ein guter Prompt aufgebaut ist.
+        </p>
+        <div style="color: var(--accent-dark); font-weight: 600; font-size: 14px;">Wert: 4,99 € — heute kostenlos dabei</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ÜBER DEN AUTOR (Persönliche Marke) ===== -->
+<section class="section section-warm">
+  <div class="container">
+    <div class="section-header">
+      <div class="label" style="color: var(--primary-light);">Über den Autor</div>
+    </div>
+    <div class="author-section">
+      <div class="author-photo">
+        <!-- PLATZHALTER: Hier dein echtes Foto einfügen -->
+        👨‍🏫
+      </div>
+      <div class="author-info">
+        <h3>René</h3>
+        <div class="role">Mathe- & Informatiklehrer in NRW · KI-Fortbildner</div>
+        <p>
+          Ich bin seit über 10 Jahren Lehrer und kenne den Wahnsinn aus 70-Stunden-Wochen und Wochenendkorrekturen aus eigener Erfahrung. Seit ich KI systematisch in meinen Arbeitsalltag integriert habe, spare ich 10–12 Stunden pro Woche — ohne Qualitätsverlust.
+        </p>
+        <p style="margin-top: 12px;">
+          Mittlerweile gebe ich Fortbildungen an Schulen, in denen ich anderen Lehrkräften genau zeige, wie sie das auch schaffen. Diese PDF enthält die Grundlagen, mit denen alles anfängt.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <div class="label" style="color: var(--primary-light);">Das sagen Kolleg*innen</div>
+      <h2 style="color: var(--primary);">Von Lehrkräften getestet</h2>
+    </div>
+
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p>Endlich verstehe ich, wie ich ChatGPT richtig nutze. Die 6-Elemente-Formel hat alles verändert. Meine Arbeitsblätter sind jetzt in Minuten fertig.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">👩‍🏫</div>
+          <div>
+            <div class="testimonial-name">Kollegin, 58</div>
+            <div class="testimonial-detail">Deutschlehrerin · Gymnasium</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p>Ich war totaler KI-Skeptiker. Aber die Vorher/Nachher-Beispiele haben mich überzeugt. Jetzt spare ich locker 3 Stunden die Woche.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">👨‍🏫</div>
+          <div>
+            <div class="testimonial-name">Kollege, 45</div>
+            <div class="testimonial-detail">Englischlehrer · Gesamtschule</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <p>Das DSGVO-Ampelsystem allein ist das Geld wert. Endlich weiß ich, was ich darf und was nicht — ohne stundenlange Recherche.</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">👩‍🏫</div>
+          <div>
+            <div class="testimonial-name">Kollegin, 34</div>
+            <div class="testimonial-detail">Biolehrerin · Realschule</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="design-note" style="margin-top: 30px;">
+      <strong>📝 HINWEIS:</strong> Diese Testimonials sind Platzhalter. Ersetze sie durch echte Rückmeldungen aus deinen Workshops. Am besten mit Vor- und Nachname + Foto (falls erlaubt). Screenshots von Nachrichten funktionieren auch sehr gut.
+    </div>
+  </div>
+</section>
+
+<!-- ===== GARANTIE (Offerte: Solide Garantie) ===== -->
+<section class="section section-warm">
+  <div class="container">
+    <div class="guarantee-box">
+      <div class="icon">🛡️</div>
+      <h3>30 Tage Geld-zurück-Garantie</h3>
+      <p>
+        Wenn du nach dem Lesen der PDF nicht mindestens einen Trick gefunden hast, der dir sofort Zeit spart, bekommst du dein Geld zurück. Ohne Wenn und Aber. Eine kurze E-Mail an mich reicht.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2 style="color: var(--primary);">Häufige Fragen</h2>
+    </div>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">Für welche Fächer funktioniert das? <span>+</span></div>
+        <div class="faq-a">Für alle Fächer. Die 6-Elemente-Formel ist fachunabhängig. In der PDF gibt es Beispiele aus Mathe, Deutsch, Englisch und Naturwissenschaften. Du passt die Prompts einfach auf dein Fach an.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Brauche ich technisches Vorwissen? <span>+</span></div>
+        <div class="faq-a">Nein. Wenn du eine E-Mail schreiben kannst, kannst du auch prompten. Die PDF erklärt alles Schritt für Schritt — auch für absolute KI-Anfänger.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Ist das DSGVO-konform? <span>+</span></div>
+        <div class="faq-a">Ja. In der PDF lernst du das Ampelsystem, das dir zeigt, was du darfst und was nicht. Alle Prompt-Vorlagen sind so gestaltet, dass keine personenbezogenen Schülerdaten verarbeitet werden.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Welches KI-Tool brauche ich? <span>+</span></div>
+        <div class="faq-a">Die Prompts funktionieren mit ChatGPT (kostenlose Version reicht), aber auch mit anderen KI-Tools wie Claude, Gemini oder Copilot.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Wie bekomme ich die PDF? <span>+</span></div>
+        <div class="faq-a">Sofort nach dem Kauf erhältst du eine E-Mail mit dem Download-Link. Du kannst die PDF dann auf jedem Gerät lesen — Computer, Tablet oder Handy.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Gibt es noch mehr Inhalte als diese PDF? <span>+</span></div>
+        <div class="faq-a">Ja — diese PDF ist der Einstieg. Wenn du nach dem Lesen tiefer einsteigen willst (KI-Korrektur, KI-Unterrichtsplanung, Bildgenerierung), kannst du dich auf die Warteliste für meinen kompletten Onlinekurs „Endlich Feierabend" setzen lassen.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FINALER CTA ===== -->
+<section class="final-cta">
+  <div class="container">
+    <h2>Bereit für 2–3 Stunden mehr pro Woche?</h2>
+    <p class="lead">Für weniger als ein Mittagessen in der Mensa bekommst du das System, das hunderte Lehrkräfte bereits nutzen.</p>
+    <div class="price-inline">
+      <span class="price-old" style="font-size: 22px;">29,99 €</span>
+      <span class="price-new" style="font-size: 48px;">14,99 €</span>
+      <span class="price-save">−50%</span>
+    </div>
+    <a href="https://www.checkout-ds24.com/product/669015" class="btn-buy">🛒 Jetzt kaufen — Sofortiger Download</a>
+    <div class="btn-sub" style="margin-top: 14px;">30 Tage Geld-zurück-Garantie · Sichere Zahlung · Sofort per E-Mail</div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer style="background: var(--primary); color: rgba(255,255,255,0.6); padding: 30px 0; text-align: center; font-size: 13px;">
+  <div class="container">
+    <p>© 2026 René · KI für Lehrkräfte</p>
+    <p style="margin-top: 6px;">
+      <a href="impressum.html" style="color: rgba(255,255,255,0.6);">Impressum</a> · 
+      <a href="impressum.html#datenschutz" style="color: rgba(255,255,255,0.6);">Datenschutz</a> · 
+      <a href="impressum.html#agb" style="color: rgba(255,255,255,0.6);">AGB</a> · 
+      <a href="impressum.html#widerruf" style="color: rgba(255,255,255,0.6);">Widerruf</a>
+    </p>
+  </div>
+</footer>
+
+<!-- Countdown Timer Script -->
+<script>
+  // Fake countdown that resets daily (Dringlichkeit-Element)
+  function updateCountdown() {
+    const now = new Date();
+    const endOfDay = new Date(now);
+    endOfDay.setHours(23, 59, 59, 999);
+    const diff = endOfDay - now;
+    
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+    
+    document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+    document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+    document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+  }
+  
+  setInterval(updateCountdown, 1000);
+  updateCountdown();
+</script>
+
+<script>
+// Mobile Navigation Toggle
+const menuToggle = document.querySelector(".menu-toggle");
+const navMenu = document.querySelector(".nav-menu");
+
+if (menuToggle && navMenu) {
+  menuToggle.addEventListener("click", () => {
+    navMenu.classList.toggle("active");
+  });
+
+  // Close menu when clicking outside
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".nav-container")) {
+      navMenu.classList.remove("active");
+    }
+  });
+}
+</script>
+
+</body>
+</html>

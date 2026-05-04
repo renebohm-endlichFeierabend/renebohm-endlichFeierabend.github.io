@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>René Bohm | KI für Lehrkräfte — Endlich Feierabend</title>
-<meta name="description" content="KI-Fortbildungen für Lehrkräfte: Spare 10-12 Stunden pro Woche mit systematischer KI-Integration. Workshops, Online-Kurse und praxisnahe Lösungen.">
+<title>Online-Kurs: Endlich Feierabend | René Bohm</title>
+<meta name="description" content="Der komplette Online-Kurs für systematische KI-Integration im Lehreralltag. 4 Module, Schritt-für-Schritt-Anleitungen und persönlicher Support.">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -75,7 +75,7 @@
     font-size: 15px;
     transition: color 0.2s;
   }
-  .nav-link:hover {
+  .nav-link:hover, .nav-link.active {
     color: var(--primary);
   }
   .nav-cta {
@@ -93,7 +93,6 @@
     transform: translateY(-1px);
   }
 
-  /* Mobile Menu */
   .menu-toggle {
     display: none;
     background: none;
@@ -106,85 +105,40 @@
   /* === CONTAINER === */
   .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
 
-  /* === HERO SECTION === */
+  /* === HERO === */
   .hero {
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
     color: var(--text-on-dark);
-    padding: 100px 0 80px;
+    padding: 80px 0 70px;
     text-align: center;
   }
   .hero h1 {
     font-family: 'DM Serif Display', serif;
-    font-size: clamp(36px, 5vw, 56px);
+    font-size: clamp(36px, 5vw, 52px);
     line-height: 1.15;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
   .hero h1 em {
     color: var(--accent);
     font-style: italic;
   }
   .hero .lead {
-    font-size: clamp(18px, 2.5vw, 22px);
+    font-size: 19px;
     line-height: 1.6;
-    max-width: 800px;
-    margin: 0 auto 40px;
+    max-width: 700px;
+    margin: 0 auto 32px;
     opacity: 0.95;
   }
-  .hero-cta {
-    display: inline-flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .btn {
+  .hero-badge {
     display: inline-block;
-    padding: 16px 32px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 16px;
-    transition: all 0.2s;
-  }
-  .btn-primary {
-    background: var(--accent);
-    color: var(--primary);
-  }
-  .btn-primary:hover {
-    background: var(--accent-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(232,168,56,0.3);
-  }
-  .btn-secondary {
-    background: rgba(255,255,255,0.15);
-    color: white;
-    border: 2px solid rgba(255,255,255,0.3);
-  }
-  .btn-secondary:hover {
-    background: rgba(255,255,255,0.25);
-  }
-
-  /* === STATS BAR === */
-  .stats {
-    background: white;
-    border-bottom: 1px solid var(--border);
-    padding: 40px 0;
-  }
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 40px;
-    text-align: center;
-  }
-  .stat-number {
-    font-family: 'DM Serif Display', serif;
-    font-size: 42px;
+    background: rgba(232,168,56,0.2);
+    border: 1px solid rgba(232,168,56,0.4);
     color: var(--accent);
-    margin-bottom: 8px;
-  }
-  .stat-label {
+    padding: 8px 16px;
+    border-radius: 8px;
     font-size: 14px;
-    color: var(--text-light);
-    font-weight: 500;
+    font-weight: 600;
+    margin-bottom: 24px;
   }
 
   /* === SECTIONS === */
@@ -221,71 +175,110 @@
     line-height: 1.7;
   }
 
-  /* === CARDS === */
-  .card-grid {
+  /* === MODULE CARDS === */
+  .module-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 30px;
+    margin-top: 50px;
   }
-  .card {
+  .module-card {
     background: white;
-    border: 1px solid var(--border);
+    border: 2px solid var(--border);
     border-radius: 16px;
     padding: 40px 30px;
-    transition: all 0.3s;
+    position: relative;
   }
-  .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(27,77,62,0.12);
+  .module-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-dark));
+    border-radius: 16px 16px 0 0;
   }
-  .card-icon {
-    font-size: 48px;
-    margin-bottom: 20px;
-    display: block;
-  }
-  .card h3 {
+  .module-number {
     font-family: 'DM Serif Display', serif;
-    font-size: 24px;
-    color: var(--primary);
+    font-size: 14px;
+    color: var(--accent);
+    font-weight: 600;
     margin-bottom: 12px;
   }
-  .card p {
-    color: var(--text-light);
-    font-size: 15px;
-    line-height: 1.7;
-    margin-bottom: 20px;
-  }
-  .card-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+  .module-card h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
     color: var(--primary);
-    font-weight: 600;
-    text-decoration: none;
-    font-size: 14px;
-    transition: gap 0.2s;
+    margin-bottom: 16px;
   }
-  .card-link:hover {
-    gap: 10px;
+  .module-card ul {
+    list-style: none;
+    padding: 0;
+  }
+  .module-card li {
+    font-size: 14px;
+    color: var(--text-light);
+    line-height: 1.8;
+    padding-left: 20px;
+    position: relative;
+    margin-bottom: 8px;
+  }
+  .module-card li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
   }
 
-  /* === CTA SECTION === */
-  .cta-section {
+  /* === WAITING LIST BOX === */
+  .waitlist-box {
     background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
     color: var(--text-on-dark);
-    padding: 80px 0;
+    border-radius: 20px;
+    padding: 60px 40px;
     text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
   }
-  .cta-section h2 {
+  .waitlist-box h2 {
     font-family: 'DM Serif Display', serif;
-    font-size: clamp(32px, 4vw, 42px);
-    margin-bottom: 20px;
+    font-size: 36px;
+    margin-bottom: 16px;
   }
-  .cta-section p {
-    font-size: 18px;
-    max-width: 600px;
-    margin: 0 auto 32px;
+  .waitlist-box p {
+    font-size: 17px;
     opacity: 0.95;
+    margin-bottom: 32px;
+  }
+  .waitlist-form {
+    display: flex;
+    gap: 12px;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .waitlist-input {
+    flex: 1;
+    padding: 14px 20px;
+    border-radius: 10px;
+    border: none;
+    font-size: 15px;
+  }
+  .waitlist-btn {
+    background: var(--accent);
+    color: var(--primary);
+    padding: 14px 28px;
+    border-radius: 10px;
+    border: none;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .waitlist-btn:hover {
+    background: var(--accent-dark);
+    transform: translateY(-1px);
   }
 
   /* === FOOTER === */
@@ -367,6 +360,9 @@
     .nav-menu.active {
       display: flex;
     }
+    .nav-menu {
+      display: none;
+    }
     .menu-toggle {
       display: block;
     }
@@ -380,6 +376,9 @@
     .section {
       padding: 60px 0;
     }
+    .waitlist-form {
+      flex-direction: column;
+    }
   }
 </style>
 </head>
@@ -389,13 +388,13 @@
 <nav class="nav">
   <div class="nav-container">
     <a href="index.html" class="nav-logo">
-      <img src="logo.png" alt="">
+      <img src="images/logo.png" alt="Endlich Feierabend Logo">
       <span class="nav-brand">Endlich Feierabend</span>
     </a>
     <ul class="nav-menu">
       <li><a href="index.html" class="nav-link">Start</a></li>
       <li><a href="workshops.html" class="nav-link">Workshops</a></li>
-      <li><a href="endlich-feierabend.html" class="nav-link">Online-Kurs</a></li>
+      <li><a href="endlich-feierabend.html" class="nav-link active">Online-Kurs</a></li>
       <li><a href="ueber-mich.html" class="nav-link">Über mich</a></li>
     </ul>
     <a href="ki-kickstart.html" class="nav-cta">PDF für 14,99€</a>
@@ -406,108 +405,119 @@
 <!-- HERO -->
 <section class="hero">
   <div class="container">
-    <h1>Spare 10–12 Stunden pro Woche mit <em>systematischer KI-Integration</em></h1>
+    <span class="hero-badge">🚧 In Entwicklung — Warteliste öffnen</span>
+    <h1>Endlich Feierabend<br><em>Der komplette Online-Kurs</em></h1>
     <p class="lead">
-      Als Mathe- und Informatiklehrer in NRW zeige ich dir, wie du KI DSGVO-konform in deinen Arbeitsalltag integrierst — ohne Qualitätsverlust, mit messbaren Zeitersparnissen.
+      Systematische KI-Integration für deinen Lehreralltag: 4 Module, Schritt-für-Schritt-Anleitungen, fertige Vorlagen und persönlicher Support. Spare 10–12 Stunden pro Woche — DSGVO-konform und praxiserprobt.
     </p>
-    <div class="hero-cta">
-      <a href="ki-kickstart.html" class="btn btn-primary">📥 PDF-Guide für 14,99€</a>
-      <a href="workshops.html" class="btn btn-secondary">🎓 Workshop buchen</a>
-      <a href="endlich-feierabend.html" class="btn btn-secondary">🎯 Online-Kurs</a>
-    </div>
   </div>
 </section>
 
-<!-- STATS -->
-<section class="stats">
-  <div class="container">
-    <div class="stats-grid">
-      <div>
-        <div class="stat-number">10–12h</div>
-        <div class="stat-label">Zeitersparnis pro Woche</div>
-      </div>
-      <div>
-        <div class="stat-number">1 Mio.</div>
-        <div class="stat-label">Lehrkräfte im DACH-Raum</div>
-      </div>
-      <div>
-        <div class="stat-number">72%</div>
-        <div class="stat-label">benötigen KI-Training</div>
-      </div>
-      <div>
-        <div class="stat-number">100%</div>
-        <div class="stat-label">DSGVO-konform</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ANGEBOTE -->
+<!-- MODULE ÜBERSICHT -->
 <section class="section">
   <div class="container">
     <div class="section-header">
-      <div class="label">Meine Angebote</div>
-      <h2>Drei Wege zu mehr Feierabend</h2>
-      <p>Egal ob du schnell starten willst oder tiefgehende Begleitung suchst — hier findest du den passenden Einstieg.</p>
+      <div class="label">Was du lernst</div>
+      <h2>4 Module für die komplette Transformation</h2>
+      <p>Von den Grundlagen bis zur vollständigen Workflow-Integration — alles, was du brauchst, um KI effektiv im Schulalltag einzusetzen.</p>
     </div>
 
-    <div class="card-grid">
-      <div class="card">
-        <span class="card-icon">📄</span>
-        <h3>KI-Kickstart PDF</h3>
-        <p>Die 6-Elemente-Prompting-Formel, 10+ fertige Prompt-Vorlagen, DSGVO-Ampelsystem und sofort umsetzbare Beispiele. Perfekt für den schnellen Einstieg.</p>
-        <a href="ki-kickstart.html" class="card-link">Jetzt für 14,99€ →</a>
+    <div class="module-grid">
+      <div class="module-card">
+        <div class="module-number">MODUL 1</div>
+        <h3>Prompting-Grundlagen</h3>
+        <ul>
+          <li>Die 6-Elemente-Formel erklärt</li>
+          <li>ChatGPT vs. Copilot vs. Claude</li>
+          <li>Typische Fehler erkennen & vermeiden</li>
+          <li>Prompt-Bibliothek mit 50+ Vorlagen</li>
+        </ul>
       </div>
 
-      <div class="card">
-        <span class="card-icon">🎓</span>
-        <h3>Workshops an Schulen</h3>
-        <p>Ich komme direkt zu euch an die Schule und führe praxisnahe Fortbildungen durch. Von Prompting-Grundlagen bis zur vollständigen Workflow-Integration.</p>
-        <a href="workshops.html" class="card-link">Workshop anfragen →</a>
+      <div class="module-card">
+        <div class="module-number">MODUL 2</div>
+        <h3>Materialerstellung</h3>
+        <ul>
+          <li>Arbeitsblätter in Minuten erstellen</li>
+          <li>Differenzierung auf 3 Niveaustufen</li>
+          <li>Stunden- und Reihenplanung</li>
+          <li>Lehrwerksnahe Arbeit sicherstellen</li>
+        </ul>
       </div>
 
-      <div class="card">
-        <span class="card-icon">🎯</span>
-        <h3>Online-Kurs "Endlich Feierabend"</h3>
-        <p>Der komplette Weg zur systematischen KI-Integration: 4 Module, Schritt-für-Schritt-Anleitungen, Vorlagen und persönlicher Support.</p>
-        <a href="endlich-feierabend.html" class="card-link">Mehr erfahren →</a>
+      <div class="module-card">
+        <div class="module-number">MODUL 3</div>
+        <h3>Korrektur & Bewertung</h3>
+        <ul>
+          <li>KI als Korrekturassistenz nutzen</li>
+          <li>Erwartungshorizonte generieren</li>
+          <li>Anonymisierte Feedback-Workflows</li>
+          <li>Rechtlicher Rahmen (NRW-spezifisch)</li>
+        </ul>
       </div>
-    </div>
-  </div>
-</section>
 
-<!-- PROBLEM/LÖSUNG -->
-<section class="section section-warm">
-  <div class="container">
-    <div class="section-header">
-      <div class="label">Das Problem</div>
-      <h2>78% der Lehrkräfte fühlen sich stark belastet</h2>
-      <p>70-Stunden-Wochen, Wochenendkorrekturen, permanente Überlastung — und gleichzeitig soll KI jetzt auch noch gelernt werden?</p>
-    </div>
+      <div class="module-card">
+        <div class="module-number">MODUL 4</div>
+        <h3>Workflow-Integration</h3>
+        <ul>
+          <li>Kompletter Arbeitsablauf optimiert</li>
+          <li>Tool-Stack für Lehrkräfte</li>
+          <li>Automatisierung & Templates</li>
+          <li>10–12h Zeitersparnis erreichen</li>
+        </ul>
+      </div>
 
-    <div style="max-width: 800px; margin: 0 auto;">
-      <div class="card" style="border-left: 4px solid var(--accent);">
-        <h3>Die Lösung: Systematische KI-Integration</h3>
-        <p style="margin-bottom: 16px;">Statt noch mehr Belastung bringt KI <strong>messbare Entlastung</strong> — wenn sie richtig eingesetzt wird. Meine Workshops und Kurse zeigen dir:</p>
-        <ul style="color: var(--text-light); line-height: 2; padding-left: 20px;">
-          <li>Wie du mit der 6-Elemente-Formel sofort bessere Ergebnisse erzielst</li>
-          <li>Welche Tools DSGVO-konform sind (und welche nicht)</li>
-          <li>Wie du KI für Materialerstellung, Differenzierung und Korrektur nutzt</li>
-          <li>Wie du 10–12 Stunden pro Woche sparst — ohne Qualitätsverlust</li>
+      <div class="module-card">
+        <div class="module-number">MODUL 5</div>
+        <h3>Moodle-Kurse mit KI erstellen</h3>
+        <ul>
+          <li>Kursstruktur KI-gestützt aufbauen</li>
+          <li>Lernaktivitäten & Quizfragen generieren</li>
+          <li>H5P-Inhalte effizient erstellen</li>
+          <li>Von der Idee zum fertigen Kursraum</li>
         </ul>
       </div>
     </div>
   </div>
 </section>
 
-<!-- CTA SECTION -->
-<section class="cta-section">
+<!-- DSGVO -->
+<section class="section section-warm">
   <div class="container">
-    <h2>Bereit für mehr Feierabend?</h2>
-    <p>Starte heute mit dem KI-Kickstart PDF oder buche einen Workshop für deine Schule.</p>
-    <div class="hero-cta">
-      <a href="ki-kickstart.html" class="btn btn-primary">📥 PDF für 14,99€ kaufen</a>
-      <a href="workshops.html" class="btn btn-secondary">🎓 Workshop anfragen</a>
+    <div class="section-header">
+      <div class="label">Datenschutz</div>
+      <h2>100% DSGVO-konform</h2>
+      <p>In jedem Modul lernst du, wie du KI datenschutzkonform einsetzt. Mit dem Ampelsystem checkst du in 3 Sekunden, was erlaubt ist.</p>
+    </div>
+
+    <div style="max-width: 700px; margin: 0 auto; background: white; border: 2px solid var(--border); border-radius: 16px; padding: 40px; text-align: center;">
+      <div style="font-size: 48px; margin-bottom: 20px;">🔒</div>
+      <h3 style="color: var(--primary); margin-bottom: 12px; font-family: 'DM Serif Display', serif; font-size: 24px;">Das DSGVO-Ampelsystem</h3>
+      <p style="color: var(--text-light); line-height: 1.7; margin-bottom: 20px;">
+        <strong style="color: #27AE60;">🟢 Grün:</strong> Ohne Schülerdaten — immer erlaubt<br>
+        <strong style="color: #E8A838;">🟡 Gelb:</strong> Anonymisiert — mit Vorsicht<br>
+        <strong style="color: #C0392B;">🔴 Rot:</strong> Personenbezogen — nur intern
+      </p>
+      <p style="font-size: 14px; color: var(--text-light);">Inklusive Dokumentationsvorlagen für die Schulleitung</p>
+    </div>
+  </div>
+</section>
+
+<!-- WARTELISTE -->
+<section class="section">
+  <div class="container">
+    <div class="waitlist-box">
+      <h2>Kurs in Entwicklung</h2>
+      <p>Der Online-Kurs ist aktuell in Arbeit und wird auf Basis meiner Workshop-Erfahrungen entwickelt. Trage dich in die Warteliste ein und erfahre als Erste/r, wenn der Kurs startet.</p>
+      
+      <form class="waitlist-form" action="https://submit-form.com/YOUR-FORM-ID" method="POST">
+        <input type="email" name="email" class="waitlist-input" placeholder="Deine E-Mail-Adresse" required>
+        <button type="submit" class="waitlist-btn">📬 Auf Warteliste</button>
+      </form>
+
+      <p style="margin-top: 24px; font-size: 14px; opacity: 0.8;">
+        Bis dahin: Starte mit dem <a href="ki-kickstart.html" style="color: var(--accent); font-weight: 600; text-decoration: underline;">KI-Kickstart PDF für 14,99€</a>
+      </p>
     </div>
   </div>
 </section>
@@ -555,19 +565,21 @@
 
 <script>
 // Mobile Navigation Toggle
-const menuToggle = document.querySelector('.menu-toggle');
-const navMenu = document.querySelector('.nav-menu');
+const menuToggle = document.querySelector(".menu-toggle");
+const navMenu = document.querySelector(".nav-menu");
 
-menuToggle.addEventListener('click', () => {
-  navMenu.classList.toggle('active');
-});
+if (menuToggle && navMenu) {
+  menuToggle.addEventListener("click", () => {
+    navMenu.classList.toggle("active");
+  });
 
-// Close menu when clicking outside
-document.addEventListener('click', (e) => {
-  if (!e.target.closest('.nav-container')) {
-    navMenu.classList.remove('active');
-  }
-});
+  // Close menu when clicking outside
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".nav-container")) {
+      navMenu.classList.remove("active");
+    }
+  });
+}
 </script>
 
 </body>
