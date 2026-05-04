@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout';
+import ErrorBoundary from './components/ErrorBoundary';
 import { useStore } from './data/store';
 import Home from './routes/Home';
 import ClassesView from './routes/Grades/ClassesView';
@@ -47,7 +48,9 @@ export default function App() {
 
   return (
     <HashRouter>
-      <AppRoutes />
+      <ErrorBoundary>
+        <AppRoutes />
+      </ErrorBoundary>
     </HashRouter>
   );
 }
