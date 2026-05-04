@@ -12,7 +12,7 @@ export default function DriveSyncSettings() {
   const [connecting, setConnecting] = useState(false);
   const [error, setError] = useState('');
 
-  const isConnected = driveConfig != null && isTokenValid(driveConfig);
+  const isConnected = !!driveConfig && isTokenValid(driveConfig);
 
   const handleConnect = async () => {
     if (!clientId.trim()) { setError('Bitte Client-ID eingeben'); return; }
