@@ -36,7 +36,7 @@ export const useStore = create<AppStore>((set, get) => ({
 
   init: async () => {
     const [data, driveConfig] = await Promise.all([loadAppData(), loadDriveConfig()]);
-    set({ ...data, driveConfig, loading: false });
+    set({ ...data, driveConfig: driveConfig ?? null, loading: false });
 
     if (driveConfig?.accessToken && navigator.onLine) {
       get().syncNow();

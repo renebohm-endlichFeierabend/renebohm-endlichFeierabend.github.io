@@ -10,6 +10,11 @@ export default class ErrorBoundary extends Component<Props, State> {
     return { error };
   }
 
+  componentDidCatch(error: Error, info: { componentStack: string }) {
+    console.error('[LeherTool] Render-Fehler:', error.message);
+    console.error('[LeherTool] Stack:', info.componentStack);
+  }
+
   render() {
     if (this.state.error) {
       return (

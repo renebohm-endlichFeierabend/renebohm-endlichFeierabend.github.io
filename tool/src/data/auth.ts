@@ -62,6 +62,7 @@ async function fetchUserEmail(token: string): Promise<string> {
   }
 }
 
-export function isTokenValid(config: DriveConfig): boolean {
+export function isTokenValid(config: DriveConfig | null | undefined): boolean {
+  if (!config) return false;
   return !!config.accessToken && !!config.tokenExpiry && config.tokenExpiry > Date.now() + 60_000;
 }
