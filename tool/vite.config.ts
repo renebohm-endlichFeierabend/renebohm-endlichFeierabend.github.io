@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
-  base: '/',
+  base: '/tool/',
   plugins: [
     react(),
     VitePWA({
@@ -13,14 +13,15 @@ export default defineConfig({
         name: 'Lehrer-Tool',
         short_name: 'Lehrer',
         description: 'Noten, Aufgaben, Videos und Meditation für Lehrkräfte',
-        start_url: '/',
+        start_url: '/tool/',
+        scope: '/tool/',
         display: 'standalone',
         background_color: '#fafaf7',
         theme_color: '#1c1917',
         icons: [
-          { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
-          { src: '/icon-512.png', sizes: '512x512', type: 'image/png' },
-          { src: '/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+          { src: '/tool/icon-192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/tool/icon-512.png', sizes: '512x512', type: 'image/png' },
+          { src: '/tool/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
       },
       workbox: {

@@ -1,11 +1,8 @@
-name: Deploy Lehrer-Tool to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches: [main]
-    paths:
-      - 'tool/**'
-      - '.github/workflows/deploy-tool.yml'
 
 permissions:
   contents: write
@@ -26,13 +23,21 @@ jobs:
         run: npm ci
         working-directory: tool
 
-      - name: Build
+      - name: Build Lehrer-Tool
         run: npm run build
         working-directory: tool
 
-      - name: Deploy to GitHub Pages
+      - name: Assemble deployment directory
+        run: |
+          mkdir -p deploy/tool
+          # Existing website files at root
+          cp *.html deploy/ 2>/dev/null || true
+          cp *.jpg *.png *.css *.js 2>/dev/null deploy/ || true
+          # Lehrer-Tool built app into /tool/
+          cp -r tool/dist/. deploy/tool/
+
+      - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./tool/dist
-          cname: tool.renebohm-endlichfeierabend.de
+          publish_dir: ./deploy
