@@ -35,7 +35,16 @@ export const useStore = create<AppStore>((set, get) => ({
   pendingSync: false,
 
   init: async () => {
-    const [data, driveConfig] = await Promise.all([loadAppData(), loadDriveConfig()]);
+    const [storedData, driveConfig] = await Promise.all([loadAppData(), loadDriveConfig()]);
+    // Use epoch timestamp for fresh installs so Drive data always wins on first sync
+    const data = storedData ?? {
+      version: 1,
+      lastModified: new Date(0).toISOString(),
+      classes: [],
+      todos: [],
+      videos: [],
+      meditationSessions: [],
+    };
     set({ ...data, driveConfig: driveConfig ?? null, loading: false });
 
     if (driveConfig?.accessToken && navigator.onLine) {
@@ -98,18 +107,11 @@ export const useStore = create<AppStore>((set, get) => ({
       };
 
       if (remoteData && remoteData.lastModified > localData.lastModified) {
-        const useRemote = window.confirm(
-          `Die Drive-Daten sind neuer (${new Date(remoteData.lastModified).toLocaleString('de-DE')}).\n` +
-          `Lokale Daten: ${new Date(localData.lastModified).toLocaleString('de-DE')}\n\n` +
-          `Drive-Version übernehmen?`
-        );
-        if (useRemote) {
-          set(remoteData);
-          await saveAppData(remoteData);
-        } else {
-          await syncToDrive(driveConfig, localData);
-        }
+        // Drive is newer (or local has epoch timestamp = fresh install) → load from Drive
+        set(remoteData);
+        await saveAppData(remoteData);
       } else {
+        // Local is newer or no Drive data yet → push to Drive
         await syncToDrive(driveConfig, localData);
       }
       set({ syncStatus: 'idle' });

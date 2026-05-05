@@ -22,19 +22,9 @@ function getDb() {
   return dbPromise;
 }
 
-const INITIAL_DATA: AppData = {
-  version: 1,
-  lastModified: new Date().toISOString(),
-  classes: [],
-  todos: [],
-  videos: [],
-  meditationSessions: [],
-};
-
-export async function loadAppData(): Promise<AppData> {
+export async function loadAppData(): Promise<AppData | null> {
   const db = await getDb();
-  const data = await db.get('appData', 'main');
-  return data ?? { ...INITIAL_DATA };
+  return (await db.get('appData', 'main')) ?? null;
 }
 
 export async function saveAppData(data: AppData): Promise<void> {
