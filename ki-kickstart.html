@@ -617,6 +617,74 @@
   }
   .design-note strong { color: #6D4C00; }
 
+  /* === OPT-IN FORMULAR === */
+  .optin-wrapper {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .optin-intro {
+    font-size: 15px;
+    font-weight: 600;
+    color: #0B2240;
+    margin-bottom: 16px;
+  }
+  .optin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .optin-form input[type="email"] {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--text);
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .optin-form input[type="email"]:focus {
+    border-color: #0B2240;
+  }
+  .optin-form input[type="email"]::placeholder {
+    color: var(--text-light);
+  }
+  .btn-optin {
+    display: block;
+    width: 100%;
+    background: #1A6B3C;
+    color: white;
+    border: none;
+    padding: 16px 24px;
+    font-size: 17px;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    text-align: center;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(26,107,60,0.30);
+  }
+  .btn-optin:hover {
+    background: #155a32;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(26,107,60,0.40);
+  }
+  .form-disclaimer {
+    font-size: 12px;
+    color: var(--text-light);
+    text-align: center;
+  }
+  .optin-form-center {
+    max-width: 480px;
+    margin: 0 auto 0;
+  }
+
   /* === RESPONSIVE === */
   @media (max-width: 768px) {
     .nav-menu {
@@ -673,16 +741,6 @@
   <span>🎓 KI für Lehrkräfte — von einem Lehrer, der es selbst macht</span>
 </nav>
 
-<!-- ===== ANNOUNCEMENT BAR (Dringlichkeit + Rabattgrund) ===== -->
-<div class="announcement">
-  ⏰ <strong>Einführungspreis:</strong> Spare 50% — nur noch für kurze Zeit!
-  <span class="countdown">
-    <span class="countdown-unit" id="hours">07</span>:
-    <span class="countdown-unit" id="minutes">42</span>:
-    <span class="countdown-unit" id="seconds">18</span>
-  </span>
-</div>
-
 <!-- ===== HERO SECTION ===== -->
 <div class="container">
   <section class="hero">
@@ -704,16 +762,15 @@
         Die Prompting-Grundlagen, mit denen ein Mathe- und Informatiklehrer sich selbst 10–12 Stunden pro Woche zurückgeholt hat — jetzt als kompakte PDF-Anleitung. 100% DSGVO-konform. Kein Vorwissen nötig.
       </p>
 
-      <!-- PREIS-BOX (Offerte: Rabatt + Grund für Rabatt) -->
-      <div class="price-box">
-        <div class="price-row">
-          <span class="price-old">29,99 €</span>
-          <span class="price-new">14,99 €</span>
-          <span class="price-save">−50%</span>
-        </div>
-        <div class="price-tax">inkl. 7% MwSt. · Sofort-Download nach Kauf</div>
-        <a href="https://www.checkout-ds24.com/product/669015" class="btn-buy">🛒 Jetzt kaufen — Sofortiger Download</a>
-        <div class="btn-sub">Sichere Zahlung via Shopify Payments · Kein Abo</div>
+      <!-- OPT-IN FORMULAR -->
+      <div class="optin-wrapper">
+        <p class="optin-intro">📥 Jetzt kostenlos herunterladen:</p>
+        <!-- MAILERLITE_FORM_URL_HIER_EINTRAGEN -->
+        <form id="mailerlite-form" action="" method="post" class="optin-form">
+          <input type="email" name="email" placeholder="Deine E-Mail-Adresse" required>
+          <button type="submit" class="btn-optin">PDF kostenlos erhalten</button>
+          <p class="form-disclaimer">Kein Spam. Jederzeit abmeldbar.</p>
+        </form>
       </div>
 
       <!-- Trust Badges -->
@@ -938,10 +995,6 @@
         </div>
       </div>
     </div>
-
-    <div class="design-note" style="margin-top: 30px;">
-      <strong>📝 HINWEIS:</strong> Diese Testimonials sind Platzhalter. Ersetze sie durch echte Rückmeldungen aus deinen Workshops. Am besten mit Vor- und Nachname + Foto (falls erlaubt). Screenshots von Nachrichten funktionieren auch sehr gut.
-    </div>
   </div>
 </section>
 
@@ -999,13 +1052,12 @@
   <div class="container">
     <h2>Bereit für 2–3 Stunden mehr pro Woche?</h2>
     <p class="lead">Für weniger als ein Mittagessen in der Mensa bekommst du das System, das hunderte Lehrkräfte bereits nutzen.</p>
-    <div class="price-inline">
-      <span class="price-old" style="font-size: 22px;">29,99 €</span>
-      <span class="price-new" style="font-size: 48px;">14,99 €</span>
-      <span class="price-save">−50%</span>
-    </div>
-    <a href="https://www.checkout-ds24.com/product/669015" class="btn-buy">🛒 Jetzt kaufen — Sofortiger Download</a>
-    <div class="btn-sub" style="margin-top: 14px;">30 Tage Geld-zurück-Garantie · Sichere Zahlung · Sofort per E-Mail</div>
+    <!-- MAILERLITE_FORM_URL_HIER_EINTRAGEN -->
+    <form id="mailerlite-form" action="" method="post" class="optin-form optin-form-center">
+      <input type="email" name="email" placeholder="Deine E-Mail-Adresse" required>
+      <button type="submit" class="btn-optin">PDF kostenlos erhalten</button>
+      <p class="form-disclaimer">Kein Spam. Jederzeit abmeldbar.</p>
+    </form>
   </div>
 </section>
 
@@ -1021,28 +1073,6 @@
     </p>
   </div>
 </footer>
-
-<!-- Countdown Timer Script -->
-<script>
-  // Fake countdown that resets daily (Dringlichkeit-Element)
-  function updateCountdown() {
-    const now = new Date();
-    const endOfDay = new Date(now);
-    endOfDay.setHours(23, 59, 59, 999);
-    const diff = endOfDay - now;
-    
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-    
-    document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-    document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-    document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
-  }
-  
-  setInterval(updateCountdown, 1000);
-  updateCountdown();
-</script>
 
 <script>
 // Mobile Navigation Toggle
