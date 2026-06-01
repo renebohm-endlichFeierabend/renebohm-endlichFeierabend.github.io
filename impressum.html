@@ -3,414 +3,245 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Impressum & Rechtliches | René Bohm</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
+<title>Impressum &amp; Rechtliches · Endlich Feierabend</title>
+<meta name="description" content="Impressum, Datenschutzerklärung, AGB und Widerrufsbelehrung von René Bohm — Endlich Feierabend.">
+<link rel="icon" href="assets/logo-mark.svg">
+<link rel="stylesheet" href="assets/ef.css">
 <style>
-  :root {
-    --primary: #1B4D3E;
-    --primary-light: #2A7A5F;
-    --accent: #E8A838;
-    --accent-dark: #C4891E;
-    --bg: #FAFAF5;
-    --bg-warm: #F5F0E8;
-    --text: #2C2C2C;
-    --text-light: #666;
-    --border: #E0DDD5;
-  }
+  .page-hero{background:linear-gradient(160deg,#0B2240,#0D3A6B);color:var(--on-dark);padding:72px 0 60px;position:relative;overflow:hidden;}
+  .page-hero::after{content:"";position:absolute;right:-120px;top:-120px;width:360px;height:360px;border-radius:50%;
+    background:radial-gradient(circle,rgba(206,138,44,.2),transparent 62%);}
+  .page-hero .container{position:relative;z-index:1;}
+  .page-hero h1{color:#fff;}
+  .page-hero p{color:var(--on-dark-soft);margin-top:12px;}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  .legal-layout{display:grid;grid-template-columns:230px 1fr;gap:48px;align-items:start;}
+  .legal-toc{position:sticky;top:96px;background:var(--surface);border:1px solid var(--line);
+    border-radius:var(--r-lg);padding:24px;box-shadow:var(--shadow-sm);}
+  .legal-toc h4{font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--text-soft);margin-bottom:14px;}
+  .legal-toc ul{list-style:none;display:flex;flex-direction:column;gap:4px;}
+  .legal-toc a{display:block;padding:9px 12px;border-radius:var(--r-sm);text-decoration:none;color:var(--text);
+    font-size:15px;transition:background .2s,color .2s;}
+  .legal-toc a:hover{background:var(--paper-2);color:var(--ink);}
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  /* === NAVIGATION === */
-  .nav {
-    background: white;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .nav-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 70px;
-  }
-  .nav-logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-    color: var(--primary);
-  }
-  .nav-logo img {
-    height: 40px;
-  }
-  .nav-brand {
-    font-family: 'DM Serif Display', serif;
-    font-size: 20px;
-    font-weight: 400;
-  }
-  .nav-menu {
-    display: flex;
-    gap: 32px;
-    list-style: none;
-  }
-  .nav-link {
-    text-decoration: none;
-    color: var(--text);
-    font-weight: 500;
-    font-size: 15px;
-    transition: color 0.2s;
-  }
-  .nav-link:hover {
-    color: var(--primary);
-  }
-  .nav-cta {
-    background: var(--accent);
-    color: var(--primary);
-    padding: 10px 20px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 14px;
-    transition: all 0.2s;
-  }
-  .nav-cta:hover {
-    background: var(--accent-dark);
-    transform: translateY(-1px);
-  }
-
-  .menu-toggle {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: var(--primary);
-  }
-
-  /* === CONTAINER === */
-  .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
-
-  /* === HEADER === */
-  .page-header {
-    background: var(--bg-warm);
-    padding: 60px 0 40px;
-    text-align: center;
-  }
-  .page-header h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(32px, 4vw, 42px);
-    color: var(--primary);
-    margin-bottom: 12px;
-  }
-  .page-header p {
-    color: var(--text-light);
-    font-size: 16px;
-  }
-
-  /* === CONTENT === */
-  .content {
-    padding: 60px 0 80px;
-  }
-  .legal-section {
-    margin-bottom: 60px;
-    scroll-margin-top: 100px;
-  }
-  .legal-section h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 28px;
-    color: var(--primary);
-    margin-bottom: 20px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid var(--border);
-  }
-  .legal-section h3 {
-    font-size: 20px;
-    color: var(--primary);
-    margin: 28px 0 12px;
-  }
-  .legal-section p {
-    margin-bottom: 16px;
-    line-height: 1.8;
-    color: var(--text);
-  }
-  .legal-section ul {
-    margin: 16px 0 16px 24px;
-    line-height: 1.8;
-  }
-  .legal-section li {
-    margin-bottom: 8px;
-  }
-  .legal-section a {
-    color: var(--primary);
-    text-decoration: underline;
-  }
-  .legal-section a:hover {
-    color: var(--accent);
-  }
-  .contact-box {
-    background: var(--bg-warm);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px;
-    margin: 24px 0;
-  }
-  .contact-box strong {
-    color: var(--primary);
-  }
-
-  /* === FOOTER === */
-  .footer {
-    background: var(--primary);
-    color: rgba(255,255,255,0.7);
-    padding: 40px 0 30px;
-  }
-  .footer-bottom {
-    text-align: center;
-    font-size: 13px;
-  }
-
-  /* === RESPONSIVE === */
-  @media (max-width: 768px) {
-    .nav-menu {
-      display: none;
-      position: absolute;
-      top: 70px;
-      left: 0;
-      right: 0;
-      background: white;
-      flex-direction: column;
-      padding: 20px;
-      border-bottom: 1px solid var(--border);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      gap: 16px;
-    }
-    .nav-menu.active {
-      display: flex;
-    }
-    .nav-menu {
-      display: none;
-    }
-    .menu-toggle {
-      display: block;
-    }
-    .page-header {
-      padding: 40px 0 30px;
-    }
-    .content {
-      padding: 40px 0 60px;
-    }
-  }
+  .legal-section{margin-bottom:56px;scroll-margin-top:90px;}
+  .legal-section h2{font-size:30px;padding-bottom:14px;border-bottom:2px solid var(--amber);
+    margin-bottom:24px;display:inline-block;}
+  .legal-section h3{font-size:19px;margin:28px 0 10px;}
+  .legal-section h4{font-size:16px;color:var(--ink);margin:20px 0 8px;}
+  .legal-section p{font-size:15.5px;color:var(--text-soft);margin-bottom:12px;line-height:1.7;}
+  .legal-section ul{margin:0 0 14px 0;padding-left:22px;color:var(--text-soft);font-size:15.5px;line-height:1.8;}
+  .legal-section a{color:var(--gruen);text-decoration:underline;text-underline-offset:2px;}
+  .legal-section strong{color:var(--ink);font-weight:600;}
+  .contact-box{background:var(--paper-2);border:1px solid var(--line);border-left:4px solid var(--ink);
+    border-radius:var(--r);padding:22px 24px;margin:16px 0;}
+  .contact-box p{color:var(--text);margin-bottom:8px;}
+  @media (max-width:820px){ .legal-layout{grid-template-columns:1fr;} .legal-toc{position:static;} }
 </style>
 </head>
 <body>
 
-<!-- NAVIGATION -->
-<nav class="nav">
-  <div class="nav-container">
-    <a href="index.html" class="nav-logo">
-      <img src="images/logo.png" alt="Endlich Feierabend Logo">
-      <span class="nav-brand">Endlich Feierabend</span>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-ig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+</svg>
+
+<nav class="ef-nav">
+  <div class="ef-nav__in">
+    <a href="index.html" class="ef-logo">
+      <img src="assets/logo-mark.svg" alt="">
+      <span class="ef-logo__wm">endlich feierabend<small>KI für Lehrkräfte</small></span>
     </a>
-    <ul class="nav-menu">
-      <li><a href="index.html" class="nav-link">Start</a></li>
-      <li><a href="workshops.html" class="nav-link">Workshops</a></li>
-      <li><a href="endlich-feierabend.html" class="nav-link">Online-Kurs</a></li>
-      <li><a href="ueber-mich.html" class="nav-link">Über mich</a></li>
+    <ul class="ef-nav__menu" id="nav">
+      <li><a href="index.html">Start</a></li>
+      <li><a href="workshops.html">Workshops</a></li>
+      <li><a href="endlich-feierabend.html">Online-Kurs</a></li>
+      <li><a href="ueber-mich.html">Über mich</a></li>
     </ul>
-    <a href="ki-kickstart.html" class="nav-cta">PDF für 14,99€</a>
-    <button class="menu-toggle">☰</button>
+    <div class="ef-nav__right">
+      <a href="ki-kickstart.html" class="btn btn--primary">KI-Kickstart · 14,99 €</a>
+      <button class="ef-burger" id="burger" aria-label="Menü"><svg><use href="#i-menu"/></svg></button>
+    </div>
   </div>
 </nav>
 
-<!-- HEADER -->
-<section class="page-header">
+<section class="page-hero">
   <div class="container">
-    <h1>Rechtliche Informationen</h1>
+    <div class="eyebrow on-dark">Rechtliches</div>
+    <h1>Impressum &amp; Rechtliches</h1>
     <p>Impressum, Datenschutz, AGB und Widerrufsbelehrung</p>
   </div>
 </section>
 
-<!-- CONTENT -->
-<div class="content">
+<section class="section">
   <div class="container">
+    <div class="legal-layout">
+      <aside class="legal-toc">
+        <h4>Inhalt</h4>
+        <ul>
+          <li><a href="#impressum">Impressum</a></li>
+          <li><a href="#datenschutz">Datenschutz</a></li>
+          <li><a href="#agb">AGB</a></li>
+          <li><a href="#widerruf">Widerruf</a></li>
+        </ul>
+      </aside>
 
-    <!-- IMPRESSUM -->
-    <section class="legal-section" id="impressum">
-      <h2>Impressum</h2>
-      
-      <p><strong>Angaben gemäß § 5 TMG:</strong></p>
-      
-      <div class="contact-box">
-        <p><strong>René Bohm</strong><br>
-        Hagedorn 8<br>
-        41334 Nettetal<br>
-        Deutschland</p>
+      <div>
+        <!-- IMPRESSUM -->
+        <section class="legal-section" id="impressum">
+          <h2>Impressum</h2>
+          <p><strong>Angaben gemäß § 5 TMG:</strong></p>
+          <div class="contact-box">
+            <p><strong>René Bohm</strong><br>Hagedorn 8<br>41334 Nettetal<br>Deutschland</p>
+            <p style="margin-top:14px;"><strong>Kontakt:</strong><br>E-Mail: <a href="/cdn-cgi/l/email-protection#ec9e898289c28e838481d5deac8b818d8580c28f8381"><span class="__cf_email__" data-cfemail="582a3d363d763a373035616a183f35393134763b3735">[email&#160;protected]</span></a></p>
+          </div>
+          <h3>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:</h3>
+          <p>René Bohm<br>Hagedorn 8<br>41334 Nettetal</p>
+          <h3>EU-Streitschlichtung</h3>
+          <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: <a href="https://ec.europa.eu/consumers/odr/" target="_blank">https://ec.europa.eu/consumers/odr/</a></p>
+          <p>Unsere E-Mail-Adresse finden Sie oben im Impressum.</p>
+          <h3>Verbraucherstreitbeilegung/Universalschlichtungsstelle</h3>
+          <p>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
+        </section>
 
-        <p style="margin-top: 16px;">
-          <strong>Kontakt:</strong><br>
-          E-Mail: <a href="/cdn-cgi/l/email-protection#e694838883c884898e8bdfd4a6818b878f8ac885898b"><span class="__cf_email__" data-cfemail="9deff8f3f8b3fff2f5f0a4afddfaf0fcf4f1b3fef2f0">[email&#160;protected]</span></a>
-        </p>
+        <!-- DATENSCHUTZ -->
+        <section class="legal-section" id="datenschutz">
+          <h2>Datenschutzerklärung</h2>
+          <h3>1. Datenschutz auf einen Blick</h3>
+          <h4>Allgemeine Hinweise</h4>
+          <p>Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie diese Website besuchen. Personenbezogene Daten sind alle Daten, mit denen Sie persönlich identifiziert werden können.</p>
+          <h4>Datenerfassung auf dieser Website</h4>
+          <p><strong>Wer ist verantwortlich für die Datenerfassung auf dieser Website?</strong></p>
+          <p>Die Datenverarbeitung auf dieser Website erfolgt durch den Websitebetreiber. Dessen Kontaktdaten können Sie dem Impressum dieser Website entnehmen.</p>
+          <p><strong>Wie erfassen wir Ihre Daten?</strong></p>
+          <p>Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese mitteilen. Hierbei kann es sich z.B. um Daten handeln, die Sie in ein Kontaktformular eingeben.</p>
+          <p>Andere Daten werden automatisch beim Besuch der Website durch unsere IT-Systeme erfasst. Das sind vor allem technische Daten (z.B. Internetbrowser, Betriebssystem oder Uhrzeit des Seitenaufrufs).</p>
+          <p><strong>Wofür nutzen wir Ihre Daten?</strong></p>
+          <p>Ein Teil der Daten wird erhoben, um eine fehlerfreie Bereitstellung der Website zu gewährleisten. Andere Daten können zur Analyse Ihres Nutzerverhaltens verwendet werden.</p>
+          <h3>2. Hosting</h3>
+          <p>Diese Website wird bei GitHub Pages gehostet. GitHub kann beim Besuch dieser Website technische Informationen inklusive Ihrer IP-Adresse erfassen.</p>
+          <p>Weitere Informationen finden Sie in der Datenschutzerklärung von GitHub: <a href="https://docs.github.com/de/site-policy/privacy-policies/github-privacy-statement" target="_blank">GitHub Privacy Statement</a></p>
+          <h3>3. Digistore24 (Zahlungsabwicklung)</h3>
+          <p>Für die Abwicklung von Zahlungen nutzen wir Digistore24. Beim Kaufvorgang werden Ihre Daten an Digistore24 übermittelt und dort verarbeitet.</p>
+          <p>Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Vertragsabwicklung).</p>
+          <p>Weitere Informationen: <a href="https://www.digistore24.com/page/privacy" target="_blank">Digistore24 Datenschutz</a></p>
+          <h3>4. Kontaktformular / E-Mail</h3>
+          <p>Wenn Sie uns per E-Mail kontaktieren, werden Ihre Angaben inklusive der von Ihnen angegebenen Kontaktdaten zwecks Bearbeitung der Anfrage und für den Fall von Anschlussfragen bei uns gespeichert.</p>
+          <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Bearbeitung Ihrer Anfrage).</p>
+          <h3>5. Newsletter (falls implementiert)</h3>
+          <p>Falls Sie sich für unseren Newsletter anmelden, verwenden wir Ihre E-Mail-Adresse ausschließlich für den Versand des Newsletters. Sie können den Newsletter jederzeit abbestellen.</p>
+          <h3>6. Ihre Rechte</h3>
+          <p>Sie haben jederzeit das Recht:</p>
+          <ul>
+            <li>Auskunft über Ihre bei uns gespeicherten Daten zu erhalten (Art. 15 DSGVO)</li>
+            <li>Die Berichtigung unrichtiger Daten zu verlangen (Art. 16 DSGVO)</li>
+            <li>Die Löschung Ihrer Daten zu verlangen (Art. 17 DSGVO)</li>
+            <li>Die Einschränkung der Verarbeitung zu verlangen (Art. 18 DSGVO)</li>
+            <li>Der Verarbeitung zu widersprechen (Art. 21 DSGVO)</li>
+            <li>Ihre Daten in einem strukturierten Format zu erhalten (Art. 20 DSGVO)</li>
+            <li>Sich bei einer Aufsichtsbehörde zu beschweren (Art. 77 DSGVO)</li>
+          </ul>
+          <p>Kontakt für Datenschutzanfragen: <a href="/cdn-cgi/l/email-protection#92e0f7fcf7bcf0fdfaffaba0d2f5fff3fbfebcf1fdff"><span class="__cf_email__" data-cfemail="c8baada6ade6aaa7a0a5f1fa88afa5a9a1a4e6aba7a5">[email&#160;protected]</span></a></p>
+        </section>
+
+        <!-- AGB -->
+        <section class="legal-section" id="agb">
+          <h2>Allgemeine Geschäftsbedingungen (AGB)</h2>
+          <h3>§ 1 Geltungsbereich</h3>
+          <p>Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Verträge über digitale Produkte und Dienstleistungen, die über diese Website abgeschlossen werden.</p>
+          <p>Vertragspartner ist René Bohm, Hagedorn 8, 41334 Nettetal.</p>
+          <h3>§ 2 Vertragsschluss</h3>
+          <p>Die Darstellung der Produkte im Online-Shop stellt kein rechtlich bindendes Angebot dar. Durch Anklicken des Buttons "Jetzt kaufen" geben Sie eine verbindliche Bestellung ab. Der Vertrag kommt zustande, wenn Sie nach erfolgter Zahlung eine Auftragsbestätigung per E-Mail erhalten.</p>
+          <h3>§ 3 Preise und Zahlung</h3>
+          <p>Alle Preise verstehen sich inklusive der gesetzlichen Mehrwertsteuer.</p>
+          <p>Die Zahlung erfolgt über Digistore24. Es stehen verschiedene Zahlungsmethoden zur Verfügung (PayPal, Kreditkarte, Überweisung, etc.).</p>
+          <h3>§ 4 Lieferung digitaler Produkte</h3>
+          <p>Bei digitalen Produkten (PDF, Video-Kurse) erhalten Sie unmittelbar nach Zahlungseingang einen Download-Link per E-Mail. Der Zugang ist zeitlich unbegrenzt.</p>
+          <h3>§ 5 Gewährleistung</h3>
+          <p>Es gelten die gesetzlichen Gewährleistungsrechte.</p>
+          <h3>§ 6 Haftung</h3>
+          <p>Für leicht fahrlässige Pflichtverletzungen haften wir nur bei Verletzung wesentlicher Vertragspflichten. Die Haftung ist auf den vertragstypischen, vorhersehbaren Schaden begrenzt. Diese Haftungsbeschränkung gilt nicht bei Verletzung von Leben, Körper und Gesundheit.</p>
+          <h3>§ 7 Streitbeilegung</h3>
+          <p>Die EU-Kommission stellt eine Plattform für die außergerichtliche Online-Streitbeilegung (OS-Plattform) bereit, aufrufbar unter <a href="https://ec.europa.eu/odr" target="_blank">https://ec.europa.eu/odr</a>.</p>
+          <h3>§ 8 Schlussbestimmungen</h3>
+          <p>Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts.</p>
+          <p>Sollten einzelne Bestimmungen dieser AGB unwirksam sein, berührt dies die Wirksamkeit der übrigen Bestimmungen nicht.</p>
+        </section>
+
+        <!-- WIDERRUF -->
+        <section class="legal-section" id="widerruf">
+          <h2>Widerrufsbelehrung</h2>
+          <h3>Widerrufsrecht</h3>
+          <p>Sie haben das Recht, binnen vierzehn Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen.</p>
+          <p>Die Widerrufsfrist beträgt vierzehn Tage ab dem Tag des Vertragsabschlusses.</p>
+          <p>Um Ihr Widerrufsrecht auszuüben, müssen Sie uns</p>
+          <div class="contact-box">
+            <p><strong>René Bohm</strong><br>Hagedorn 8<br>41334 Nettetal<br>E-Mail: <a href="/cdn-cgi/l/email-protection#f486919a91da969b9c99cdc6b49399959d98da979b99"><span class="__cf_email__" data-cfemail="5e2c3b303b703c313633676c1e39333f3732703d3133">[email&#160;protected]</span></a></p>
+          </div>
+          <p>mittels einer eindeutigen Erklärung (z.B. ein mit der Post versandter Brief oder E-Mail) über Ihren Entschluss, diesen Vertrag zu widerrufen, informieren.</p>
+          <h3>Folgen des Widerrufs</h3>
+          <p>Wenn Sie diesen Vertrag widerrufen, haben wir Ihnen alle Zahlungen, die wir von Ihnen erhalten haben, unverzüglich und spätestens binnen vierzehn Tagen ab dem Tag zurückzuzahlen, an dem die Mitteilung über Ihren Widerruf dieses Vertrags bei uns eingegangen ist.</p>
+          <h3>Erlöschen des Widerrufsrechts bei digitalen Inhalten</h3>
+          <p><strong>Wichtig:</strong> Das Widerrufsrecht erlischt bei digitalen Inhalten, wenn Sie ausdrücklich zugestimmt haben, dass wir mit der Ausführung des Vertrags vor Ablauf der Widerrufsfrist beginnen, und Sie Ihre Kenntnis davon bestätigt haben, dass Sie durch Ihre Zustimmung mit Beginn der Ausführung des Vertrags Ihr Widerrufsrecht verlieren.</p>
+          <p>Durch den sofortigen Download nach Kauf stimmen Sie dieser vorzeitigen Vertragserfüllung zu und verlieren Ihr Widerrufsrecht.</p>
+          <h3>Muster-Widerrufsformular</h3>
+          <div class="contact-box">
+            <p><em>Wenn Sie den Vertrag widerrufen wollen, dann füllen Sie bitte dieses Formular aus und senden Sie es zurück an:</em></p>
+            <p>René Bohm<br>Hagedorn 8<br>41334 Nettetal<br>E-Mail: <a href="/cdn-cgi/l/email-protection#2557404b400b474a4d481c17654248444c490b464a48"><span class="__cf_email__" data-cfemail="addfc8c3c883cfc2c5c0949fedcac0ccc4c183cec2c0">[email&#160;protected]</span></a></p>
+            <p style="margin-top:14px;"><em>Hiermit widerrufe(n) ich/wir (*) den von mir/uns (*) abgeschlossenen Vertrag über den Kauf der folgenden Waren (*)/die Erbringung der folgenden Dienstleistung (*)</em></p>
+            <p><em>Bestellt am (*)/erhalten am (*)</em></p>
+            <p><em>Name des/der Verbraucher(s)</em></p>
+            <p><em>Anschrift des/der Verbraucher(s)</em></p>
+            <p><em>Unterschrift des/der Verbraucher(s) (nur bei Mitteilung auf Papier)</em></p>
+            <p><em>Datum</em></p>
+            <p style="font-size:13px;"><em>(*) Unzutreffendes streichen</em></p>
+          </div>
+        </section>
       </div>
-
-      <h3>Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:</h3>
-      <p>René Bohm<br>
-      Hagedorn 8<br>
-      41334 Nettetal</p>
-
-      <h3>EU-Streitschlichtung</h3>
-      <p>Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit: <a href="https://ec.europa.eu/consumers/odr/" target="_blank">https://ec.europa.eu/consumers/odr/</a></p>
-      <p>Unsere E-Mail-Adresse finden Sie oben im Impressum.</p>
-
-      <h3>Verbraucherstreitbeilegung/Universalschlichtungsstelle</h3>
-      <p>Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.</p>
-    </section>
-
-    <!-- DATENSCHUTZ -->
-    <section class="legal-section" id="datenschutz">
-      <h2>Datenschutzerklärung</h2>
-
-      <h3>1. Datenschutz auf einen Blick</h3>
-      
-      <h4>Allgemeine Hinweise</h4>
-      <p>Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie diese Website besuchen. Personenbezogene Daten sind alle Daten, mit denen Sie persönlich identifiziert werden können.</p>
-
-      <h4>Datenerfassung auf dieser Website</h4>
-      <p><strong>Wer ist verantwortlich für die Datenerfassung auf dieser Website?</strong></p>
-      <p>Die Datenverarbeitung auf dieser Website erfolgt durch den Websitebetreiber. Dessen Kontaktdaten können Sie dem Impressum dieser Website entnehmen.</p>
-
-      <p><strong>Wie erfassen wir Ihre Daten?</strong></p>
-      <p>Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese mitteilen. Hierbei kann es sich z.B. um Daten handeln, die Sie in ein Kontaktformular eingeben.</p>
-      <p>Andere Daten werden automatisch beim Besuch der Website durch unsere IT-Systeme erfasst. Das sind vor allem technische Daten (z.B. Internetbrowser, Betriebssystem oder Uhrzeit des Seitenaufrufs).</p>
-
-      <p><strong>Wofür nutzen wir Ihre Daten?</strong></p>
-      <p>Ein Teil der Daten wird erhoben, um eine fehlerfreie Bereitstellung der Website zu gewährleisten. Andere Daten können zur Analyse Ihres Nutzerverhaltens verwendet werden.</p>
-
-      <h3>2. Hosting</h3>
-      <p>Diese Website wird bei GitHub Pages gehostet. GitHub kann beim Besuch dieser Website technische Informationen inklusive Ihrer IP-Adresse erfassen.</p>
-      <p>Weitere Informationen finden Sie in der Datenschutzerklärung von GitHub: <a href="https://docs.github.com/de/site-policy/privacy-policies/github-privacy-statement" target="_blank">GitHub Privacy Statement</a></p>
-
-      <h3>3. Digistore24 (Zahlungsabwicklung)</h3>
-      <p>Für die Abwicklung von Zahlungen nutzen wir Digistore24. Beim Kaufvorgang werden Ihre Daten an Digistore24 übermittelt und dort verarbeitet.</p>
-      <p>Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Vertragsabwicklung).</p>
-      <p>Weitere Informationen: <a href="https://www.digistore24.com/page/privacy" target="_blank">Digistore24 Datenschutz</a></p>
-
-      <h3>4. Kontaktformular / E-Mail</h3>
-      <p>Wenn Sie uns per E-Mail kontaktieren, werden Ihre Angaben inklusive der von Ihnen angegebenen Kontaktdaten zwecks Bearbeitung der Anfrage und für den Fall von Anschlussfragen bei uns gespeichert.</p>
-      <p>Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an der Bearbeitung Ihrer Anfrage).</p>
-
-      <h3>5. Newsletter (falls implementiert)</h3>
-      <p>Falls Sie sich für unseren Newsletter anmelden, verwenden wir Ihre E-Mail-Adresse ausschließlich für den Versand des Newsletters. Sie können den Newsletter jederzeit abbestellen.</p>
-
-      <h3>6. Ihre Rechte</h3>
-      <p>Sie haben jederzeit das Recht:</p>
-      <ul>
-        <li>Auskunft über Ihre bei uns gespeicherten Daten zu erhalten (Art. 15 DSGVO)</li>
-        <li>Die Berichtigung unrichtiger Daten zu verlangen (Art. 16 DSGVO)</li>
-        <li>Die Löschung Ihrer Daten zu verlangen (Art. 17 DSGVO)</li>
-        <li>Die Einschränkung der Verarbeitung zu verlangen (Art. 18 DSGVO)</li>
-        <li>Der Verarbeitung zu widersprechen (Art. 21 DSGVO)</li>
-        <li>Ihre Daten in einem strukturierten Format zu erhalten (Art. 20 DSGVO)</li>
-        <li>Sich bei einer Aufsichtsbehörde zu beschweren (Art. 77 DSGVO)</li>
-      </ul>
-
-      <p>Kontakt für Datenschutzanfragen: <a href="/cdn-cgi/l/email-protection#e795828982c985888f8aded5a7808a868e8bc984888a"><span class="__cf_email__" data-cfemail="a8dacdc6cd86cac7c0c5919ae8cfc5c9c1c486cbc7c5">[email&#160;protected]</span></a></p>
-    </section>
-
-    <!-- AGB -->
-    <section class="legal-section" id="agb">
-      <h2>Allgemeine Geschäftsbedingungen (AGB)</h2>
-
-      <h3>§ 1 Geltungsbereich</h3>
-      <p>Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Verträge über digitale Produkte und Dienstleistungen, die über diese Website abgeschlossen werden.</p>
-      <p>Vertragspartner ist René Bohm, Hagedorn 8, 41334 Nettetal.</p>
-
-      <h3>§ 2 Vertragsschluss</h3>
-      <p>Die Darstellung der Produkte im Online-Shop stellt kein rechtlich bindendes Angebot dar. Durch Anklicken des Buttons "Jetzt kaufen" geben Sie eine verbindliche Bestellung ab. Der Vertrag kommt zustande, wenn Sie nach erfolgter Zahlung eine Auftragsbestätigung per E-Mail erhalten.</p>
-
-      <h3>§ 3 Preise und Zahlung</h3>
-      <p>Alle Preise verstehen sich inklusive der gesetzlichen Mehrwertsteuer.</p>
-      <p>Die Zahlung erfolgt über Digistore24. Es stehen verschiedene Zahlungsmethoden zur Verfügung (PayPal, Kreditkarte, Überweisung, etc.).</p>
-
-      <h3>§ 4 Lieferung digitaler Produkte</h3>
-      <p>Bei digitalen Produkten (PDF, Video-Kurse) erhalten Sie unmittelbar nach Zahlungseingang einen Download-Link per E-Mail. Der Zugang ist zeitlich unbegrenzt.</p>
-
-      <h3>§ 5 Gewährleistung</h3>
-      <p>Es gelten die gesetzlichen Gewährleistungsrechte.</p>
-
-      <h3>§ 6 Haftung</h3>
-      <p>Für leicht fahrlässige Pflichtverletzungen haften wir nur bei Verletzung wesentlicher Vertragspflichten. Die Haftung ist auf den vertragstypischen, vorhersehbaren Schaden begrenzt. Diese Haftungsbeschränkung gilt nicht bei Verletzung von Leben, Körper und Gesundheit.</p>
-
-      <h3>§ 7 Streitbeilegung</h3>
-      <p>Die EU-Kommission stellt eine Plattform für die außergerichtliche Online-Streitbeilegung (OS-Plattform) bereit, aufrufbar unter <a href="https://ec.europa.eu/odr" target="_blank">https://ec.europa.eu/odr</a>.</p>
-
-      <h3>§ 8 Schlussbestimmungen</h3>
-      <p>Es gilt das Recht der Bundesrepublik Deutschland unter Ausschluss des UN-Kaufrechts.</p>
-      <p>Sollten einzelne Bestimmungen dieser AGB unwirksam sein, berührt dies die Wirksamkeit der übrigen Bestimmungen nicht.</p>
-    </section>
-
-    <!-- WIDERRUF -->
-    <section class="legal-section" id="widerruf">
-      <h2>Widerrufsbelehrung</h2>
-
-      <h3>Widerrufsrecht</h3>
-      <p>Sie haben das Recht, binnen vierzehn Tagen ohne Angabe von Gründen diesen Vertrag zu widerrufen.</p>
-      <p>Die Widerrufsfrist beträgt vierzehn Tage ab dem Tag des Vertragsabschlusses.</p>
-
-      <p>Um Ihr Widerrufsrecht auszuüben, müssen Sie uns</p>
-      <div class="contact-box">
-        <p><strong>René Bohm</strong><br>
-        Hagedorn 8<br>
-        41334 Nettetal<br>
-        E-Mail: <a href="/cdn-cgi/l/email-protection#67150209024905080f0a5e5527000a060e0b4904080a"><span class="__cf_email__" data-cfemail="1a687f747f347875727723285a7d777b737634797577">[email&#160;protected]</span></a></p>
-      </div>
-
-      <p>mittels einer eindeutigen Erklärung (z.B. ein mit der Post versandter Brief oder E-Mail) über Ihren Entschluss, diesen Vertrag zu widerrufen, informieren.</p>
-
-      <h3>Folgen des Widerrufs</h3>
-      <p>Wenn Sie diesen Vertrag widerrufen, haben wir Ihnen alle Zahlungen, die wir von Ihnen erhalten haben, unverzüglich und spätestens binnen vierzehn Tagen ab dem Tag zurückzuzahlen, an dem die Mitteilung über Ihren Widerruf dieses Vertrags bei uns eingegangen ist.</p>
-
-      <h3>Erlöschen des Widerrufsrechts bei digitalen Inhalten</h3>
-      <p><strong>Wichtig:</strong> Das Widerrufsrecht erlischt bei digitalen Inhalten, wenn Sie ausdrücklich zugestimmt haben, dass wir mit der Ausführung des Vertrags vor Ablauf der Widerrufsfrist beginnen, und Sie Ihre Kenntnis davon bestätigt haben, dass Sie durch Ihre Zustimmung mit Beginn der Ausführung des Vertrags Ihr Widerrufsrecht verlieren.</p>
-
-      <p>Durch den sofortigen Download nach Kauf stimmen Sie dieser vorzeitigen Vertragserfüllung zu und verlieren Ihr Widerrufsrecht.</p>
-
-      <h3>Muster-Widerrufsformular</h3>
-      <div class="contact-box">
-        <p><em>Wenn Sie den Vertrag widerrufen wollen, dann füllen Sie bitte dieses Formular aus und senden Sie es zurück an:</em></p>
-        <p>René Bohm<br>
-        Hagedorn 8<br>
-        41334 Nettetal<br>
-        E-Mail: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8cfee9e2e9a2eee3e4e1b5beccebe1ede5e0a2efe3e1">[email&#160;protected]</a></p>
-        <p style="margin-top: 16px;"><em>Hiermit widerrufe(n) ich/wir (*) den von mir/uns (*) abgeschlossenen Vertrag über den Kauf der folgenden Waren (*)/die Erbringung der folgenden Dienstleistung (*)</em></p>
-        <p><em>Bestellt am (*)/erhalten am (*)</em></p>
-        <p><em>Name des/der Verbraucher(s)</em></p>
-        <p><em>Anschrift des/der Verbraucher(s)</em></p>
-        <p><em>Unterschrift des/der Verbraucher(s) (nur bei Mitteilung auf Papier)</em></p>
-        <p><em>Datum</em></p>
-        <p style="margin-top: 12px; font-size: 13px;"><em>(*) Unzutreffendes streichen</em></p>
-      </div>
-    </section>
-
+    </div>
   </div>
-</div>
+</section>
 
-<!-- FOOTER -->
-<footer class="footer">
+<footer class="ef-footer">
   <div class="container">
-    <div class="footer-bottom">
-      <p>© 2026 René Bohm · Endlich Feierabend · Alle Rechte vorbehalten</p>
-      <p style="margin-top: 12px;">
-        <a href="index.html" style="color: rgba(255,255,255,0.7); text-decoration: none; margin: 0 8px;">Startseite</a> ·
-        <a href="impressum.html" style
+    <div class="ef-footer__grid">
+      <div>
+        <div class="ef-footer__brand"><img src="assets/logo-mark.svg" alt=""><span class="ef-logo__wm">endlich feierabend</span></div>
+        <p>KI-Fortbildungen für Lehrkräfte im DACH-Raum. Systematisch, praxisnah und DSGVO-konform.</p>
+        <p style="margin-top:18px;"><strong style="color:#fff;">René Bohm</strong><br>Mathe- &amp; Informatiklehrer in NRW · KI-Fortbildner</p>
+        <p style="margin-top:14px;"><a class="ig" href="https://instagram.com/endlich.feierabend.ki" target="_blank"><svg style="width:16px;height:16px;"><use href="#i-ig"/></svg> @endlich.feierabend.ki</a></p>
+      </div>
+      <div>
+        <h4>Angebote</h4>
+        <ul class="ef-footer__links">
+          <li><a href="ki-kickstart.html">KI-Kickstart PDF</a></li>
+          <li><a href="workshops.html">Workshops</a></li>
+          <li><a href="endlich-feierabend.html">Online-Kurs</a></li>
+          <li><a href="ueber-mich.html">Über mich</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Rechtliches</h4>
+        <ul class="ef-footer__links">
+          <li><a href="#impressum">Impressum</a></li>
+          <li><a href="#datenschutz">Datenschutz</a></li>
+          <li><a href="#agb">AGB</a></li>
+          <li><a href="#widerruf">Widerruf</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ef-footer__bottom">
+      <span>© 2026 René Bohm · Endlich Feierabend · Alle Rechte vorbehalten</span>
+      <span>Mit Sorgfalt gebaut in NRW.</span>
+    </div>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  const burger=document.getElementById('burger'),nav=document.getElementById('nav');
+  burger.addEventListener('click',()=>nav.classList.toggle('open'));
+  document.addEventListener('click',e=>{if(!e.target.closest('.ef-nav'))nav.classList.remove('open');});
+</script>
+</body>
+</html>
