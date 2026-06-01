@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 44" role="img" aria-label="Endlich Feierabend">
+  <defs>
+    <clipPath id="horizon">
+      <rect x="0" y="0" width="48" height="29"></rect>
+    </clipPath>
+  </defs>
+  <circle cx="24" cy="29" r="12.5" fill="#CE8A2C" clip-path="url(#horizon)"></circle>
+  <line x1="4" y1="29" x2="44" y2="29" stroke="#0B2240" stroke-width="3.2" stroke-linecap="round"></line>
+  <line x1="13" y1="36" x2="35" y2="36" stroke="#0B2240" stroke-width="3.2" stroke-linecap="round" opacity="0.4"></line>
+</svg>
