@@ -3,534 +3,235 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>René Bohm | KI für Lehrkräfte — Endlich Feierabend</title>
-<meta name="description" content="KI-Fortbildungen für Lehrkräfte: Spare 10-12 Stunden pro Woche mit systematischer KI-Integration. Workshops, Online-Kurse und praxisnahe Lösungen.">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
+<title>René Bohm · KI für Lehrkräfte — Endlich Feierabend</title>
+<meta name="description" content="KI-Fortbildungen für Lehrkräfte: Spare 10–12 Stunden pro Woche mit systematischer, DSGVO-konformer KI-Integration. Workshops, Online-Kurs und der KI-Kickstart für Lehrkräfte.">
+<link rel="icon" href="assets/logo-mark.svg">
+<link rel="stylesheet" href="assets/ef.css">
 <style>
-  :root {
-    --primary: #1B4D3E;
-    --primary-light: #2A7A5F;
-    --accent: #E8A838;
-    --accent-dark: #C4891E;
-    --bg: #FAFAF5;
-    --bg-warm: #F5F0E8;
-    --bg-dark: #1B4D3E;
-    --text: #2C2C2C;
-    --text-light: #666;
-    --text-on-dark: #F5F0E8;
-    --border: #E0DDD5;
-  }
+  /* ---- Home-specific ---- */
+  .hero{position:relative;overflow:hidden;
+    background:linear-gradient(160deg,#0B2240 0%,#0D3A6B 78%,#103a63 100%);
+    color:var(--on-dark);padding:118px 0 130px;}
+  .hero__glow{position:absolute;left:50%;bottom:-340px;transform:translateX(-50%);
+    width:760px;height:760px;border-radius:50%;
+    background:radial-gradient(circle,rgba(206,138,44,.42) 0%,rgba(206,138,44,.10) 42%,transparent 66%);
+    pointer-events:none;}
+  .hero__horizon{position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--on-dark-line);}
+  .hero .container{position:relative;z-index:2;max-width:880px;text-align:center;}
+  .hero h1{color:#fff;}
+  .hero h1 em{color:#fff;background-image:linear-gradient(var(--amber),var(--amber));
+    background-repeat:no-repeat;background-position:0 92%;background-size:100% .1em;}
+  .hero .lead{color:var(--on-dark-soft);max-width:680px;margin:22px auto 36px;}
+  .hero .btn-row{justify-content:center;}
+  .hero__trust{margin-top:30px;display:flex;gap:24px;justify-content:center;flex-wrap:wrap;
+    font-family:var(--mono);font-size:12.5px;letter-spacing:.05em;color:var(--on-dark-soft);}
+  .hero__trust span{display:inline-flex;align-items:center;gap:8px;}
+  .hero__trust svg{width:15px;height:15px;color:#7BE0A4;}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  .statwrap{margin-top:-66px;position:relative;z-index:3;}
+  .statwrap .inner{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+    box-shadow:var(--shadow);padding:40px 30px;}
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
+  .offer-card{position:relative;display:flex;flex-direction:column;}
+  .offer-card .price{font-family:var(--mono);font-size:13px;color:var(--amber);letter-spacing:.04em;margin-top:auto;}
+  .offer-card .card-link{margin-top:8px;}
 
-  /* === NAVIGATION === */
-  .nav {
-    background: white;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .nav-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 70px;
-  }
-  .nav-logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-    color: var(--primary);
-  }
-  .nav-logo img {
-    height: 40px;
-  }
-  .nav-brand {
-    font-family: 'DM Serif Display', serif;
-    font-size: 20px;
-    font-weight: 400;
-  }
-  .nav-menu {
-    display: flex;
-    gap: 32px;
-    list-style: none;
-  }
-  .nav-link {
-    text-decoration: none;
-    color: var(--text);
-    font-weight: 500;
-    font-size: 15px;
-    transition: color 0.2s;
-  }
-  .nav-link:hover {
-    color: var(--primary);
-  }
-  .nav-cta {
-    background: var(--accent);
-    color: var(--primary);
-    padding: 10px 20px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 14px;
-    transition: all 0.2s;
-  }
-  .nav-cta:hover {
-    background: var(--accent-dark);
-    transform: translateY(-1px);
-  }
+  .split{display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center;}
+  .solution-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+    padding:38px;box-shadow:var(--shadow-sm);}
+  .solution-card h3{margin-bottom:20px;}
 
-  /* Mobile Menu */
-  .menu-toggle {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: var(--primary);
-  }
+  .me{display:grid;grid-template-columns:300px 1fr;gap:54px;align-items:center;}
+  .me img{width:300px;height:360px;object-fit:cover;border-radius:var(--r-lg);
+    border:1px solid var(--line);box-shadow:var(--shadow);}
+  .me .sig{font-family:var(--display);font-weight:700;color:var(--ink);font-size:22px;margin-top:18px;}
+  .me .sig small{display:block;font-family:var(--mono);font-size:12px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--text-soft);font-weight:500;margin-top:6px;}
 
-  /* === CONTAINER === */
-  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .cta-final{text-align:center;}
+  .cta-final .container{max-width:720px;}
+  .cta-final .btn-row{justify-content:center;margin-top:30px;}
 
-  /* === HERO SECTION === */
-  .hero {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-    color: var(--text-on-dark);
-    padding: 100px 0 80px;
-    text-align: center;
+  @media (max-width:820px){
+    .split{grid-template-columns:1fr;gap:34px;}
+    .me{grid-template-columns:1fr;gap:28px;text-align:center;}
+    .me img{width:240px;height:290px;margin:0 auto;}
   }
-  .hero h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(36px, 5vw, 56px);
-    line-height: 1.15;
-    margin-bottom: 24px;
-  }
-  .hero h1 em {
-    color: var(--accent);
-    font-style: italic;
-  }
-  .hero .lead {
-    font-size: clamp(18px, 2.5vw, 22px);
-    line-height: 1.6;
-    max-width: 800px;
-    margin: 0 auto 40px;
-    opacity: 0.95;
-  }
-  .hero-cta {
-    display: inline-flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .btn {
-    display: inline-block;
-    padding: 16px 32px;
-    border-radius: 10px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 16px;
-    transition: all 0.2s;
-  }
-  .btn-primary {
-    background: var(--accent);
-    color: var(--primary);
-  }
-  .btn-primary:hover {
-    background: var(--accent-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(232,168,56,0.3);
-  }
-  .btn-secondary {
-    background: rgba(255,255,255,0.15);
-    color: white;
-    border: 2px solid rgba(255,255,255,0.3);
-  }
-  .btn-secondary:hover {
-    background: rgba(255,255,255,0.25);
-  }
-
-  /* === STATS BAR === */
-  .stats {
-    background: white;
-    border-bottom: 1px solid var(--border);
-    padding: 40px 0;
-  }
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 40px;
-    text-align: center;
-  }
-  .stat-number {
-    font-family: 'DM Serif Display', serif;
-    font-size: 42px;
-    color: var(--accent);
-    margin-bottom: 8px;
-  }
-  .stat-label {
-    font-size: 14px;
-    color: var(--text-light);
-    font-weight: 500;
-  }
-
-  /* === SECTIONS === */
-  .section {
-    padding: 80px 0;
-  }
-  .section-warm {
-    background: var(--bg-warm);
-  }
-  .section-header {
-    text-align: center;
-    max-width: 700px;
-    margin: 0 auto 50px;
-  }
-  .label {
-    display: inline-block;
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--primary-light);
-    margin-bottom: 12px;
-  }
-  .section-header h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(32px, 4vw, 42px);
-    line-height: 1.2;
-    color: var(--primary);
-    margin-bottom: 16px;
-  }
-  .section-header p {
-    font-size: 17px;
-    color: var(--text-light);
-    line-height: 1.7;
-  }
-
-  /* === CARDS === */
-  .card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-  }
-  .card {
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 40px 30px;
-    transition: all 0.3s;
-  }
-  .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(27,77,62,0.12);
-  }
-  .card-icon {
-    font-size: 48px;
-    margin-bottom: 20px;
-    display: block;
-  }
-  .card h3 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 24px;
-    color: var(--primary);
-    margin-bottom: 12px;
-  }
-  .card p {
-    color: var(--text-light);
-    font-size: 15px;
-    line-height: 1.7;
-    margin-bottom: 20px;
-  }
-  .card-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--primary);
-    font-weight: 600;
-    text-decoration: none;
-    font-size: 14px;
-    transition: gap 0.2s;
-  }
-  .card-link:hover {
-    gap: 10px;
-  }
-
-  /* === CTA SECTION === */
-  .cta-section {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-    color: var(--text-on-dark);
-    padding: 80px 0;
-    text-align: center;
-  }
-  .cta-section h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(32px, 4vw, 42px);
-    margin-bottom: 20px;
-  }
-  .cta-section p {
-    font-size: 18px;
-    max-width: 600px;
-    margin: 0 auto 32px;
-    opacity: 0.95;
-  }
-
-  /* === FOOTER === */
-  .footer {
-    background: var(--primary);
-    color: rgba(255,255,255,0.7);
-    padding: 50px 0 30px;
-  }
-  .footer-content {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 50px;
-    margin-bottom: 40px;
-  }
-  .footer h4 {
-    color: white;
-    font-weight: 600;
-    margin-bottom: 16px;
-    font-size: 16px;
-  }
-  .footer p {
-    font-size: 14px;
-    line-height: 1.7;
-    margin-bottom: 12px;
-  }
-  .footer-links {
-    list-style: none;
-  }
-  .footer-links a {
-    color: rgba(255,255,255,0.7);
-    text-decoration: none;
-    font-size: 14px;
-    display: block;
-    margin-bottom: 10px;
-    transition: color 0.2s;
-  }
-  .footer-links a:hover {
-    color: var(--accent);
-  }
-  .footer-bottom {
-    border-top: 1px solid rgba(255,255,255,0.1);
-    padding-top: 30px;
-    text-align: center;
-    font-size: 13px;
-  }
-  .social-links {
-    display: flex;
-    gap: 16px;
-    margin-top: 16px;
-  }
-  .social-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: rgba(255,255,255,0.7);
-    text-decoration: none;
-    font-size: 14px;
-    transition: color 0.2s;
-  }
-  .social-link:hover {
-    color: var(--accent);
-  }
-
-  /* === RESPONSIVE === */
-  @media (max-width: 768px) {
-    .nav-menu {
-      display: none;
-      position: absolute;
-      top: 70px;
-      left: 0;
-      right: 0;
-      background: white;
-      flex-direction: column;
-      padding: 20px;
-      border-bottom: 1px solid var(--border);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      gap: 16px;
-    }
-    .nav-menu.active {
-      display: flex;
-    }
-    .menu-toggle {
-      display: block;
-    }
-    .footer-content {
-      grid-template-columns: 1fr;
-      gap: 30px;
-    }
-    .hero {
-      padding: 60px 0 50px;
-    }
-    .section {
-      padding: 60px 0;
-    }
-  }
+  @media (max-width:680px){ .hero{padding:88px 0 104px;} .statwrap{margin-top:-44px;} }
 </style>
 </head>
 <body>
 
-<!-- NAVIGATION -->
-<nav class="nav">
-  <div class="nav-container">
-    <a href="index.html" class="nav-logo">
-      <img src="logo.png" alt="">
-      <span class="nav-brand">Endlich Feierabend</span>
+<!-- ICON SPRITE -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4 3 7 7 9 4-2 7-5 7-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+</svg>
+
+<!-- NAV -->
+<nav class="ef-nav">
+  <div class="ef-nav__in">
+    <a href="index.html" class="ef-logo">
+      <img src="assets/logo-mark.svg" alt="">
+      <span class="ef-logo__wm">endlich feierabend<small>KI für Lehrkräfte</small></span>
     </a>
-    <ul class="nav-menu">
-      <li><a href="index.html" class="nav-link">Start</a></li>
-      <li><a href="workshops.html" class="nav-link">Workshops</a></li>
-      <li><a href="endlich-feierabend.html" class="nav-link">Online-Kurs</a></li>
-      <li><a href="ueber-mich.html" class="nav-link">Über mich</a></li>
+    <ul class="ef-nav__menu" id="nav">
+      <li><a href="index.html" class="active">Start</a></li>
+      <li><a href="workshops.html">Workshops</a></li>
+      <li><a href="endlich-feierabend.html">Online-Kurs</a></li>
+      <li><a href="ueber-mich.html">Über mich</a></li>
     </ul>
-    <a href="ki-kickstart.html" class="nav-cta">PDF für 14,99€</a>
-    <button class="menu-toggle">☰</button>
+    <div class="ef-nav__right">
+      <a href="ki-kickstart.html" class="btn btn--primary">KI-Kickstart · 14,99 €</a>
+      <button class="ef-burger" id="burger" aria-label="Menü"><svg><use href="#i-menu"/></svg></button>
+    </div>
   </div>
 </nav>
 
 <!-- HERO -->
-<section class="hero">
+<header class="hero">
+  <div class="hero__glow"></div>
+  <div class="hero__horizon"></div>
   <div class="container">
-    <h1>Spare 10–12 Stunden pro Woche mit <em>systematischer KI-Integration</em></h1>
-    <p class="lead">
-      Als Mathe- und Informatiklehrer in NRW zeige ich dir, wie du KI DSGVO-konform in deinen Arbeitsalltag integrierst — ohne Qualitätsverlust, mit messbaren Zeitersparnissen.
-    </p>
-    <div class="hero-cta">
-      <a href="ki-kickstart.html" class="btn btn-primary">📥 PDF-Guide für 14,99€</a>
-      <a href="workshops.html" class="btn btn-secondary">🎓 Workshop buchen</a>
-      <a href="endlich-feierabend.html" class="btn btn-secondary">🎯 Online-Kurs</a>
+    <div class="eyebrow on-dark" style="justify-content:center;">Für Lehrkräfte im DACH-Raum</div>
+    <h1>Spare <em>10–12 Stunden</em> pro Woche mit systematischer KI-Integration</h1>
+    <p class="lead">Ich bin René — Mathe- und Informatiklehrer in NRW. Ich zeige dir, wie du KI DSGVO-konform in deinen Schulalltag holst: ohne Tech-Hype, ohne Qualitätsverlust, mit messbarer Zeitersparnis.</p>
+    <div class="btn-row">
+      <a href="ki-kickstart.html" class="btn btn--primary btn--lg">KI-Kickstart sichern <svg><use href="#i-arrow"/></svg></a>
+      <a href="workshops.html" class="btn btn--on-dark btn--lg">Workshop anfragen</a>
+    </div>
+    <div class="hero__trust">
+      <span><svg><use href="#i-check"/></svg> 100 % DSGVO-konform</span>
+      <span><svg><use href="#i-check"/></svg> Von einem aktiven Lehrer</span>
+      <span><svg><use href="#i-check"/></svg> Sofort umsetzbar</span>
     </div>
   </div>
-</section>
+</header>
 
 <!-- STATS -->
-<section class="stats">
+<div class="statwrap">
   <div class="container">
-    <div class="stats-grid">
-      <div>
-        <div class="stat-number">10–12h</div>
-        <div class="stat-label">Zeitersparnis pro Woche</div>
-      </div>
-      <div>
-        <div class="stat-number">1 Mio.</div>
-        <div class="stat-label">Lehrkräfte im DACH-Raum</div>
-      </div>
-      <div>
-        <div class="stat-number">72%</div>
-        <div class="stat-label">benötigen KI-Training</div>
-      </div>
-      <div>
-        <div class="stat-number">100%</div>
-        <div class="stat-label">DSGVO-konform</div>
+    <div class="inner">
+      <div class="stat-band">
+        <div class="stat"><div class="n">10–12<span class="u">h</span></div><div class="l">Zeitersparnis / Woche</div></div>
+        <div class="stat"><div class="n">100<span class="u">+</span></div><div class="l">Lehrkräfte fortgebildet</div></div>
+        <div class="stat"><div class="n">10<span class="u">+</span></div><div class="l">Jahre im Schuldienst</div></div>
+        <div class="stat"><div class="n">100<span class="u">%</span></div><div class="l">DSGVO-konform</div></div>
       </div>
     </div>
   </div>
-</section>
+</div>
 
 <!-- ANGEBOTE -->
 <section class="section">
   <div class="container">
-    <div class="section-header">
-      <div class="label">Meine Angebote</div>
+    <div class="section-head center">
+      <div class="eyebrow" style="justify-content:center;">Meine Angebote</div>
       <h2>Drei Wege zu mehr Feierabend</h2>
-      <p>Egal ob du schnell starten willst oder tiefgehende Begleitung suchst — hier findest du den passenden Einstieg.</p>
+      <p class="lead">Ob schneller Einstieg oder tiefe Begleitung — wähle den Weg, der zu dir und deiner Schule passt.</p>
     </div>
-
-    <div class="card-grid">
-      <div class="card">
-        <span class="card-icon">📄</span>
-        <h3>KI-Kickstart PDF</h3>
-        <p>Die 6-Elemente-Prompting-Formel, 10+ fertige Prompt-Vorlagen, DSGVO-Ampelsystem und sofort umsetzbare Beispiele. Perfekt für den schnellen Einstieg.</p>
-        <a href="ki-kickstart.html" class="card-link">Jetzt für 14,99€ →</a>
+    <div class="grid grid-3">
+      <div class="card card--hover offer-card">
+        <span class="idx">01 — Einstieg</span>
+        <h3>KI-Kickstart für Lehrkräfte</h3>
+        <p>Die 6-Elemente-Prompting-Formel, 10+ fertige Vorlagen und das DSGVO-Ampelsystem als kompakte PDF. Spart dir ab nächster Woche 2–3 Stunden.</p>
+        <span class="price">PDF · 14,99 €</span>
+        <a href="ki-kickstart.html" class="card-link">Zum KI-Kickstart <svg><use href="#i-arrow"/></svg></a>
       </div>
-
-      <div class="card">
-        <span class="card-icon">🎓</span>
+      <div class="card card--hover offer-card">
+        <span class="idx">02 — Kollegium</span>
         <h3>Workshops an Schulen</h3>
-        <p>Ich komme direkt zu euch an die Schule und führe praxisnahe Fortbildungen durch. Von Prompting-Grundlagen bis zur vollständigen Workflow-Integration.</p>
-        <a href="workshops.html" class="card-link">Workshop anfragen →</a>
+        <p>Praxisnahe Fortbildung direkt bei euch — modular kombinierbar von Prompting-Grundlagen bis zur kompletten Workflow-Integration. DSGVO in jedem Modul.</p>
+        <span class="price">Vor Ort · individuell</span>
+        <a href="workshops.html" class="card-link">Workshop anfragen <svg><use href="#i-arrow"/></svg></a>
       </div>
-
-      <div class="card">
-        <span class="card-icon">🎯</span>
-        <h3>Online-Kurs "Endlich Feierabend"</h3>
-        <p>Der komplette Weg zur systematischen KI-Integration: 4 Module, Schritt-für-Schritt-Anleitungen, Vorlagen und persönlicher Support.</p>
-        <a href="endlich-feierabend.html" class="card-link">Mehr erfahren →</a>
+      <div class="card card--hover offer-card">
+        <span class="idx">03 — Vertiefung</span>
+        <h3>Online-Kurs „Endlich Feierabend"</h3>
+        <p>Der komplette Weg zur systematischen KI-Integration: 5 Module, Schritt-für-Schritt-Anleitungen, Vorlagen und Support. Aktuell Warteliste.</p>
+        <span class="price">In Entwicklung</span>
+        <a href="endlich-feierabend.html" class="card-link">Auf die Warteliste <svg><use href="#i-arrow"/></svg></a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PROBLEM/LÖSUNG -->
-<section class="section section-warm">
+<!-- PROBLEM / LÖSUNG -->
+<section class="section section--paper2">
   <div class="container">
-    <div class="section-header">
-      <div class="label">Das Problem</div>
-      <h2>78% der Lehrkräfte fühlen sich stark belastet</h2>
-      <p>70-Stunden-Wochen, Wochenendkorrekturen, permanente Überlastung — und gleichzeitig soll KI jetzt auch noch gelernt werden?</p>
-    </div>
-
-    <div style="max-width: 800px; margin: 0 auto;">
-      <div class="card" style="border-left: 4px solid var(--accent);">
-        <h3>Die Lösung: Systematische KI-Integration</h3>
-        <p style="margin-bottom: 16px;">Statt noch mehr Belastung bringt KI <strong>messbare Entlastung</strong> — wenn sie richtig eingesetzt wird. Meine Workshops und Kurse zeigen dir:</p>
-        <ul style="color: var(--text-light); line-height: 2; padding-left: 20px;">
-          <li>Wie du mit der 6-Elemente-Formel sofort bessere Ergebnisse erzielst</li>
-          <li>Welche Tools DSGVO-konform sind (und welche nicht)</li>
-          <li>Wie du KI für Materialerstellung, Differenzierung und Korrektur nutzt</li>
-          <li>Wie du 10–12 Stunden pro Woche sparst — ohne Qualitätsverlust</li>
+    <div class="split">
+      <div>
+        <div class="eyebrow">Das Problem</div>
+        <h2>78 % der Lehrkräfte fühlen sich stark belastet.</h2>
+        <p class="lead" style="margin-top:18px;">70-Stunden-Wochen. Korrekturen bis Mitternacht. Die Sonntagabend-Panik. Und jetzt soll auch noch KI gelernt werden?</p>
+        <p class="muted" style="margin-top:18px;">Genau hier setze ich an: KI nicht als zusätzliche Last, sondern als systematisches Werkzeug zur echten Entlastung — richtig eingesetzt.</p>
+      </div>
+      <div class="solution-card">
+        <h3>Die Lösung: systematische KI-Integration</h3>
+        <ul class="ticks">
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> Mit der 6-Elemente-Formel sofort bessere Ergebnisse</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> Klarheit, welche Tools DSGVO-konform sind — und welche nicht</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> KI für Material, Differenzierung und Korrektur nutzen</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> 10–12 Stunden pro Woche sparen — ohne Qualitätsverlust</li>
         </ul>
       </div>
     </div>
   </div>
 </section>
 
-<!-- CTA SECTION -->
-<section class="cta-section">
+<!-- ÜBER MICH TEASER -->
+<section class="section">
   <div class="container">
-    <h2>Bereit für mehr Feierabend?</h2>
-    <p>Starte heute mit dem KI-Kickstart PDF oder buche einen Workshop für deine Schule.</p>
-    <div class="hero-cta">
-      <a href="ki-kickstart.html" class="btn btn-primary">📥 PDF für 14,99€ kaufen</a>
-      <a href="workshops.html" class="btn btn-secondary">🎓 Workshop anfragen</a>
+    <div class="me">
+      <img src="rene-bohm.jpg" alt="René Bohm">
+      <div>
+        <div class="eyebrow">Wer dahintersteht</div>
+        <h2>Kein Tech-Verkäufer. Ein Kollege.</h2>
+        <p class="lead" style="margin-top:18px;">Seit über 10 Jahren unterrichte ich Mathe und Informatik an einem Gymnasium in NRW. Ich kenne die 70-Stunden-Wochen aus eigener Erfahrung — und habe mir mit KI 10–12 Stunden pro Woche zurückgeholt.</p>
+        <p class="muted" style="margin-top:16px;">Alles, was ich weitergebe, nutze ich selbst täglich. Kein Hype, sondern Werkzeuge, die im Schulalltag wirklich funktionieren.</p>
+        <div class="sig">René Bohm<small>Mathe- & Informatiklehrer · KI-Fortbildner</small></div>
+        <div class="btn-row" style="margin-top:22px;">
+          <a href="ueber-mich.html" class="btn btn--ghost">Meine Geschichte <svg><use href="#i-arrow"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="section section--dark cta-final">
+  <div class="container">
+    <div class="eyebrow on-dark" style="justify-content:center;">Bereit für mehr Feierabend?</div>
+    <h2>Hol dir deine Abende zurück.</h2>
+    <p class="lead" style="margin-top:16px;">Starte heute mit dem KI-Kickstart oder bring eine Fortbildung an deine Schule.</p>
+    <div class="btn-row">
+      <a href="ki-kickstart.html" class="btn btn--primary btn--lg">KI-Kickstart · 14,99 € <svg><use href="#i-arrow"/></svg></a>
+      <a href="workshops.html" class="btn btn--on-dark btn--lg">Workshop anfragen</a>
     </div>
   </div>
 </section>
 
 <!-- FOOTER -->
-<footer class="footer">
+<footer class="ef-footer">
   <div class="container">
-    <div class="footer-content">
+    <div class="ef-footer__grid">
       <div>
-        <h4>Endlich Feierabend</h4>
-        <p>KI-Fortbildungen für Lehrkräfte im DACH-Raum. Systematisch, praxisnah und DSGVO-konform.</p>
-        <p><strong>René Bohm</strong><br>
-        Mathe- & Informatiklehrer in NRW<br>
-        KI-Fortbildner</p>
-        <div class="social-links">
-          <a href="https://instagram.com/endlich.feierabend.ki" target="_blank" class="social-link">
-            📸 Instagram
-          </a>
+        <div class="ef-footer__brand">
+          <img src="assets/logo-mark.svg" alt="">
+          <span class="ef-logo__wm">endlich feierabend</span>
         </div>
+        <p>KI-Fortbildungen für Lehrkräfte im DACH-Raum. Systematisch, praxisnah und DSGVO-konform.</p>
+        <p style="margin-top:18px;"><strong style="color:#fff;">René Bohm</strong><br>Mathe- &amp; Informatiklehrer in NRW · KI-Fortbildner</p>
+        <p style="margin-top:14px;"><a class="ig" href="https://instagram.com/endlich.feierabend.ki" target="_blank"><svg style="width:16px;height:16px;"><use href="#i-ig"/></svg> @endlich.feierabend.ki</a></p>
       </div>
       <div>
         <h4>Angebote</h4>
-        <ul class="footer-links">
+        <ul class="ef-footer__links">
           <li><a href="ki-kickstart.html">KI-Kickstart PDF</a></li>
           <li><a href="workshops.html">Workshops</a></li>
           <li><a href="endlich-feierabend.html">Online-Kurs</a></li>
@@ -539,7 +240,7 @@
       </div>
       <div>
         <h4>Rechtliches</h4>
-        <ul class="footer-links">
+        <ul class="ef-footer__links">
           <li><a href="impressum.html">Impressum</a></li>
           <li><a href="impressum.html#datenschutz">Datenschutz</a></li>
           <li><a href="impressum.html#agb">AGB</a></li>
@@ -547,28 +248,17 @@
         </ul>
       </div>
     </div>
-    <div class="footer-bottom">
-      <p>© 2026 René Bohm · Endlich Feierabend · Alle Rechte vorbehalten</p>
+    <div class="ef-footer__bottom">
+      <span>© 2026 René Bohm · Endlich Feierabend</span>
+      <span>Mit Sorgfalt gebaut in NRW.</span>
     </div>
   </div>
 </footer>
 
 <script>
-// Mobile Navigation Toggle
-const menuToggle = document.querySelector('.menu-toggle');
-const navMenu = document.querySelector('.nav-menu');
-
-menuToggle.addEventListener('click', () => {
-  navMenu.classList.toggle('active');
-});
-
-// Close menu when clicking outside
-document.addEventListener('click', (e) => {
-  if (!e.target.closest('.nav-container')) {
-    navMenu.classList.remove('active');
-  }
-});
+  const burger=document.getElementById('burger'),nav=document.getElementById('nav');
+  burger.addEventListener('click',()=>nav.classList.toggle('open'));
+  document.addEventListener('click',e=>{if(!e.target.closest('.ef-nav'))nav.classList.remove('open');});
 </script>
-
 </body>
 </html>
