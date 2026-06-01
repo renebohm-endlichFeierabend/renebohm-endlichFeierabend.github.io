@@ -3,544 +3,204 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Online-Kurs: Endlich Feierabend | René Bohm</title>
-<meta name="description" content="Der komplette Online-Kurs für systematische KI-Integration im Lehreralltag. 4 Module, Schritt-für-Schritt-Anleitungen und persönlicher Support.">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
+<title>Online-Kurs „Endlich Feierabend" · KI für Lehrkräfte</title>
+<meta name="description" content="Der komplette Online-Kurs zur systematischen KI-Integration im Lehreralltag: 5 Module, Vorlagen, Support. Spare 10–12 Stunden pro Woche. Jetzt auf die Warteliste.">
+<link rel="icon" href="assets/logo-mark.svg">
+<link rel="stylesheet" href="assets/ef.css">
 <style>
-  :root {
-    --primary: #1B4D3E;
-    --primary-light: #2A7A5F;
-    --accent: #E8A838;
-    --accent-dark: #C4891E;
-    --bg: #FAFAF5;
-    --bg-warm: #F5F0E8;
-    --bg-dark: #1B4D3E;
-    --text: #2C2C2C;
-    --text-light: #666;
-    --text-on-dark: #F5F0E8;
-    --border: #E0DDD5;
-  }
+  .page-hero{background:linear-gradient(160deg,#0B2240,#0D3A6B);color:var(--on-dark);
+    padding:90px 0 86px;position:relative;overflow:hidden;text-align:center;}
+  .page-hero::after{content:"";position:absolute;left:50%;bottom:-300px;transform:translateX(-50%);
+    width:680px;height:680px;border-radius:50%;background:radial-gradient(circle,rgba(206,138,44,.34),transparent 64%);}
+  .page-hero .container{position:relative;z-index:1;max-width:780px;}
+  .page-hero h1{color:#fff;}
+  .page-hero h1 em{color:var(--amber);background:none;}
+  .page-hero .lead{color:var(--on-dark-soft);margin:22px auto 0;max-width:640px;}
+  .pill-badge{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-weight:600;
+    font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;background:rgba(206,138,44,.16);
+    color:var(--amber);border:1px solid rgba(206,138,44,.4);padding:8px 16px;border-radius:var(--r-pill);margin-bottom:24px;}
+  .pill-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--amber);}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  .module-card{display:flex;flex-direction:column;}
+  .module-card .mod-n{font-family:var(--mono);font-weight:600;font-size:12px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--amber);margin-bottom:10px;}
+  .module-card h3{font-size:21px;margin-bottom:16px;}
+  .module-card ul{list-style:none;display:flex;flex-direction:column;gap:11px;}
+  .module-card li{display:flex;gap:11px;align-items:flex-start;font-size:15.5px;color:var(--text-soft);}
+  .module-card .tick{width:21px;height:21px;margin-top:1px;}
+  .module-card .tick svg{width:11px;height:11px;}
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
+  .ampel{max-width:640px;margin:0 auto;background:var(--surface);border:1px solid var(--line);
+    border-radius:var(--r-lg);padding:40px;box-shadow:var(--shadow);}
+  .ampel h3{text-align:center;margin-bottom:6px;}
+  .ampel .sub{text-align:center;color:var(--text-soft);font-size:15px;margin-bottom:26px;}
+  .ampel-row{display:flex;gap:16px;align-items:flex-start;padding:16px 0;border-top:1px solid var(--line);}
+  .ampel-row .lamp{flex-shrink:0;width:18px;height:18px;border-radius:50%;margin-top:4px;}
+  .ampel-row .lamp.g{background:var(--gruen);} .ampel-row .lamp.a{background:var(--amber);} .ampel-row .lamp.r{background:var(--rot);}
+  .ampel-row b{color:var(--ink);} .ampel-row p{margin:0;font-size:15.5px;color:var(--text-soft);}
+  .ampel .note{text-align:center;font-family:var(--mono);font-size:12.5px;color:var(--text-soft);margin-top:22px;}
 
-  /* === NAVIGATION === */
-  .nav {
-    background: white;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .nav-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 70px;
-  }
-  .nav-logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-    color: var(--primary);
-  }
-  .nav-logo img {
-    height: 40px;
-  }
-  .nav-brand {
-    font-family: 'DM Serif Display', serif;
-    font-size: 20px;
-    font-weight: 400;
-  }
-  .nav-menu {
-    display: flex;
-    gap: 32px;
-    list-style: none;
-  }
-  .nav-link {
-    text-decoration: none;
-    color: var(--text);
-    font-weight: 500;
-    font-size: 15px;
-    transition: color 0.2s;
-  }
-  .nav-link:hover, .nav-link.active {
-    color: var(--primary);
-  }
-  .nav-cta {
-    background: var(--accent);
-    color: var(--primary);
-    padding: 10px 20px;
-    border-radius: 8px;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 14px;
-    transition: all 0.2s;
-  }
-  .nav-cta:hover {
-    background: var(--accent-dark);
-    transform: translateY(-1px);
-  }
-
-  .menu-toggle {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: var(--primary);
-  }
-
-  /* === CONTAINER === */
-  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-
-  /* === HERO === */
-  .hero {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-    color: var(--text-on-dark);
-    padding: 80px 0 70px;
-    text-align: center;
-  }
-  .hero h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(36px, 5vw, 52px);
-    line-height: 1.15;
-    margin-bottom: 20px;
-  }
-  .hero h1 em {
-    color: var(--accent);
-    font-style: italic;
-  }
-  .hero .lead {
-    font-size: 19px;
-    line-height: 1.6;
-    max-width: 700px;
-    margin: 0 auto 32px;
-    opacity: 0.95;
-  }
-  .hero-badge {
-    display: inline-block;
-    background: rgba(232,168,56,0.2);
-    border: 1px solid rgba(232,168,56,0.4);
-    color: var(--accent);
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 24px;
-  }
-
-  /* === SECTIONS === */
-  .section {
-    padding: 80px 0;
-  }
-  .section-warm {
-    background: var(--bg-warm);
-  }
-  .section-header {
-    text-align: center;
-    max-width: 700px;
-    margin: 0 auto 50px;
-  }
-  .label {
-    display: inline-block;
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--primary-light);
-    margin-bottom: 12px;
-  }
-  .section-header h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(32px, 4vw, 42px);
-    line-height: 1.2;
-    color: var(--primary);
-    margin-bottom: 16px;
-  }
-  .section-header p {
-    font-size: 17px;
-    color: var(--text-light);
-    line-height: 1.7;
-  }
-
-  /* === MODULE CARDS === */
-  .module-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
-    margin-top: 50px;
-  }
-  .module-card {
-    background: white;
-    border: 2px solid var(--border);
-    border-radius: 16px;
-    padding: 40px 30px;
-    position: relative;
-  }
-  .module-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, var(--accent), var(--accent-dark));
-    border-radius: 16px 16px 0 0;
-  }
-  .module-number {
-    font-family: 'DM Serif Display', serif;
-    font-size: 14px;
-    color: var(--accent);
-    font-weight: 600;
-    margin-bottom: 12px;
-  }
-  .module-card h3 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 22px;
-    color: var(--primary);
-    margin-bottom: 16px;
-  }
-  .module-card ul {
-    list-style: none;
-    padding: 0;
-  }
-  .module-card li {
-    font-size: 14px;
-    color: var(--text-light);
-    line-height: 1.8;
-    padding-left: 20px;
-    position: relative;
-    margin-bottom: 8px;
-  }
-  .module-card li::before {
-    content: '✓';
-    position: absolute;
-    left: 0;
-    color: var(--accent);
-    font-weight: 700;
-  }
-
-  /* === WAITING LIST BOX === */
-  .waitlist-box {
-    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-    color: var(--text-on-dark);
-    border-radius: 20px;
-    padding: 60px 40px;
-    text-align: center;
-    max-width: 800px;
-    margin: 0 auto;
-  }
-  .waitlist-box h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 36px;
-    margin-bottom: 16px;
-  }
-  .waitlist-box p {
-    font-size: 17px;
-    opacity: 0.95;
-    margin-bottom: 32px;
-  }
-  .waitlist-form {
-    display: flex;
-    gap: 12px;
-    max-width: 500px;
-    margin: 0 auto;
-  }
-  .waitlist-input {
-    flex: 1;
-    padding: 14px 20px;
-    border-radius: 10px;
-    border: none;
-    font-size: 15px;
-  }
-  .waitlist-btn {
-    background: var(--accent);
-    color: var(--primary);
-    padding: 14px 28px;
-    border-radius: 10px;
-    border: none;
-    font-weight: 600;
-    font-size: 15px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .waitlist-btn:hover {
-    background: var(--accent-dark);
-    transform: translateY(-1px);
-  }
-
-  /* === FOOTER === */
-  .footer {
-    background: var(--primary);
-    color: rgba(255,255,255,0.7);
-    padding: 50px 0 30px;
-  }
-  .footer-content {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 50px;
-    margin-bottom: 40px;
-  }
-  .footer h4 {
-    color: white;
-    font-weight: 600;
-    margin-bottom: 16px;
-    font-size: 16px;
-  }
-  .footer p {
-    font-size: 14px;
-    line-height: 1.7;
-    margin-bottom: 12px;
-  }
-  .footer-links {
-    list-style: none;
-  }
-  .footer-links a {
-    color: rgba(255,255,255,0.7);
-    text-decoration: none;
-    font-size: 14px;
-    display: block;
-    margin-bottom: 10px;
-    transition: color 0.2s;
-  }
-  .footer-links a:hover {
-    color: var(--accent);
-  }
-  .footer-bottom {
-    border-top: 1px solid rgba(255,255,255,0.1);
-    padding-top: 30px;
-    text-align: center;
-    font-size: 13px;
-  }
-  .social-links {
-    display: flex;
-    gap: 16px;
-    margin-top: 16px;
-  }
-  .social-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: rgba(255,255,255,0.7);
-    text-decoration: none;
-    font-size: 14px;
-    transition: color 0.2s;
-  }
-  .social-link:hover {
-    color: var(--accent);
-  }
-
-  /* === RESPONSIVE === */
-  @media (max-width: 768px) {
-    .nav-menu {
-      display: none;
-      position: absolute;
-      top: 70px;
-      left: 0;
-      right: 0;
-      background: white;
-      flex-direction: column;
-      padding: 20px;
-      border-bottom: 1px solid var(--border);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      gap: 16px;
-    }
-    .nav-menu.active {
-      display: flex;
-    }
-    .nav-menu {
-      display: none;
-    }
-    .menu-toggle {
-      display: block;
-    }
-    .footer-content {
-      grid-template-columns: 1fr;
-      gap: 30px;
-    }
-    .hero {
-      padding: 60px 0 50px;
-    }
-    .section {
-      padding: 60px 0;
-    }
-    .waitlist-form {
-      flex-direction: column;
-    }
-  }
+  .waitlist{background:linear-gradient(155deg,var(--ink),var(--ink-2));color:#fff;border-radius:var(--r-lg);
+    padding:60px 44px;text-align:center;position:relative;overflow:hidden;}
+  .waitlist::after{content:"";position:absolute;right:-90px;top:-90px;width:300px;height:300px;border-radius:50%;
+    background:radial-gradient(circle,rgba(206,138,44,.26),transparent 64%);}
+  .waitlist>*{position:relative;z-index:1;}
+  .wl-form{display:flex;gap:10px;max-width:480px;margin:28px auto 0;flex-wrap:wrap;}
+  .wl-form input{flex:1;min-width:220px;padding:15px 18px;border-radius:var(--r-pill);border:1.5px solid var(--on-dark-line);
+    background:rgba(255,255,255,.08);color:#fff;font-family:var(--body);font-size:16px;outline:none;}
+  .wl-form input::placeholder{color:rgba(234,241,248,.55);}
+  .wl-form input:focus{border-color:var(--amber);}
+  @media (max-width:680px){ .wl-form{flex-direction:column;} .wl-form .btn{justify-content:center;} }
 </style>
 </head>
 <body>
 
-<!-- NAVIGATION -->
-<nav class="nav">
-  <div class="nav-container">
-    <a href="index.html" class="nav-logo">
-      <img src="images/logo.png" alt="Endlich Feierabend Logo">
-      <span class="nav-brand">Endlich Feierabend</span>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+</svg>
+
+<nav class="ef-nav">
+  <div class="ef-nav__in">
+    <a href="index.html" class="ef-logo">
+      <img src="assets/logo-mark.svg" alt="">
+      <span class="ef-logo__wm">endlich feierabend<small>KI für Lehrkräfte</small></span>
     </a>
-    <ul class="nav-menu">
-      <li><a href="index.html" class="nav-link">Start</a></li>
-      <li><a href="workshops.html" class="nav-link">Workshops</a></li>
-      <li><a href="endlich-feierabend.html" class="nav-link active">Online-Kurs</a></li>
-      <li><a href="ueber-mich.html" class="nav-link">Über mich</a></li>
+    <ul class="ef-nav__menu" id="nav">
+      <li><a href="index.html">Start</a></li>
+      <li><a href="workshops.html">Workshops</a></li>
+      <li><a href="endlich-feierabend.html" class="active">Online-Kurs</a></li>
+      <li><a href="ueber-mich.html">Über mich</a></li>
     </ul>
-    <a href="ki-kickstart.html" class="nav-cta">PDF für 14,99€</a>
-    <button class="menu-toggle">☰</button>
+    <div class="ef-nav__right">
+      <a href="ki-kickstart.html" class="btn btn--primary">KI-Kickstart · 14,99 €</a>
+      <button class="ef-burger" id="burger" aria-label="Menü"><svg><use href="#i-menu"/></svg></button>
+    </div>
   </div>
 </nav>
 
 <!-- HERO -->
-<section class="hero">
+<section class="page-hero">
   <div class="container">
-    <span class="hero-badge">🚧 In Entwicklung — Warteliste öffnen</span>
+    <span class="pill-badge"><span class="dot"></span> In Entwicklung — Warteliste offen</span>
     <h1>Endlich Feierabend<br><em>Der komplette Online-Kurs</em></h1>
-    <p class="lead">
-      Systematische KI-Integration für deinen Lehreralltag: 4 Module, Schritt-für-Schritt-Anleitungen, fertige Vorlagen und persönlicher Support. Spare 10–12 Stunden pro Woche — DSGVO-konform und praxiserprobt.
-    </p>
+    <p class="lead">Systematische KI-Integration für deinen Lehreralltag: 5 Module, Schritt-für-Schritt-Anleitungen, fertige Vorlagen und persönlicher Support. Spare 10–12 Stunden pro Woche — DSGVO-konform und praxiserprobt.</p>
   </div>
 </section>
 
-<!-- MODULE ÜBERSICHT -->
+<!-- MODULE -->
 <section class="section">
   <div class="container">
-    <div class="section-header">
-      <div class="label">Was du lernst</div>
-      <h2>4 Module für die komplette Transformation</h2>
-      <p>Von den Grundlagen bis zur vollständigen Workflow-Integration — alles, was du brauchst, um KI effektiv im Schulalltag einzusetzen.</p>
+    <div class="section-head center">
+      <div class="eyebrow" style="justify-content:center;">Was du lernst</div>
+      <h2>5 Module für die komplette Transformation</h2>
+      <p class="lead">Von den Grundlagen bis zur vollständigen Workflow-Integration — alles, was du brauchst, um KI effektiv im Schulalltag einzusetzen.</p>
     </div>
-
-    <div class="module-grid">
-      <div class="module-card">
-        <div class="module-number">MODUL 1</div>
-        <h3>Prompting-Grundlagen</h3>
+    <div class="grid grid-3">
+      <div class="card module-card">
+        <span class="mod-n">Modul 1</span><h3>Prompting-Grundlagen</h3>
         <ul>
-          <li>Die 6-Elemente-Formel erklärt</li>
-          <li>ChatGPT vs. Copilot vs. Claude</li>
-          <li>Typische Fehler erkennen & vermeiden</li>
-          <li>Prompt-Bibliothek mit 50+ Vorlagen</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> Die 6-Elemente-Formel erklärt</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> ChatGPT vs. Copilot vs. Claude</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> Typische Fehler erkennen &amp; vermeiden</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> Prompt-Bibliothek mit 50+ Vorlagen</li>
         </ul>
       </div>
-
-      <div class="module-card">
-        <div class="module-number">MODUL 2</div>
-        <h3>Materialerstellung</h3>
+      <div class="card module-card">
+        <span class="mod-n">Modul 2</span><h3>Materialerstellung</h3>
         <ul>
-          <li>Arbeitsblätter in Minuten erstellen</li>
-          <li>Differenzierung auf 3 Niveaustufen</li>
-          <li>Stunden- und Reihenplanung</li>
-          <li>Lehrwerksnahe Arbeit sicherstellen</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> Arbeitsblätter in Minuten erstellen</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> Differenzierung auf 3 Niveaustufen</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> Stunden- und Reihenplanung</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> Lehrwerksnahe Arbeit sicherstellen</li>
         </ul>
       </div>
-
-      <div class="module-card">
-        <div class="module-number">MODUL 3</div>
-        <h3>Korrektur & Bewertung</h3>
+      <div class="card module-card">
+        <span class="mod-n">Modul 3</span><h3>Korrektur &amp; Bewertung</h3>
         <ul>
-          <li>KI als Korrekturassistenz nutzen</li>
-          <li>Erwartungshorizonte generieren</li>
-          <li>Anonymisierte Feedback-Workflows</li>
-          <li>Rechtlicher Rahmen (NRW-spezifisch)</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> KI als Korrekturassistenz nutzen</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> Erwartungshorizonte generieren</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> Anonymisierte Feedback-Workflows</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> Rechtlicher Rahmen (NRW-spezifisch)</li>
         </ul>
       </div>
-
-      <div class="module-card">
-        <div class="module-number">MODUL 4</div>
-        <h3>Workflow-Integration</h3>
+      <div class="card module-card">
+        <span class="mod-n">Modul 4</span><h3>Workflow-Integration</h3>
         <ul>
-          <li>Kompletter Arbeitsablauf optimiert</li>
-          <li>Tool-Stack für Lehrkräfte</li>
-          <li>Automatisierung & Templates</li>
-          <li>10–12h Zeitersparnis erreichen</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> Kompletter Arbeitsablauf optimiert</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> Tool-Stack für Lehrkräfte</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> Automatisierung &amp; Templates</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> 10–12 h Zeitersparnis erreichen</li>
         </ul>
       </div>
-
-      <div class="module-card">
-        <div class="module-number">MODUL 5</div>
-        <h3>Moodle-Kurse mit KI erstellen</h3>
+      <div class="card module-card">
+        <span class="mod-n">Modul 5</span><h3>Moodle-Kurse mit KI</h3>
         <ul>
-          <li>Kursstruktur KI-gestützt aufbauen</li>
-          <li>Lernaktivitäten & Quizfragen generieren</li>
-          <li>H5P-Inhalte effizient erstellen</li>
-          <li>Von der Idee zum fertigen Kursraum</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> Kursstruktur KI-gestützt aufbauen</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> Lernaktivitäten &amp; Quizfragen generieren</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> H5P-Inhalte effizient erstellen</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> Von der Idee zum fertigen Kursraum</li>
         </ul>
+      </div>
+      <div class="card module-card" style="background:var(--paper-2);border-style:dashed;justify-content:center;align-items:center;text-align:center;">
+        <span class="mod-n">Mehr folgt</span>
+        <p class="muted" style="font-size:15.5px;">Der Kurs wächst mit den Erfahrungen aus meinen Workshops. Auf der Warteliste erfährst du als Erste/r von neuen Inhalten.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- DSGVO -->
-<section class="section section-warm">
+<!-- DSGVO AMPEL -->
+<section class="section section--paper2">
   <div class="container">
-    <div class="section-header">
-      <div class="label">Datenschutz</div>
-      <h2>100% DSGVO-konform</h2>
-      <p>In jedem Modul lernst du, wie du KI datenschutzkonform einsetzt. Mit dem Ampelsystem checkst du in 3 Sekunden, was erlaubt ist.</p>
+    <div class="section-head center">
+      <div class="eyebrow" style="justify-content:center;">Datenschutz</div>
+      <h2>100 % DSGVO-konform</h2>
+      <p class="lead">In jedem Modul lernst du, wie du KI datenschutzkonform einsetzt. Mit dem Ampelsystem checkst du in 3 Sekunden, was erlaubt ist.</p>
     </div>
-
-    <div style="max-width: 700px; margin: 0 auto; background: white; border: 2px solid var(--border); border-radius: 16px; padding: 40px; text-align: center;">
-      <div style="font-size: 48px; margin-bottom: 20px;">🔒</div>
-      <h3 style="color: var(--primary); margin-bottom: 12px; font-family: 'DM Serif Display', serif; font-size: 24px;">Das DSGVO-Ampelsystem</h3>
-      <p style="color: var(--text-light); line-height: 1.7; margin-bottom: 20px;">
-        <strong style="color: #27AE60;">🟢 Grün:</strong> Ohne Schülerdaten — immer erlaubt<br>
-        <strong style="color: #E8A838;">🟡 Gelb:</strong> Anonymisiert — mit Vorsicht<br>
-        <strong style="color: #C0392B;">🔴 Rot:</strong> Personenbezogen — nur intern
-      </p>
-      <p style="font-size: 14px; color: var(--text-light);">Inklusive Dokumentationsvorlagen für die Schulleitung</p>
+    <div class="ampel">
+      <h3>Das DSGVO-Ampelsystem</h3>
+      <p class="sub">Drei Stufen — eine klare Entscheidung vor jedem Prompt.</p>
+      <div class="ampel-row"><span class="lamp g"></span><p><b>Grün — ohne Schülerdaten.</b> Allgemeine Aufgaben, Materialerstellung, Ideen. Immer erlaubt.</p></div>
+      <div class="ampel-row"><span class="lamp a"></span><p><b>Gelb — anonymisiert.</b> Texte ohne Namen und personenbezogene Angaben. Mit Vorsicht und Anonymisierung.</p></div>
+      <div class="ampel-row"><span class="lamp r"></span><p><b>Rot — personenbezogen.</b> Echte Schülerdaten gehören nicht in öffentliche KI-Tools. Nur in geprüften, internen Systemen.</p></div>
+      <p class="note">Inklusive Dokumentationsvorlagen für die Schulleitung</p>
     </div>
   </div>
 </section>
 
 <!-- WARTELISTE -->
 <section class="section">
-  <div class="container">
-    <div class="waitlist-box">
-      <h2>Kurs in Entwicklung</h2>
-      <p>Der Online-Kurs ist aktuell in Arbeit und wird auf Basis meiner Workshop-Erfahrungen entwickelt. Trage dich in die Warteliste ein und erfahre als Erste/r, wenn der Kurs startet.</p>
-      
-      <form class="waitlist-form" action="https://submit-form.com/YOUR-FORM-ID" method="POST">
-        <input type="email" name="email" class="waitlist-input" placeholder="Deine E-Mail-Adresse" required>
-        <button type="submit" class="waitlist-btn">📬 Auf Warteliste</button>
+  <div class="container-narrow">
+    <div class="waitlist">
+      <div class="eyebrow on-dark" style="justify-content:center;">Warteliste</div>
+      <h2 style="color:#fff;">Kurs in Entwicklung</h2>
+      <p class="lead" style="color:var(--on-dark-soft);margin:16px auto 0;max-width:540px;">Der Online-Kurs wird aktuell auf Basis meiner Workshop-Erfahrungen entwickelt. Trage dich ein und erfahre als Erste/r, wenn er startet.</p>
+      <form class="wl-form" action="https://submit-form.com/YOUR-FORM-ID" method="POST">
+        <input type="email" name="email" placeholder="Deine E-Mail-Adresse" required>
+        <button type="submit" class="btn btn--primary">Auf die Warteliste <svg><use href="#i-arrow"/></svg></button>
       </form>
-
-      <p style="margin-top: 24px; font-size: 14px; opacity: 0.8;">
-        Bis dahin: Starte mit dem <a href="ki-kickstart.html" style="color: var(--accent); font-weight: 600; text-decoration: underline;">KI-Kickstart PDF für 14,99€</a>
+      <p style="margin-top:24px;font-family:var(--mono);font-size:13.5px;color:var(--on-dark-soft);">
+        Bis dahin: Starte mit dem <a href="ki-kickstart.html" style="color:var(--amber);text-decoration:none;">KI-Kickstart für 14,99 €</a>
       </p>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
-<footer class="footer">
+<footer class="ef-footer">
   <div class="container">
-    <div class="footer-content">
+    <div class="ef-footer__grid">
       <div>
-        <h4>Endlich Feierabend</h4>
+        <div class="ef-footer__brand"><img src="assets/logo-mark.svg" alt=""><span class="ef-logo__wm">endlich feierabend</span></div>
         <p>KI-Fortbildungen für Lehrkräfte im DACH-Raum. Systematisch, praxisnah und DSGVO-konform.</p>
-        <p><strong>René Bohm</strong><br>
-        Mathe- & Informatiklehrer in NRW<br>
-        KI-Fortbildner</p>
-        <div class="social-links">
-          <a href="https://instagram.com/endlich.feierabend.ki" target="_blank" class="social-link">
-            📸 Instagram
-          </a>
-        </div>
+        <p style="margin-top:18px;"><strong style="color:#fff;">René Bohm</strong><br>Mathe- &amp; Informatiklehrer in NRW · KI-Fortbildner</p>
+        <p style="margin-top:14px;"><a class="ig" href="https://instagram.com/endlich.feierabend.ki" target="_blank"><svg style="width:16px;height:16px;"><use href="#i-ig"/></svg> @endlich.feierabend.ki</a></p>
       </div>
       <div>
         <h4>Angebote</h4>
-        <ul class="footer-links">
+        <ul class="ef-footer__links">
           <li><a href="ki-kickstart.html">KI-Kickstart PDF</a></li>
           <li><a href="workshops.html">Workshops</a></li>
           <li><a href="endlich-feierabend.html">Online-Kurs</a></li>
@@ -549,7 +209,7 @@
       </div>
       <div>
         <h4>Rechtliches</h4>
-        <ul class="footer-links">
+        <ul class="ef-footer__links">
           <li><a href="impressum.html">Impressum</a></li>
           <li><a href="impressum.html#datenschutz">Datenschutz</a></li>
           <li><a href="impressum.html#agb">AGB</a></li>
@@ -557,30 +217,17 @@
         </ul>
       </div>
     </div>
-    <div class="footer-bottom">
-      <p>© 2026 René Bohm · Endlich Feierabend · Alle Rechte vorbehalten</p>
+    <div class="ef-footer__bottom">
+      <span>© 2026 René Bohm · Endlich Feierabend</span>
+      <span>Mit Sorgfalt gebaut in NRW.</span>
     </div>
   </div>
 </footer>
 
 <script>
-// Mobile Navigation Toggle
-const menuToggle = document.querySelector(".menu-toggle");
-const navMenu = document.querySelector(".nav-menu");
-
-if (menuToggle && navMenu) {
-  menuToggle.addEventListener("click", () => {
-    navMenu.classList.toggle("active");
-  });
-
-  // Close menu when clicking outside
-  document.addEventListener("click", (e) => {
-    if (!e.target.closest(".nav-container")) {
-      navMenu.classList.remove("active");
-    }
-  });
-}
+  const burger=document.getElementById('burger'),nav=document.getElementById('nav');
+  burger.addEventListener('click',()=>nav.classList.toggle('open'));
+  document.addEventListener('click',e=>{if(!e.target.closest('.ef-nav'))nav.classList.remove('open');});
 </script>
-
 </body>
 </html>
