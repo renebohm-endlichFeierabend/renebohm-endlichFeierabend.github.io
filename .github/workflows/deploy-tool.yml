@@ -32,7 +32,9 @@ jobs:
           mkdir -p deploy/tool
           # Existing website files at root
           cp *.html deploy/ 2>/dev/null || true
-          cp *.jpg *.png *.css *.js 2>/dev/null deploy/ || true
+          cp *.jpg *.png *.css *.js deploy/ 2>/dev/null || true
+          # Static assets (design system CSS, logo, etc.)
+          cp -r assets deploy/ 2>/dev/null || true
           # Lehrer-Tool built app into /tool/
           cp -r tool/dist/. deploy/tool/
 
