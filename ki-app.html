@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Die KI-App für Lehrkräfte · Endlich Feierabend</title>
-<meta name="description" content="Endlich Feierabend – die Desktop-App für Lehrkräfte: Klausuren, Erwartungshorizonte und Arbeitsblätter mit KI erstellen. Alle Daten bleiben lokal. Jetzt kostenlos für Windows & Mac herunterladen.">
+<meta name="description" content="Endlich Feierabend – die Desktop-App für Lehrkräfte: Klausuren, Erwartungshorizonte und Arbeitsblätter mit KI erstellen. Alle Daten bleiben lokal. Jetzt für Windows & Mac herunterladen.">
 <link rel="icon" href="assets/logo-mark.svg">
 <link rel="stylesheet" href="assets/ef.css">
 <style>
@@ -47,6 +47,15 @@
     font-family:var(--mono);font-size:12.5px;letter-spacing:.04em;color:var(--on-dark-soft);}
   .hero-trust span{display:inline-flex;align-items:center;gap:8px;}
   .hero-trust svg{width:15px;height:15px;color:#7BE0A4;}
+
+  /* SCREENSHOTS */
+  .shots{display:grid;grid-template-columns:1fr 1fr;gap:34px 30px;}
+  .shot{margin:0;}
+  .shot img{width:100%;height:auto;display:block;border-radius:var(--r-lg);
+    border:1px solid var(--line);box-shadow:0 18px 40px rgba(11,34,64,.14);background:var(--surface);}
+  .shot figcaption{margin-top:14px;font-size:15px;line-height:1.55;color:var(--text-soft);}
+  .shot figcaption b{color:var(--ink);}
+  .center{text-align:center;}
 
   /* FEATURE GRID */
   .feat-card .ic{width:46px;height:46px;border-radius:12px;background:var(--gruen-tint);
@@ -94,7 +103,7 @@
   .final{text-align:center;}
   .final .container{max-width:720px;}
 
-  @media (max-width:820px){ .local-split{grid-template-columns:1fr;gap:34px;} .req-grid{grid-template-columns:1fr;} }
+  @media (max-width:820px){ .local-split{grid-template-columns:1fr;gap:34px;} .req-grid{grid-template-columns:1fr;} .shots{grid-template-columns:1fr;gap:30px;} }
 </style>
 </head>
 <body>
@@ -158,10 +167,10 @@
           <h3>Windows</h3>
         </div>
         <p class="dl-card__meta">Installer (.exe) · Windows 10/11 · 64-Bit</p>
-        <a class="btn btn--primary btn--lg" href="https://github.com/renebohm-endlichFeierabend/Lehrer-KI-releases/releases/download/v0.2.9/Endlich-Feierabend-Setup-0.2.9.exe">
+        <a class="btn btn--primary btn--lg" href="https://github.com/renebohm-endlichFeierabend/Lehrer-KI-releases/releases/download/v1.0.0/Endlich-Feierabend-Setup-1.0.0.exe">
           <svg><use href="#i-download"/></svg> Für Windows laden
         </a>
-        <p class="dl-card__hint">Version 0.2.9 · ca. 100 MB</p>
+        <p class="dl-card__hint">Version 1.0.0 · ca. 103 MB</p>
       </div>
       <!-- MAC -->
       <div class="dl-card" id="card-mac">
@@ -171,15 +180,15 @@
           <h3>Mac</h3>
         </div>
         <p class="dl-card__meta">Disk-Image (.dmg) · Apple Silicon (M1–M4)</p>
-        <a class="btn btn--primary btn--lg" href="https://github.com/renebohm-endlichFeierabend/Lehrer-KI-releases/releases/download/v0.2.9/Endlich-Feierabend-0.2.9-arm64.dmg">
+        <a class="btn btn--primary btn--lg" href="https://github.com/renebohm-endlichFeierabend/Lehrer-KI-releases/releases/download/v1.0.0/Endlich-Feierabend-1.0.0-arm64.dmg">
           <svg><use href="#i-download"/></svg> Für Mac laden
         </a>
-        <p class="dl-card__hint">Version 0.2.9 · ca. 120 MB</p>
+        <p class="dl-card__hint">Version 1.0.0 · ca. 118 MB</p>
       </div>
     </div>
 
     <div class="hero-trust">
-      <span><svg><use href="#i-check"/></svg> Kostenlos &amp; ohne Konto</span>
+      <span><svg><use href="#i-check"/></svg> Gratis-Kontingent zum Start</span>
       <span><svg><use href="#i-check"/></svg> Daten bleiben lokal</span>
       <span><svg><use href="#i-check"/></svg> Von einem aktiven Lehrer</span>
     </div>
@@ -218,14 +227,54 @@
       <div class="card feat-card">
         <div class="ic"><svg><use href="#i-lock"/></svg></div>
         <h4>Alles bleibt lokal</h4>
-        <p>Deine Dokumente, Klausuren und Schlüssel liegen verschlüsselt auf deinem Rechner — nicht in einer fremden Cloud.</p>
+        <p>Deine Dokumente und Klausuren liegen auf deinem Rechner — nicht in einer fremden Cloud.</p>
       </div>
       <div class="card feat-card">
         <div class="ic"><svg><use href="#i-key"/></svg></div>
-        <h4>Dein Modell</h4>
-        <p>Wähle deinen Sprachmodell. Ob die günstiges asiatischen Modelle, die leistungsfähigen aus Amerika oder doch lieber die europäische Lösung Mistral.</p>
+        <h4>Du wählst die Qualität</h4>
+        <p>Drei Profile: bestes Preis-Leistungs-Verhältnis, Höchstleistung — oder ausschließlich europäische Modelle. Umschalten geht jederzeit.</p>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- BLICK IN DIE APP -->
+<section class="section section--paper2" id="screenshots">
+  <div class="container">
+    <div class="section-head center">
+      <div class="eyebrow" style="justify-content:center;">Blick in die App</div>
+      <h2>So sieht das aus</h2>
+      <p class="lead">Keine Hochglanz-Montage — das sind Bildschirmfotos aus der Anwendung.</p>
+    </div>
+
+    <div class="shots">
+      <figure class="shot">
+        <img src="assets/app/arbeitsblatt.webp" width="1600" height="1000" loading="lazy" decoding="async"
+             alt="Die Ansicht „Generieren“: aus Fach, Klasse und Thema ist ein fertiges Arbeitsblatt zu Satzgliedern entstanden.">
+        <figcaption><b>Fach, Klasse, Thema — mehr nicht.</b> Daraus entsteht das fertige Arbeitsblatt, das du vor dem Speichern noch änderst.</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="assets/app/differenzierung.webp" width="1600" height="1000" loading="lazy" decoding="async"
+             alt="Die Ansicht „Differenzieren“: aus einem Arbeitsblatt sind Varianten in mehreren Niveaustufen entstanden.">
+        <figcaption><b>Ein Blatt, drei Niveaus.</b> Gleiches Lernziel, abgestufte Hilfen — leichter, anspruchsvoller oder sprachsensibel.</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="assets/app/korrektur.webp" width="1600" height="1000" loading="lazy" decoding="async"
+             alt="Die Ansicht „Korrektur“: Punktevorschlag je Aufgabe mit Begründung, Gesamtpunktzahl und Förderhinweisen.">
+        <figcaption><b>Punkte mit Begründung.</b> Die App schlägt vor und rechnet zusammen — bewertet wird von dir, jede Zahl ist änderbar.</figcaption>
+      </figure>
+      <figure class="shot">
+        <img src="assets/app/elternbrief.webp" width="1600" height="1000" loading="lazy" decoding="async"
+             alt="Die Ansicht „Elternkommunikation“: ein fertiger Elternbrief zu einer Exkursion mit Rücklaufabschnitt.">
+        <figcaption><b>Elternbrief samt Rücklauf.</b> Anlass und Eckdaten eintippen, der Rest steht — inklusive Abschnitt zum Abtrennen.</figcaption>
+      </figure>
+    </div>
+
+    <p class="muted center" style="margin-top:26px;font-size:14px;">
+      Die gezeigten Klassen, Namen und Texte sind frei erfunden. Die von der KI erzeugten
+      Inhalte sind Beispieldarstellungen — was bei dir herauskommt, hängt von deinen
+      Vorgaben und deinen hinterlegten Materialien ab.
+    </p>
   </div>
 </section>
 
@@ -237,15 +286,15 @@
         <div class="eyebrow">Datenschutz by design</div>
         <h2>Deine Schülerdaten verlassen deinen Rechner nicht.</h2>
         <p class="lead" style="margin-top:18px;">Die App läuft komplett lokal. Datenbank, hochgeladene Dokumente und generierte Dateien bleiben im Benutzerverzeichnis deines Betriebssystems.</p>
-        <p class="muted" style="margin-top:16px;">Einzige Ausnahme sind die KI-Anfragen selbst — sie gehen an den von dir gewählten Anbieter (z. B. Mistral in der EU). Mit dem DSGVO-Ampelsystem behältst du dabei den Überblick.</p>
+        <p class="muted" style="margin-top:16px;">Einzige Ausnahme ist die KI-Anfrage selbst. Sie läuft über den Server von „Endlich Feierabend“ zum Sprachmodell — dort werden nur Zähler für deine Abrechnung gespeichert, keine Inhalte deiner Anfragen. Wo es heikel wird, sagt es die App: In der Elternkommunikation und beim Schulbereich steht der Hinweis, so wenig personenbezogene Daten wie möglich einzugeben.</p>
       </div>
       <div class="local-card">
         <h3>Sicher gebaut</h3>
         <ul class="ticks">
           <li><span class="tick"><svg><use href="#i-check"/></svg></span> Lokale Datenbank — keine Cloud-Pflicht</li>
-          <li><span class="tick"><svg><use href="#i-check"/></svg></span> API-Schlüssel verschlüsselt im OS-Schlüsselbund</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> Zugangsdaten verschlüsselt im OS-Schlüsselbund</li>
           <li><span class="tick"><svg><use href="#i-check"/></svg></span> Zwei-Stufen-Freigabe: erst Vorschau, dann Erstellen</li>
-          <li><span class="tick"><svg><use href="#i-check"/></svg></span> Anbieter frei wählbar — auch EU-Modelle</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span> EU-Profil: ausschließlich europäische Modelle</li>
           <li><span class="tick"><svg><use href="#i-check"/></svg></span> App &amp; Inhalte durchgängig auf Deutsch</li>
         </ul>
       </div>
@@ -262,7 +311,7 @@
     </div>
     <div class="steps">
       <div class="step"><span class="num">1</span><div><h4>Herunterladen &amp; installieren</h4><p>Lade die Datei für dein System oben und folge dem Installations-Assistenten. Hinweise zu Windows SmartScreen und macOS findest du weiter unten.</p></div></div>
-      <div class="step"><span class="num">2</span><div><h4>Eigenen KI-Schlüssel hinterlegen</h4><p>Beim ersten Start hilft dir ein kurzer Onboarding-Chat, einen eigenen Mistral-API-Schlüssel anzulegen. Danach läuft alles über dein Modell.</p></div></div>
+      <div class="step"><span class="num">2</span><div><h4>Anmelden und E-Mail bestätigen</h4><p>Einmal Adresse eintragen, Bestätigungslink klicken — fertig. Dein Gratis-Kontingent steht sofort bereit, ein Schlüssel bei einem KI-Anbieter ist nicht nötig.</p></div></div>
       <div class="step"><span class="num">3</span><div><h4>Fächer, Klassen &amp; Materialien anlegen</h4><p>Pflege in den Einstellungen deine Lerngruppen und lade in der Bibliothek Kernlehrpläne und alte Klausuren hoch.</p></div></div>
       <div class="step"><span class="num">4</span><div><h4>Material erstellen lassen</h4><p>Fordere im Chat oder unter „Generieren“ Klausuren, Erwartungshorizonte oder Arbeitsblätter an — prüfen, freigeben, fertig.</p></div></div>
     </div>
@@ -312,9 +361,9 @@
     <div class="faq">
       <details class="faq-item"><summary class="faq-q">Windows zeigt eine SmartScreen-Warnung — was tun? <span class="pm">+</span></summary><div class="faq-a">Weil die App noch jung ist und (noch) keine kostenpflichtige Signatur hat, kann Windows „Der Computer wurde durch Windows geschützt“ anzeigen.<ol><li>Auf <strong>„Weitere Informationen“</strong> klicken.</li><li>Dann auf <strong>„Trotzdem ausführen“</strong>.</li></ol>Die Installation startet anschließend ganz normal.</div></details>
       <details class="faq-item"><summary class="faq-q">Mac sagt „Programm kann nicht geöffnet werden“ — was tun? <span class="pm">+</span></summary><div class="faq-a">macOS blockiert Apps unbekannter Entwickler zunächst.<ol><li>Die <code>.dmg</code> öffnen und die App in den Ordner <strong>„Programme“</strong> ziehen.</li><li>App per <strong>Rechtsklick → „Öffnen“</strong> starten und im Dialog erneut auf <strong>„Öffnen“</strong> klicken.</li><li>Alternativ: <strong>Systemeinstellungen → Datenschutz &amp; Sicherheit</strong> → ganz unten auf <strong>„Dennoch öffnen“</strong>.</li></ol>Das ist nur beim ersten Start nötig.</div></details>
-      <details class="faq-item"><summary class="faq-q">Ist die App wirklich kostenlos? <span class="pm">+</span></summary><div class="faq-a">Ja, die App selbst ist kostenlos. Es können nur Kosten beim KI-Anbieter deiner Wahl entstehen (z. B. Mistral), abhängig von deiner Nutzung. Diese rechnest du direkt mit dem Anbieter ab.</div></details>
-      <details class="faq-item"><summary class="faq-q">Brauche ich ein Benutzerkonto? <span class="pm">+</span></summary><div class="faq-a">Nein. Es gibt keine Anmeldung und kein Konto bei „Endlich Feierabend“. Du brauchst lediglich einen eigenen API-Schlüssel für dein KI-Modell — beim ersten Start wirst du dabei an die Hand genommen.</div></details>
-      <details class="faq-item"><summary class="faq-q">Welche KI-Anbieter werden unterstützt? <span class="pm">+</span></summary><div class="faq-a">Empfohlen ist <strong>Mistral</strong> (EU). Es funktionieren außerdem OpenAI, Anthropic, DeepSeek, Moonshot/Kimi, OpenRouter sowie beliebige OpenAI-kompatible Anbieter mit eigener Base-URL.</div></details>
+      <details class="faq-item"><summary class="faq-q">Was kostet die App? <span class="pm">+</span></summary><div class="faq-a">Der Download und die App selbst kosten nichts. Abgerechnet wird nur, was die KI tatsächlich für dich arbeitet — in <strong>Nutzungspunkten</strong>, kein Abo. Zum Start ist ein Gratis-Kontingent enthalten; danach kaufst du Punkte nach, wenn du sie brauchst. Was eine Anfrage kostet, hängt vom gewählten Modell ab und steht dir in der App immer vor Augen.</div></details>
+      <details class="faq-item"><summary class="faq-q">Brauche ich ein Benutzerkonto? <span class="pm">+</span></summary><div class="faq-a">Ja. Für die KI-Funktionen meldest du dich mit E-Mail-Adresse an und bestätigst sie einmalig — darüber läuft dein Punkte-Guthaben. Deine Materialien liegen davon unberührt weiter auf deinem Rechner: über die Anmeldung läuft die Abrechnung, nicht deine Daten.</div></details>
+      <details class="faq-item"><summary class="faq-q">Brauche ich einen eigenen API-Schlüssel? <span class="pm">+</span></summary><div class="faq-a">Nein, das ist vorbei. Früher musste sich jede Lehrkraft selbst bei einem KI-Anbieter anmelden und einen Schlüssel eintragen. Heute läuft alles über „Endlich Feierabend“ — du brauchst kein Konto bei OpenAI, Mistral oder sonst jemandem. In den Einstellungen wählst du nur noch das Qualitätsprofil, unter anderem eines, das ausschließlich europäische Modelle nutzt.</div></details>
       <details class="faq-item"><summary class="faq-q">Wo liegen meine Daten? <span class="pm">+</span></summary><div class="faq-a">Alle Inhalte (Datenbank, hochgeladene Dokumente, erzeugte Dateien) liegen im Benutzerverzeichnis deines Betriebssystems, z. B. unter Windows in <code>%APPDATA%/LehrerKI/</code>. Es findet keine zentrale Speicherung statt.</div></details>
       <details class="faq-item"><summary class="faq-q">Wie bekomme ich Updates? <span class="pm">+</span></summary><div class="faq-a">Neue Versionen werden hier auf dieser Seite verlinkt. Lade einfach die aktuelle Datei herunter und installiere sie über die vorhandene Version — deine lokalen Daten bleiben erhalten.</div></details>
     </div>
@@ -326,12 +375,12 @@
   <div class="container">
     <div class="eyebrow on-dark" style="justify-content:center;">Bereit für mehr Feierabend?</div>
     <h2>Jetzt herunterladen und loslegen.</h2>
-    <p class="lead" style="margin-top:16px;">Kostenlos, lokal und in wenigen Minuten startklar.</p>
+    <p class="lead" style="margin-top:16px;">Lokal, ohne Abo und in wenigen Minuten startklar.</p>
     <div class="btn-row center" style="margin-top:30px;">
-      <a class="btn btn--primary btn--lg" href="https://github.com/renebohm-endlichFeierabend/Lehrer-KI-releases/releases/download/v0.2.9/Endlich-Feierabend-Setup-0.2.9.exe"><svg><use href="#i-windows"/></svg> Windows-Download</a>
-      <a class="btn btn--on-dark btn--lg" href="https://github.com/renebohm-endlichFeierabend/Lehrer-KI-releases/releases/download/v0.2.9/Endlich-Feierabend-0.2.9-arm64.dmg"><svg><use href="#i-apple"/></svg> Mac-Download</a>
+      <a class="btn btn--primary btn--lg" href="https://github.com/renebohm-endlichFeierabend/Lehrer-KI-releases/releases/download/v1.0.0/Endlich-Feierabend-Setup-1.0.0.exe"><svg><use href="#i-windows"/></svg> Windows-Download</a>
+      <a class="btn btn--on-dark btn--lg" href="https://github.com/renebohm-endlichFeierabend/Lehrer-KI-releases/releases/download/v1.0.0/Endlich-Feierabend-1.0.0-arm64.dmg"><svg><use href="#i-apple"/></svg> Mac-Download</a>
     </div>
-    <p style="margin-top:20px;font-family:var(--mono);font-size:12.5px;color:var(--on-dark-soft);">Aktuelle Version: 0.2.9 · Windows 10/11 &amp; Apple Silicon</p>
+    <p style="margin-top:20px;font-family:var(--mono);font-size:12.5px;color:var(--on-dark-soft);">Aktuelle Version: 1.0.0 · Windows 10/11 &amp; Apple Silicon</p>
   </div>
 </section>
 
@@ -392,6 +441,40 @@
         if(wrap&&wrap.firstChild!==card)wrap.insertBefore(card,wrap.firstChild);
       }
     }
+  })();
+
+  // Kampagnen-Herkunft über die Seite hinweg mitnehmen.
+  //
+  // Wer aus der Instagram-Bio kommt, landet mit ?utm_source=instagram hier. Klickt
+  // er danach auf „Workshops“, ist die Herkunft weg – die nächste Seite sieht nur
+  // noch einen internen Verweis. Dieses Stück hängt die utm_*-Parameter deshalb an
+  // interne Links weiter.
+  //
+  // Wichtig zur Einordnung: das MISST nichts. Es sorgt nur dafür, dass die
+  // Information nicht verloren geht, sobald einmal ein Auswertungswerkzeug
+  // eingebunden wird. Kein Cookie, kein fremder Server, keine personenbezogenen
+  // Daten – nur die Parameter aus der aufgerufenen Adresse.
+  (function(){
+    const SCHLUESSEL='ef.kampagne';
+    const jetzt=new URLSearchParams(location.search);
+    const utm=[...jetzt].filter(([k])=>k.startsWith('utm_'));
+    try{
+      if(utm.length)sessionStorage.setItem(SCHLUESSEL,new URLSearchParams(utm).toString());
+    }catch(e){/* privater Modus: dann gilt die Herkunft eben nur für diese Seite */}
+
+    let gemerkt='';
+    try{gemerkt=sessionStorage.getItem(SCHLUESSEL)||'';}catch(e){}
+    const quelle=utm.length?new URLSearchParams(utm).toString():gemerkt;
+    if(!quelle)return;
+
+    document.querySelectorAll('a[href]').forEach(a=>{
+      const ziel=new URL(a.getAttribute('href'),location.href);
+      if(ziel.origin!==location.origin)return;            // GitHub-Downloads unangetastet
+      new URLSearchParams(quelle).forEach((w,k)=>{
+        if(!ziel.searchParams.has(k))ziel.searchParams.set(k,w);
+      });
+      a.setAttribute('href',ziel.pathname+ziel.search+ziel.hash);
+    });
   })();
 </script>
 </body>
