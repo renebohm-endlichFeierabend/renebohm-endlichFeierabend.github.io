@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KI-Ordnung für Ihre Schule · Endlich Feierabend</title>
+<meta name="description" content="Begleitung für Schulen, die eine eigene KI-Ordnung beschließen wollen: fünf Regelungsfelder, ein Fahrplan, eine beschlussreife Ordnung — von einem Lehrer, der den Prozess selbst gegangen ist.">
+<link rel="icon" href="assets/logo-mark.svg">
+<link rel="stylesheet" href="assets/ef.css">
+<style>
+  .page-hero{background:linear-gradient(160deg,#0B2240,#0D3A6B);color:var(--on-dark);
+    padding:96px 0 88px;position:relative;overflow:hidden;}
+  .page-hero::after{content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;
+    background:radial-gradient(circle,rgba(206,138,44,.24),transparent 62%);}
+  .page-hero .container{position:relative;z-index:1;max-width:820px;}
+  .page-hero h1{color:#fff;}
+  .page-hero h1 em{color:#fff;background-image:linear-gradient(var(--amber),var(--amber));
+    background-repeat:no-repeat;background-position:0 92%;background-size:100% .1em;}
+  .page-hero .lead{color:var(--on-dark-soft);margin:20px 0 32px;max-width:660px;}
+  .page-hero .hero-note{font-family:var(--mono);font-size:13px;color:var(--on-dark-soft);margin-top:22px;}
+
+  .szene p{font-size:18px;line-height:1.72;color:var(--text);}
+  .szene p + p{margin-top:18px;}
+  .kernsatz{margin:34px 0 0;background:var(--paper-2);border:1px solid var(--line);
+    border-left:4px solid var(--amber);border-radius:var(--r);padding:24px 26px;}
+  .kernsatz p{margin:0;font-family:var(--display);font-weight:600;font-size:20px;line-height:1.5;color:var(--ink);}
+
+  .feld-card{display:flex;flex-direction:column;gap:12px;}
+  .feld-card .top{display:flex;align-items:center;gap:14px;}
+  .feld-card .mono-n{font-family:var(--mono);font-weight:600;font-size:13px;color:var(--amber);}
+  .feld-card h4{font-size:18.5px;}
+  .feld-card p{color:var(--text-soft);font-size:15.5px;line-height:1.62;flex:1;}
+  .feld-card .frage{font-family:var(--mono);font-size:12.5px;line-height:1.6;color:var(--ink);
+    background:rgba(11,34,64,.05);border-radius:var(--r-sm);padding:11px 13px;}
+
+  .schritte{list-style:none;display:flex;flex-direction:column;gap:0;}
+  .schritte li{display:grid;grid-template-columns:46px 1fr;gap:20px;padding:22px 0;
+    border-bottom:1px solid var(--line);}
+  .schritte li:last-child{border-bottom:0;}
+  .schritte h4{margin-bottom:6px;}
+  .schritte p{margin:0;color:var(--text-soft);font-size:16px;line-height:1.62;}
+  .schritte .gremium{display:inline-block;margin-top:10px;}
+
+  .stufe-card{position:relative;display:flex;flex-direction:column;gap:14px;}
+  .stufe-card .kopf{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;}
+  .stufe-card h3{margin:0;font-size:21px;}
+  .stufe-card .dauer{font-family:var(--mono);font-size:12.5px;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--text-soft);}
+  .stufe-card p{color:var(--text-soft);font-size:16px;line-height:1.64;flex:1;}
+  .stufe-card .ergebnis{border-top:1px solid var(--line);padding-top:14px;font-size:15.5px;color:var(--text);}
+  .stufe-card .ergebnis strong{font-family:var(--mono);font-size:11.5px;letter-spacing:.09em;
+    text-transform:uppercase;color:var(--gruen-deep);display:block;margin-bottom:5px;}
+  .stufe-card--kern{border-color:var(--line-strong);box-shadow:var(--shadow-sm);}
+
+  .nicht-card h4{color:#fff;margin-bottom:10px;}
+  .nicht-card .lbl{font-family:var(--mono);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--amber);display:block;margin-bottom:12px;}
+
+  .ablauf{width:100%;border-collapse:collapse;}
+  .ablauf th,.ablauf td{text-align:left;padding:18px 0;border-bottom:1px solid var(--line);
+    vertical-align:top;font-size:16px;}
+  .ablauf th{width:210px;font-family:var(--mono);font-size:12.5px;letter-spacing:.07em;
+    text-transform:uppercase;color:var(--ink);font-weight:600;padding-right:24px;}
+  .ablauf td{color:var(--text-soft);line-height:1.62;}
+  .ablauf tr:last-child th,.ablauf tr:last-child td{border-bottom:0;}
+
+  .me-strip{display:grid;grid-template-columns:120px 1fr;gap:28px;align-items:center;
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:30px 34px;box-shadow:var(--shadow-sm);}
+  .me-strip img{width:120px;height:120px;border-radius:50%;object-fit:cover;border:1px solid var(--line);}
+  .me-strip p{color:var(--text-soft);font-size:15.5px;margin-top:6px;}
+
+  .contact-card{background:linear-gradient(155deg,var(--ink),var(--ink-2));color:#fff;border-radius:var(--r-lg);
+    padding:56px 44px;text-align:center;position:relative;overflow:hidden;}
+  .contact-card::after{content:"";position:absolute;left:-90px;bottom:-90px;width:300px;height:300px;border-radius:50%;
+    background:radial-gradient(circle,rgba(206,138,44,.26),transparent 64%);}
+  .contact-card>*{position:relative;z-index:1;}
+  .contact-meta{margin-top:30px;font-family:var(--mono);font-size:14px;color:var(--on-dark-soft);line-height:2;}
+  .contact-meta a{color:var(--amber);text-decoration:none;}
+  @media (max-width:680px){
+    .me-strip{grid-template-columns:1fr;text-align:center;justify-items:center;}
+    .ablauf th{display:block;width:auto;padding-bottom:6px;border-bottom:0;}
+    .ablauf td{display:block;padding-top:0;}
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v6c0 4 3 7 7 9 4-2 7-5 7-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+</svg>
+
+<nav class="ef-nav">
+  <div class="ef-nav__in">
+    <a href="index.html" class="ef-logo">
+      <img src="assets/logo-mark.svg" alt="">
+      <span class="ef-logo__wm">endlich feierabend<small>KI für Lehrkräfte</small></span>
+    </a>
+    <ul class="ef-nav__menu" id="nav">
+      <li><a href="index.html">Start</a></li>
+      <li><a href="ki-app.html">KI-App</a></li>
+      <li><a href="workshops.html">Workshops</a></li>
+      <li><a href="ki-ordnung.html" class="active">KI-Ordnung</a></li>
+      <li><a href="endlich-feierabend.html">Online-Kurs</a></li>
+      <li><a href="ueber-mich.html">Über mich</a></li>
+    </ul>
+    <div class="ef-nav__right">
+      <a href="ki-kickstart.html" class="btn btn--primary">KI-Kickstart</a>
+      <button class="ef-burger" id="burger" aria-label="Menü"><svg><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="container">
+    <div class="eyebrow on-dark">Schulentwicklung · Sekundarstufe</div>
+    <h1>Eine KI-Ordnung, die <em>tatsächlich beschlossen wird</em></h1>
+    <p class="lead">Die meisten Schulen wissen, dass sie Regeln brauchen. Woran es scheitert, ist nicht der Wille, sondern das Formulieren und der Gremienweg. Genau da setze ich an — mit einem Prozess, der in sechs bis zehn Wochen zu einer beschlussreifen Ordnung führt.</p>
+    <a href="mailto:rene.bohm92@gmail.com?subject=Standortbestimmung%20KI-Ordnung" class="btn btn--primary btn--lg">Standortbestimmung anfragen <svg><use href="#i-arrow"/></svg></a>
+    <p class="hero-note">30 Minuten, per Video, abends. Kostenlos und ohne Verkaufsabsicht.</p>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="section">
+  <div class="container-narrow szene">
+    <div class="eyebrow">Der Punkt, an dem es auffällt</div>
+    <h2>Erst der Einzelfall, dann die Lücke</h2>
+    <p>Eine Facharbeit liest sich auffällig glatt. Eine Kollegin hat den Text durch ein Erkennungswerkzeug geschickt, das „92 Prozent KI" meldet. Die Eltern fragen nach der Begründung — und im Kollegium stellt sich heraus, dass bisher jede Lehrkraft anders entschieden hat.</p>
+    <p>An dieser Stelle merken Schulen zweierlei. Der Detektorwert trägt nicht: er misst Textgestalt, nicht Entstehung, und im Widerspruchsfall lässt er sich nicht erklären. Und es fehlt eine Regel, auf die man sich berufen könnte.</p>
+    <p>Das Zweite ist das eigentliche Problem, und es ist lösbar. Es braucht keine Rechtsabteilung und keinen Präsenztag. Es braucht Entscheidungen, einen Text und einen Beschluss.</p>
+    <div class="kernsatz">
+      <p>Ein Verbot ist keine Ordnung. Und eine Ordnung, die niemand beschlossen hat, hilft im Streitfall niemandem.</p>
+    </div>
+  </div>
+</section>
+
+<!-- REGELUNGSFELDER -->
+<section class="section section--paper2">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Worum es geht</div>
+      <h2>Fünf Regelungsfelder, fünf Entscheidungen</h2>
+      <p class="lead">Eine KI-Ordnung ist kein Aufsatz, sondern eine Reihe von Festlegungen. Zu jedem Feld gibt es eine Leitfrage, die Ihre Schule beantworten muss — und zu jeder Antwort mehrere legitime Optionen.</p>
+    </div>
+    <div class="grid grid-3">
+      <div class="card card--hover feld-card">
+        <div class="top"><span class="mono-n">R1</span><h4>Nutzung durch Schüler:innen</h4></div>
+        <p>Häusliche Arbeiten, Referate, Recherche. Der Unterschied zwischen „im Unterricht" und „zu Hause" ist hier der ganze Streitpunkt.</p>
+        <div class="frage">Erlaubt · erlaubt mit Kennzeichnung · nicht erlaubt — und differenziert nach Aufgabenart?</div>
+      </div>
+      <div class="card card--hover feld-card">
+        <div class="top"><span class="mono-n">R2</span><h4>Kennzeichnung</h4></div>
+        <p>Wenn KI genutzt werden darf, muss die Form der Angabe geregelt sein — sonst ist die Regel nicht prüfbar.</p>
+        <div class="frage">Fußnote je Stelle · Anhang mit Prompt-Protokoll · Erklärung am Ende · Kombination?</div>
+      </div>
+      <div class="card card--hover feld-card">
+        <div class="top"><span class="mono-n">R3</span><h4>Prüfungen &amp; Leistungsbewertung</h4></div>
+        <p>Das Feld mit dem größten akuten Schmerz: Facharbeit, Täuschungsverdacht, Umgang mit Erkennungssoftware, Gewichtung von Prozess und Produkt.</p>
+        <div class="frage">Wer entscheidet im Verdachtsfall — und auf welcher Grundlage?</div>
+      </div>
+      <div class="card card--hover feld-card">
+        <div class="top"><span class="mono-n">R4</span><h4>Nutzung durch Lehrkräfte</h4></div>
+        <p>Vorbereitung, Korrekturunterstützung, Elternkommunikation. Bewertung bleibt hoheitliche Aufgabe — was folgt daraus praktisch?</p>
+        <div class="frage">Was darf unterstützt werden, was muss die Lehrkraft selbst verantworten?</div>
+      </div>
+      <div class="card card--hover feld-card">
+        <div class="top"><span class="mono-n">R5</span><h4>Datenschutz</h4></div>
+        <p>Welche Werkzeuge sind an Ihrer Schule zugelassen, welche Daten dürfen hinein — und wer entscheidet über neue Tools?</p>
+        <div class="frage">Positivliste, Freigabeweg, Umgang mit personenbezogenen Daten?</div>
+      </div>
+      <div class="card feld-card" style="background:var(--amber-soft);border-color:#EAD9B8;">
+        <div class="top"><span class="mono-n" style="color:#9A6418;">↳</span><h4 style="color:#7A5418;">Es gibt nicht die eine richtige Ordnung</h4></div>
+        <p style="color:#7A5418;">Zwei Schulen dürfen R1 unterschiedlich beantworten und liegen beide richtig. Die Aufgabe ist nicht, das Richtige zu finden, sondern etwas Einheitliches, Begründetes und Kommuniziertes festzulegen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAHRPLAN -->
+<section class="section">
+  <div class="container-narrow">
+    <div class="section-head">
+      <div class="eyebrow">Der Weg</div>
+      <h2>Fünf Schritte vom Thema zum Beschluss</h2>
+      <p class="lead">Der Prozess ist bewusst schlank gehalten. Jeder Schritt hat ein Ergebnis, das man vorzeigen kann — sonst versandet er zwischen zwei Konferenzen.</p>
+    </div>
+    <ul class="schritte">
+      <li>
+        <span class="num">1</span>
+        <div>
+          <h4>Bestandsaufnahme</h4>
+          <p>Was ist bei Ihnen schon geregelt, was wird faktisch praktiziert, wo weichen beide voneinander ab? Meist existieren mehr informelle Regeln als vermutet — und sie widersprechen sich.</p>
+        </div>
+      </li>
+      <li>
+        <span class="num">2</span>
+        <div>
+          <h4>Beteiligung</h4>
+          <p>Kollegium und Schülerschaft werden gefragt, bevor entschieden wird. Nicht aus Höflichkeit: eine Ordnung, die von oben kommt, wird umgangen statt befolgt.</p>
+          <span class="tag tag--ink gremium">Schlanke Formate, kein Großprojekt</span>
+        </div>
+      </li>
+      <li>
+        <span class="num">3</span>
+        <div>
+          <h4>Entwurf</h4>
+          <p>Die Steuergruppe trifft die Leitentscheidungen — ich schreibe daraus den Ordnungstext. Das ist der Schritt, an dem Schulen ohne Begleitung am häufigsten hängen bleiben.</p>
+        </div>
+      </li>
+      <li>
+        <span class="num">4</span>
+        <div>
+          <h4>Gremienweg</h4>
+          <p>Was gehört in die Lehrerkonferenz, was in die Schulkonferenz, was ist Sache der Schulleitung? Dazu eine Beschlussvorlage und die zu erwartenden Einwände mit Antwort.</p>
+          <span class="tag tag--ink gremium">Beschlussvorlage inklusive</span>
+        </div>
+      </li>
+      <li>
+        <span class="num">5</span>
+        <div>
+          <h4>Kommunikation &amp; Pflege</h4>
+          <p>Eltern, Schüler:innen, Kollegium — und ein festgelegter Turnus, in dem die Ordnung überprüft wird. Erlasslage und Werkzeuge ändern sich schneller als Schulprogramme.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ANGEBOT -->
+<section class="section section--paper2">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Vier Möglichkeiten</div>
+      <h2>So viel Begleitung, wie Sie brauchen</h2>
+      <p class="lead">Manche Schulen brauchen nur einen Anstoß, andere die vollständige Begleitung bis zum Beschluss. Welche Stufe passt, klären wir im Vorgespräch — das Angebot kommt danach, schriftlich, binnen 48 Stunden.</p>
+    </div>
+    <div class="grid grid-2">
+      <div class="card card--hover stufe-card">
+        <div class="kopf"><h3>Impuls im Kollegium</h3><span class="dauer">60–90 min · vor Ort</span></div>
+        <p>Ein Beitrag in der Lehrer- oder pädagogischen Konferenz: Warum ein Verbot keine Ordnung ist, die fünf Regelungsfelder im Schnelldurchlauf, zwei Beispielschulen mit unterschiedlichen und beide vertretbaren Entscheidungen.</p>
+        <div class="ergebnis"><strong>Ergebnis</strong>Ein Kollegium, das den anschließenden Prozess mitträgt statt ihn abzuwehren. Noch keine Ordnung.</div>
+      </div>
+      <div class="card card--hover stufe-card">
+        <div class="kopf"><h3>Entscheidungs-Workshop</h3><span class="dauer">Halber Tag · 8–15 Personen</span></div>
+        <p>Eine Arbeitssitzung mit Schulleitung, Steuergruppe, Oberstufenkoordination und KI-Beauftragten. Kein Fortbildungsformat: wir arbeiten die fünf Regelungsfelder durch und legen je Feld die Leitentscheidung fest.</p>
+        <div class="ergebnis"><strong>Ergebnis</strong>Ein ausgefülltes Entscheidungsraster — der Rohtext Ihrer Ordnung. Sie gehen mit einem Dokument aus dem Raum, nicht mit Notizen.</div>
+      </div>
+      <div class="card card--hover stufe-card stufe-card--kern">
+        <div class="kopf"><h3>Prozessbegleitung bis zum Beschluss</h3><span class="dauer">6–10 Wochen · 4 Termine</span></div>
+        <p>Auftaktworkshop vor Ort, danach drei Online-Termine: Redaktionssitzung, Gremienvorbereitung, Nachlese. Dazwischen schreibe ich den Ordnungsentwurf aus den Entscheidungen Ihrer Schule. Enthalten sind Beschlussvorlage, Elternschreiben, Schülerinformation, Kollegiums-FAQ mit Einwandbehandlung und der Foliensatz zum Selbsthalten.</p>
+        <div class="ergebnis"><strong>Ergebnis</strong>Eine beschlussreife KI-Ordnung samt Kommunikationspaket und festgelegtem Pflegeturnus.</div>
+      </div>
+      <div class="card card--hover stufe-card">
+        <div class="kopf"><h3>Umsetzungspaket zum Selbstgehen</h3><span class="dauer">Ohne Termin · Dokumente</span></div>
+        <p>Wenn kein Termin im Kalender frei ist: das Dokumentenpaket zum Feld Prüfungen und Leistungsbewertung. Entscheidungsraster, Verfahren bei Täuschungsverdacht mit Gesprächsleitfaden und Formularen, Regelwerk Facharbeit, Kollegiumspräsentation zum Selbsthalten.</p>
+        <div class="ergebnis"><strong>Ergebnis</strong>Ihre Schule arbeitet den Prozess selbst ab. Eine Rückfrage-Mail ist enthalten.</div>
+      </div>
+    </div>
+    <div class="dsgvo-banner" style="display:flex;gap:22px;align-items:flex-start;margin-top:32px;background:var(--gruen-tint);border:1px solid #C9E3D2;border-radius:var(--r-lg);padding:28px 32px;">
+      <span style="flex-shrink:0;width:46px;height:46px;border-radius:50%;background:var(--gruen);display:flex;align-items:center;justify-content:center;"><svg style="width:24px;height:24px;color:#fff;"><use href="#i-shield"/></svg></span>
+      <div>
+        <h4 style="color:var(--gruen-deep);margin-bottom:6px;">Preis nach Umfang, transparent vor der Entscheidung</h4>
+        <p style="margin:0;color:#2C5A3E;font-size:15.5px;">Alle Stufen werden pauschal abgerechnet, Reisekosten nach dem Landesreisekostengesetz NRW ausgewiesen. Sie erhalten das Angebot schriftlich nach dem Vorgespräch — mit einer Empfehlung, welche Stufe für Ihre Situation genügt. Auch wenn das die kleinere ist.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WAS ES NICHT IST -->
+<section class="section section--dark">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow on-dark">Ehrlichkeit vorab</div>
+      <h2>Drei Dinge, die dieses Angebot nicht ist</h2>
+    </div>
+    <div class="grid grid-3">
+      <div class="card card--dark nicht-card">
+        <span class="lbl">Nicht</span>
+        <h4>Rechtsberatung</h4>
+        <p>Sie erhalten Vorlagen, Verfahren und Entscheidungshilfen. Die rechtliche Absicherung Ihrer Festlegungen läuft über Schulaufsicht und Schulträger. Wo etwas zu prüfen ist, steht es im Dokument — nicht im Kleingedruckten.</p>
+      </div>
+      <div class="card card--dark nicht-card">
+        <span class="lbl">Nicht</span>
+        <h4>Ein Tool-Kurs</h4>
+        <p>Es steht nirgends, welches KI-Werkzeug Sie benutzen sollen. Landeslizenzen und kostenlose Zugänge gibt es reichlich; was fehlt, sind die Regeln für den Umgang damit.</p>
+      </div>
+      <div class="card card--dark nicht-card">
+        <span class="lbl">Nicht</span>
+        <h4>Eine Ordnung von der Stange</h4>
+        <p>Ich bringe keine fertige Ordnung mit, die Sie unterschreiben. Ihre Schule entscheidet — der Prozess strukturiert die Entscheidung und formuliert das Ergebnis.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABLAUF -->
+<section class="section">
+  <div class="container-narrow">
+    <div class="section-head">
+      <div class="eyebrow">Ablauf</div>
+      <h2>Wie es losgeht</h2>
+    </div>
+    <table class="ablauf">
+      <tr>
+        <th>Standortbestimmung</th>
+        <td>30 Minuten per Video, abends. Ich stelle Fragen, Sie erzählen, wo Ihre Schule steht. Kostenlos und ohne Verkaufsabsicht — wenn nichts passt, sage ich das.</td>
+      </tr>
+      <tr>
+        <th>Angebot</th>
+        <td>Schriftlich binnen 48 Stunden nach dem Gespräch, mit einer Empfehlung für die passende Stufe und ausgewiesenen Reisekosten.</td>
+      </tr>
+      <tr>
+        <th>Terminierung</th>
+        <td>Der Auftaktworkshop liegt idealerweise vor der ersten Konferenz des Halbjahres, damit der Beschluss noch in diesem Schuljahr fällt.</td>
+      </tr>
+      <tr>
+        <th>Nach dem Beschluss</th>
+        <td>Auf Wunsch Elternabend, Fachkonferenz-Begleitung zu Aufgabenformaten oder ein jährliches Update der Ordnung. Kein Abo, keine Verpflichtung.</td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<!-- ME STRIP -->
+<section class="section-sm">
+  <div class="container-narrow">
+    <div class="me-strip">
+      <img src="rene-bohm.jpg" alt="René Bohm">
+      <div>
+        <h4>Hi, ich bin René</h4>
+        <p>Mathe- und Informatiklehrer an einem Gymnasium in NRW und dort KI-Beauftragter. Die Verfahren, mit denen ich arbeite, sind aus der Frage entstanden, wie man an einer ganz normalen Schule zu belastbaren Regeln kommt — nicht aus einer Beratungsperspektive. Ich sitze in denselben Konferenzen wie Sie.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KONTAKT -->
+<section class="section" id="kontakt">
+  <div class="container-narrow">
+    <div class="contact-card">
+      <div class="eyebrow on-dark" style="justify-content:center;">Kontakt</div>
+      <h2 style="color:#fff;">Standortbestimmung vereinbaren</h2>
+      <p class="lead" style="color:var(--on-dark-soft);margin:16px auto 28px;max-width:540px;">Schreiben Sie mir zwei Sätze dazu, wo Ihre Schule gerade steht — ich schlage zwei Abendtermine vor.</p>
+      <div class="btn-row center"><a href="mailto:rene.bohm92@gmail.com?subject=Standortbestimmung%20KI-Ordnung" class="btn btn--primary btn--lg">Anfrage senden <svg><use href="#i-mail"/></svg></a></div>
+      <div class="contact-meta">
+        <strong style="color:#fff;">René Bohm</strong><br>
+        E-Mail: <a href="mailto:rene.bohm92@gmail.com">rene.bohm92@gmail.com</a><br>
+        Instagram: <a href="https://instagram.com/endlich.feierabend.ki" target="_blank">@endlich.feierabend.ki</a>
+      </div>
+      <p style="margin-top:18px;font-size:13.5px;color:var(--on-dark-soft);max-width:540px;margin-left:auto;margin-right:auto;">Ich melde mich innerhalb von 24 Stunden zurück. Für Kollegien, die zuerst eine Fortbildung suchen: die Modulübersicht liegt unter <a href="workshops.html" style="color:var(--amber);text-decoration:none;">Workshops</a>.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="ef-footer">
+  <div class="container">
+    <div class="ef-footer__grid">
+      <div>
+        <div class="ef-footer__brand"><img src="assets/logo-mark.svg" alt=""><span class="ef-logo__wm">endlich feierabend</span></div>
+        <p>KI-Fortbildungen für Lehrkräfte im DACH-Raum. Systematisch, praxisnah und DSGVO-konform.</p>
+        <p style="margin-top:18px;"><strong style="color:#fff;">René Bohm</strong><br>Mathe- &amp; Informatiklehrer in NRW · KI-Fortbildner</p>
+        <p style="margin-top:14px;"><a class="ig" href="https://instagram.com/endlich.feierabend.ki" target="_blank"><svg style="width:16px;height:16px;"><use href="#i-ig"/></svg> @endlich.feierabend.ki</a></p>
+      </div>
+      <div>
+        <h4>Angebote</h4>
+        <ul class="ef-footer__links">
+          <li><a href="ki-app.html">KI-App (Download)</a></li>
+          <li><a href="ki-kickstart.html">KI-Kickstart PDF</a></li>
+          <li><a href="workshops.html">Workshops</a></li>
+          <li><a href="ki-ordnung.html">KI-Ordnung für Schulen</a></li>
+          <li><a href="endlich-feierabend.html">Online-Kurs</a></li>
+          <li><a href="ueber-mich.html">Über mich</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Rechtliches</h4>
+        <ul class="ef-footer__links">
+          <li><a href="impressum.html">Impressum</a></li>
+          <li><a href="impressum.html#datenschutz">Datenschutz</a></li>
+          <li><a href="impressum.html#agb">AGB</a></li>
+          <li><a href="impressum.html#widerruf">Widerruf</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ef-footer__bottom">
+      <span>© 2026 René Bohm · Endlich Feierabend</span>
+      <span>Mit Sorgfalt gebaut in NRW.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const burger=document.getElementById('burger'),nav=document.getElementById('nav');
+  burger.addEventListener('click',()=>nav.classList.toggle('open'));
+  document.addEventListener('click',e=>{if(!e.target.closest('.ef-nav'))nav.classList.remove('open');});
+</script>
+</body>
+</html>

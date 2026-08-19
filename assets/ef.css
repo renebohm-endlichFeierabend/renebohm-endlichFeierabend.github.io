@@ -257,14 +257,18 @@ em,.amber-mark{font-style:normal;color:var(--ink);
   .stat-band{grid-template-columns:repeat(2,1fr);gap:36px 20px;}
   .ef-footer__grid{grid-template-columns:1fr;gap:34px;}
 }
-@media (max-width:680px){
-  body{font-size:17px;}
-  .section{padding:64px 0;}
-  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}
+/* Nav klappt frueher ins Burger-Menue: ab sechs Menuepunkten bricht die
+   Zeile sonst schon bei ~1050px um. */
+@media (max-width:1080px){
   .ef-nav__menu{position:absolute;top:72px;left:0;right:0;flex-direction:column;align-items:flex-start;
     background:var(--paper);border-bottom:1px solid var(--line);padding:18px var(--gut);gap:18px;
     box-shadow:var(--shadow);display:none;}
   .ef-nav__menu.open{display:flex;}
   .ef-burger{display:inline-flex;}
+}
+@media (max-width:680px){
+  body{font-size:17px;}
+  .section{padding:64px 0;}
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}
   .ef-footer__bottom{flex-direction:column;align-items:flex-start;}
 }
