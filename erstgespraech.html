@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KI-Standortbestimmung für Ihre Schule · Endlich Feierabend</title>
+<meta name="description" content="30 Minuten Gespräch, zwei Seiten schriftlich, kostenlos: Wo steht Ihre Schule bei KI? Eine Einordnung, mit der Sie in der Steuergruppe und beim Schulträger arbeiten können.">
+<link rel="icon" href="assets/logo-mark.svg">
+<link rel="stylesheet" href="assets/ef.css">
+<style>
+  .page-hero{background:linear-gradient(160deg,#0B2240,#0D3A6B);color:var(--on-dark);
+    padding:96px 0 88px;position:relative;overflow:hidden;}
+  .page-hero::after{content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;
+    background:radial-gradient(circle,rgba(206,138,44,.24),transparent 62%);}
+  .page-hero .container{position:relative;z-index:1;max-width:820px;}
+  .page-hero h1{color:#fff;}
+  .page-hero h1 em{color:#fff;background-image:linear-gradient(var(--amber),var(--amber));
+    background-repeat:no-repeat;background-position:0 92%;background-size:100% .1em;}
+  .page-hero .lead{color:var(--on-dark-soft);margin:20px 0 32px;max-width:660px;}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px;}
+
+  .step{display:flex;gap:22px;align-items:flex-start;}
+  .step .num{background:var(--ink);}
+  .step h4{margin-bottom:6px;}
+  .step p{color:var(--text-soft);font-size:15.5px;margin:0;}
+
+  .deliverable{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+    padding:38px 34px;box-shadow:var(--shadow-sm);}
+  .deliverable h3{margin-bottom:18px;}
+  .amp-row{display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-top:1px solid var(--line);}
+  .amp-row:first-of-type{border-top:0;}
+  .amp{flex-shrink:0;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-weight:600;font-size:12px;color:#fff;}
+  .amp--g{background:var(--gruen);} .amp--y{background:var(--amber);} .amp--r{background:var(--rot);}
+  .amp-row h4{font-size:17.5px;margin-bottom:3px;}
+  .amp-row p{margin:0;color:var(--text-soft);font-size:15px;line-height:1.6;}
+
+  .notthis{background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r-lg);padding:30px 32px;}
+  .notthis ul{list-style:none;display:flex;flex-direction:column;gap:12px;margin-top:14px;}
+  .notthis li{display:flex;gap:12px;align-items:flex-start;font-size:16.5px;color:var(--text);}
+  .notthis .x{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--rot-tint);
+    display:flex;align-items:center;justify-content:center;margin-top:3px;}
+  .notthis .x svg{width:12px;height:12px;color:var(--rot);}
+
+  .me-strip{display:grid;grid-template-columns:120px 1fr;gap:28px;align-items:center;
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:30px 34px;box-shadow:var(--shadow-sm);}
+  .me-strip img{width:120px;height:120px;border-radius:50%;object-fit:cover;border:1px solid var(--line);}
+  .me-strip p{color:var(--text-soft);font-size:15.5px;margin-top:6px;}
+
+  .contact-card{background:linear-gradient(155deg,var(--ink),var(--ink-2));color:#fff;border-radius:var(--r-lg);
+    padding:56px 44px;text-align:center;position:relative;overflow:hidden;}
+  .contact-card::after{content:"";position:absolute;left:-90px;bottom:-90px;width:300px;height:300px;border-radius:50%;
+    background:radial-gradient(circle,rgba(206,138,44,.26),transparent 64%);}
+  .contact-card>*{position:relative;z-index:1;}
+  .contact-meta{margin-top:30px;font-family:var(--mono);font-size:14px;color:var(--on-dark-soft);line-height:2;}
+  .contact-meta a{color:var(--amber);text-decoration:none;}
+  @media (max-width:680px){ .me-strip{grid-template-columns:1fr;text-align:center;justify-items:center;} }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+</svg>
+
+<nav class="ef-nav">
+  <div class="ef-nav__in">
+    <a href="index.html" class="ef-logo">
+      <img src="assets/logo-mark.svg" alt="">
+      <span class="ef-logo__wm">endlich feierabend<small>KI für Lehrkräfte</small></span>
+    </a>
+    <ul class="ef-nav__menu" id="nav">
+      <li><a href="index.html">Start</a></li>
+      <li><a href="ki-app.html">KI-App</a></li>
+      <li><a href="workshops.html">Workshops</a></li>
+      <li><a href="erstgespraech.html" class="active">Schulleitungen</a></li>
+      <li><a href="endlich-feierabend.html">Online-Kurs</a></li>
+      <li><a href="ueber-mich.html">Über mich</a></li>
+    </ul>
+    <div class="ef-nav__right">
+      <a href="#termin" class="btn btn--primary">Gespräch anfragen</a>
+      <button class="ef-burger" id="burger" aria-label="Menü"><svg><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="container">
+    <div class="eyebrow on-dark">Für Schulleitungen und Steuergruppen</div>
+    <h1>Wo steht Ihre Schule <em>bei KI?</em></h1>
+    <p class="lead">30 Minuten Gespräch, zwei Seiten schriftlich. Kostenlos. Am Ende haben Sie eine ehrliche Einordnung in der Hand — und wissen, welche zwei oder drei Schritte in diesem Schuljahr wirklich etwas bringen.</p>
+    <a href="#termin" class="btn btn--primary btn--lg">Gespräch anfragen <svg><use href="#i-arrow"/></svg></a>
+    <div class="hero-meta">
+      <span class="tag tag--amber">30 Minuten</span>
+      <span class="tag tag--amber">kostenlos</span>
+      <span class="tag tag--amber">vor Ort oder online</span>
+    </div>
+  </div>
+</section>
+
+<!-- ABLAUF -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">So läuft es ab</div>
+      <h2>Drei Schritte, keine Verkaufsshow</h2>
+      <p class="lead">Ich stelle Fragen, Sie erzählen. Was danach passiert, entscheiden Sie.</p>
+    </div>
+    <div class="grid grid-3">
+      <div class="card step">
+        <span class="num">1</span>
+        <div>
+          <h4>Das Gespräch</h4>
+          <p>Wo steht Ihre Schule? Was wird schon genutzt — offiziell und inoffiziell? Wo brennt es: Kollegium, Datenschutz, Elternschaft, Prüfungen?</p>
+        </div>
+      </div>
+      <div class="card step">
+        <span class="num">2</span>
+        <div>
+          <h4>Die Standortbestimmung</h4>
+          <p>Innerhalb von zwei Tagen zwei Seiten schriftlich: vier Felder mit Einordnung, drei Stärken, drei Lücken, drei nächste Schritte — jeweils mit Aufwand und Zuständigkeit.</p>
+        </div>
+      </div>
+      <div class="card step">
+        <span class="num">3</span>
+        <div>
+          <h4>Eine klare Empfehlung</h4>
+          <p>Wenn ich helfen kann, sage ich, wie und was es kostet. Wenn Ihre Schule das selbst schafft, sage ich das genauso — dann haben Sie die zwei Seiten trotzdem.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DELIVERABLE -->
+<section class="section section--paper2">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Ihr Ergebnis</div>
+      <h2>Zwei Seiten, mit denen Sie arbeiten können</h2>
+      <p class="lead">Keine vagen Eindrücke und kein Gutachten, das niemand liest — eine Einordnung, die in der Steuergruppe, im Kollegium und gegenüber dem Schulträger trägt.</p>
+    </div>
+    <div class="grid grid-2">
+      <div class="deliverable">
+        <span class="idx">Seite 1</span>
+        <h3>Vier Felder, ehrlich eingeordnet</h3>
+        <p class="muted" style="font-size:14.5px;margin:-8px 0 14px;">Beispielhafte Darstellung — die Einordnung entsteht im Gespräch.</p>
+        <div class="amp-row">
+          <span class="amp amp--g"><svg style="width:14px;height:14px;"><use href="#i-check"/></svg></span>
+          <div><h4>Können im Kollegium</h4><p>Wer arbeitet schon mit KI — und wie groß ist der Abstand zwischen den Engagierten und dem Rest?</p></div>
+        </div>
+        <div class="amp-row">
+          <span class="amp amp--y">?</span>
+          <div><h4>Werkzeuge &amp; Datenschutz</h4><p>Was ist im Einsatz, was ist lizenziert, was läuft über Privataccounts — und wo liegen Schülerdaten?</p></div>
+        </div>
+        <div class="amp-row">
+          <span class="amp amp--y">?</span>
+          <div><h4>Ordnung &amp; Regeln</h4><p>Gibt es eine Nutzungsordnung? Ist sie beschlossen, bekannt und gelebt?</p></div>
+        </div>
+        <div class="amp-row">
+          <span class="amp amp--r"><svg style="width:13px;height:13px;"><use href="#i-x"/></svg></span>
+          <div><h4>Leistungsbewertung &amp; Prüfung</h4><p>Facharbeit, Täuschungsverdacht, Klausurkonzepte: Ist geregelt, wie mit KI-Nutzung umgegangen wird?</p></div>
+        </div>
+      </div>
+      <div class="deliverable">
+        <span class="idx">Seite 2</span>
+        <h3>Was daraus folgt</h3>
+        <ul class="ticks" style="margin-top:6px;">
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span><div><strong>Drei Stärken</strong>, auf denen Sie aufbauen können.</div></li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span><div><strong>Drei Lücken</strong> — konkret benannt, nicht „mehr Fortbildung nötig".</div></li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span><div><strong>Drei nächste Schritte</strong>, jeder mit geschätztem Aufwand und der Angabe, wer ihn verantwortet: Schulleitung, Steuergruppe oder Fachkonferenz.</div></li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span><div><strong>Eine ehrliche Selbsteinschätzung</strong>: was Ihre Schule ohne externe Hilfe schafft — und was nicht.</div></li>
+        </ul>
+        <div class="prompt" style="margin-top:24px;">
+          <span class="lbl">Warum schriftlich</span>
+          Weil eine Einordnung, die man weiterreichen kann, in der Schule etwas bewegt — und ein Gespräch ohne Ergebnis nicht.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FÜR WEN / NICHT -->
+<section class="section">
+  <div class="container">
+    <div class="grid grid-2">
+      <div>
+        <div class="eyebrow">Für wen</div>
+        <h2 style="margin-bottom:24px;">Wer hier richtig ist</h2>
+        <ul class="ticks">
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span><div>Schulleitungen und erweiterte Schulleitungen, die KI strukturiert angehen wollen statt zufällig</div></li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span><div>Steuergruppen und Fortbildungsbeauftragte</div></li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span><div>KI-Beauftragte, die im Kollegium etwas anstoßen sollen — und Rückendeckung brauchen</div></li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span><div>Schwerpunkt Sekundarstufe II und Gymnasien in NRW; andere Schulformen und Länder gerne auf Anfrage</div></li>
+        </ul>
+        <p class="muted" style="margin-top:26px;font-size:16px;">Sie sind Lehrkraft und keine Schulleitung? Dann leiten Sie diese Seite weiter — das Gespräch ist der einfachste Weg, das Thema an Ihrer Schule aus dem Ungefähren zu holen.</p>
+      </div>
+      <div class="notthis">
+        <div class="eyebrow">Klarstellung</div>
+        <h3>Was es nicht ist</h3>
+        <ul>
+          <li><span class="x"><svg><use href="#i-x"/></svg></span><div>Keine Verkaufsshow mit Angebot am Ende der 30 Minuten.</div></li>
+          <li><span class="x"><svg><use href="#i-x"/></svg></span><div>Kein Abo und keine Plattform-Anmeldung.</div></li>
+          <li><span class="x"><svg><use href="#i-x"/></svg></span><div>Keine Produktdemo — wer ein Werkzeug sehen will, bekommt einen eigenen Termin dafür.</div></li>
+          <li><span class="x"><svg><use href="#i-x"/></svg></span><div>Kein Nachfassen ohne Ende: Ich melde mich genau einmal, wenn Sie sich nicht melden.</div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ME STRIP -->
+<section class="section-sm">
+  <div class="container-narrow">
+    <div class="me-strip">
+      <img src="rene-bohm.jpg" alt="René Bohm">
+      <div>
+        <h4>Wer fragt</h4>
+        <p>Ich bin René Bohm, Mathe- und Informatiklehrer in NRW und KI-Beauftragter meiner Schule. Ich sitze also selbst in den Runden, in denen über Nutzungsordnungen, Täuschungsverdacht und Fortbildungsplanung entschieden wird — und weiß, welche Antworten dort tragen und welche nur gut klingen.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TERMIN -->
+<section class="section" id="termin">
+  <div class="container-narrow">
+    <div class="contact-card">
+      <div class="eyebrow on-dark" style="justify-content:center;">Termin</div>
+      <h2 style="color:#fff;">30 Minuten, kostenlos</h2>
+      <p class="lead" style="color:var(--on-dark-soft);margin:16px auto 28px;max-width:540px;">Schreiben Sie mir kurz, um welche Schule es geht und wie groß das Kollegium ist — ich schlage zwei Termine vor. Vor Ort in NRW oder online.</p>
+      <div class="btn-row center"><a href="mailto:BITTE-EINTRAGEN?subject=KI-Standortbestimmung%20f%C3%BCr%20unsere%20Schule" class="btn btn--primary btn--lg">Gespräch anfragen <svg><use href="#i-mail"/></svg></a></div>
+      <div class="contact-meta">
+        <strong style="color:#fff;">René Bohm</strong><br>
+        Mathe- &amp; Informatiklehrer · KI-Beauftragter<br>
+        Instagram: <a href="https://instagram.com/endlich.feierabend.ki" target="_blank" rel="noopener">@endlich.feierabend.ki</a>
+      </div>
+      <p style="margin-top:18px;font-size:13.5px;color:var(--on-dark-soft);max-width:540px;margin-left:auto;margin-right:auto;">Ich antworte innerhalb von 24 Stunden. Die schriftliche Standortbestimmung kommt innerhalb von zwei Tagen nach dem Gespräch.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="ef-footer">
+  <div class="container">
+    <div class="ef-footer__grid">
+      <div>
+        <div class="ef-footer__brand"><img src="assets/logo-mark.svg" alt=""><span class="ef-logo__wm">endlich feierabend</span></div>
+        <p>KI-Fortbildungen für Lehrkräfte im DACH-Raum. Systematisch, praxisnah und DSGVO-konform.</p>
+        <p style="margin-top:18px;"><strong style="color:#fff;">René Bohm</strong><br>Mathe- &amp; Informatiklehrer in NRW · KI-Beauftragter</p>
+        <p style="margin-top:14px;"><a class="ig" href="https://instagram.com/endlich.feierabend.ki" target="_blank" rel="noopener"><svg style="width:16px;height:16px;"><use href="#i-ig"/></svg> @endlich.feierabend.ki</a></p>
+      </div>
+      <div>
+        <h4>Angebote</h4>
+        <ul class="ef-footer__links">
+          <li><a href="ki-app.html">KI-App (Download)</a></li>
+          <li><a href="ki-kickstart.html">KI-Kickstart PDF</a></li>
+          <li><a href="workshops.html">Workshops</a></li>
+          <li><a href="erstgespraech.html">Schulleitungen</a></li>
+          <li><a href="endlich-feierabend.html">Online-Kurs</a></li>
+          <li><a href="ueber-mich.html">Über mich</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Rechtliches</h4>
+        <ul class="ef-footer__links">
+          <li><a href="impressum.html">Impressum</a></li>
+          <li><a href="impressum.html#datenschutz">Datenschutz</a></li>
+          <li><a href="impressum.html#agb">AGB</a></li>
+          <li><a href="impressum.html#widerruf">Widerruf</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ef-footer__bottom">
+      <span>© 2026 René Bohm · Endlich Feierabend</span>
+      <span>Mit Sorgfalt gebaut in NRW.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const burger=document.getElementById('burger'),nav=document.getElementById('nav');
+  burger.addEventListener('click',()=>nav.classList.toggle('open'));
+  document.addEventListener('click',e=>{if(!e.target.closest('.ef-nav'))nav.classList.remove('open');});
+</script>
+</body>
+</html>
