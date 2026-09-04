@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Die KI-App für Lehrkräfte · Endlich Feierabend</title>
-<meta name="description" content="Endlich Feierabend – die Desktop-App für Lehrkräfte: Klausuren, Erwartungshorizonte und Arbeitsblätter mit KI erstellen. Alle Daten bleiben lokal. Jetzt für Windows & Mac herunterladen.">
+<meta name="description" content="Endlich Feierabend – die Desktop-App für Lehrkräfte: Klausuren, Erwartungshorizonte und Arbeitsblätter mit KI erstellen. Alle Daten bleiben lokal. Jetzt für Windows, Mac und Linux herunterladen.">
 <link rel="icon" href="assets/logo-mark.svg">
 <link rel="stylesheet" href="assets/ef.css">
 <style>
@@ -159,6 +159,13 @@
     <h1>Endlich Feierabend — <em>die KI-App</em> für Lehrkräfte</h1>
     <p class="lead">Klausuren, Erwartungshorizonte und Arbeitsblätter in Minuten statt Stunden — direkt auf deinem Rechner. Die KI gleicht deinen Lehrplan ab, du gibst frei, fertig. Alle Daten bleiben lokal bei dir.</p>
 
+    <!-- Die Download-Adressen sind ABSICHTLICH ohne Versionsnummer.
+         GitHub leitet /releases/latest/download/<Dateiname> immer auf das Release
+         weiter, das als "Latest" markiert ist. Damit das trägt, müssen die
+         Dateinamen über Releases hinweg gleich bleiben – dafür sorgt
+         `artifactName` in Lehrer-KI/electron/package.json (build.nsis / build.mac /
+         build.linux). Wer dort die Namen ändert, muss sie hier mitändern; sonst
+         gehen die Buttons ins Leere. Neue Version = nichts an dieser Seite tun. -->
     <div class="dl-wrap">
       <!-- WINDOWS -->
       <div class="dl-card" id="card-win">
@@ -168,10 +175,10 @@
           <h3>Windows</h3>
         </div>
         <p class="dl-card__meta">Installer (.exe) · Windows 10/11 · 64-Bit</p>
-        <a class="btn btn--primary btn--lg" href="https://github.com/renebohm-endlichFeierabend/Lehrer-KI-releases/releases/download/v1.0.0/Endlich-Feierabend-Setup-1.0.0.exe">
+        <a class="btn btn--primary btn--lg" href="https://github.com/renebohm-endlichFeierabend/Lehrer-KI-releases/releases/latest/download/Endlich-Feierabend-Setup.exe">
           <svg><use href="#i-download"/></svg> Für Windows laden
         </a>
-        <p class="dl-card__hint">Version 1.0.0 · ca. 103 MB</p>
+        <p class="dl-card__hint">immer die aktuelle Version · ca. 120 MB</p>
       </div>
       <!-- MAC -->
       <div class="dl-card" id="card-mac">
@@ -181,12 +188,18 @@
           <h3>Mac</h3>
         </div>
         <p class="dl-card__meta">Disk-Image (.dmg) · Apple Silicon (M1–M4)</p>
-        <a class="btn btn--primary btn--lg" href="https://github.com/renebohm-endlichFeierabend/Lehrer-KI-releases/releases/download/v1.0.0/Endlich-Feierabend-1.0.0-arm64.dmg">
+        <a class="btn btn--primary btn--lg" href="https://github.com/renebohm-endlichFeierabend/Lehrer-KI-releases/releases/latest/download/Endlich-Feierabend-arm64.dmg">
           <svg><use href="#i-download"/></svg> Für Mac laden
         </a>
-        <p class="dl-card__hint">Version 1.0.0 · ca. 118 MB</p>
+        <p class="dl-card__hint">immer die aktuelle Version · ca. 135 MB</p>
       </div>
     </div>
+
+    <p style="margin-top:22px;font-family:var(--mono);font-size:12.5px;color:var(--on-dark-soft);">
+      Linux? Es gibt ein
+      <a href="https://github.com/renebohm-endlichFeierabend/Lehrer-KI-releases/releases/latest/download/Endlich-Feierabend.AppImage" style="color:var(--amber);">AppImage</a>
+      · <a href="https://github.com/renebohm-endlichFeierabend/Lehrer-KI-releases/releases/latest" style="color:var(--on-dark-soft);">alle Dateien und Versionshinweise</a>
+    </p>
 
     <div class="hero-trust">
       <span><svg><use href="#i-check"/></svg> Gratis-Kontingent zum Start</span>
@@ -378,10 +391,10 @@
     <h2>Jetzt herunterladen und loslegen.</h2>
     <p class="lead" style="margin-top:16px;">Lokal, ohne Abo und in wenigen Minuten startklar.</p>
     <div class="btn-row center" style="margin-top:30px;">
-      <a class="btn btn--primary btn--lg" href="https://github.com/renebohm-endlichFeierabend/Lehrer-KI-releases/releases/download/v1.0.0/Endlich-Feierabend-Setup-1.0.0.exe"><svg><use href="#i-windows"/></svg> Windows-Download</a>
-      <a class="btn btn--on-dark btn--lg" href="https://github.com/renebohm-endlichFeierabend/Lehrer-KI-releases/releases/download/v1.0.0/Endlich-Feierabend-1.0.0-arm64.dmg"><svg><use href="#i-apple"/></svg> Mac-Download</a>
+      <a class="btn btn--primary btn--lg" href="https://github.com/renebohm-endlichFeierabend/Lehrer-KI-releases/releases/latest/download/Endlich-Feierabend-Setup.exe"><svg><use href="#i-windows"/></svg> Windows-Download</a>
+      <a class="btn btn--on-dark btn--lg" href="https://github.com/renebohm-endlichFeierabend/Lehrer-KI-releases/releases/latest/download/Endlich-Feierabend-arm64.dmg"><svg><use href="#i-apple"/></svg> Mac-Download</a>
     </div>
-    <p style="margin-top:20px;font-family:var(--mono);font-size:12.5px;color:var(--on-dark-soft);">Aktuelle Version: 1.0.0 · Windows 10/11 &amp; Apple Silicon</p>
+    <p style="margin-top:20px;font-family:var(--mono);font-size:12.5px;color:var(--on-dark-soft);">Immer die aktuelle Version · Windows 10/11, Apple Silicon &amp; Linux (AppImage)</p>
   </div>
 </section>
 
@@ -399,6 +412,7 @@
         <h4>Angebote</h4>
         <ul class="ef-footer__links">
           <li><a href="ki-app.html">KI-App (Download)</a></li>
+          <li><a href="assistenten.html">KI-Assistenten</a></li>
           <li><a href="ki-kickstart.html">KI-Kickstart PDF</a></li>
           <li><a href="workshops.html">Workshops</a></li>
           <li><a href="erstgespraech.html">Schulleitungen</a></li>
