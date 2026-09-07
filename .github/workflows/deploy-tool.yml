@@ -37,6 +37,8 @@ jobs:
           cp -r assets deploy/ 2>/dev/null || true
           # Lehrer-Tool built app into /tool/
           cp -r tool/dist/. deploy/tool/
+          # Schulpost-PWA (statisch, kein Build) nach /mail/
+          cp -r mail deploy/ 2>/dev/null || true
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
