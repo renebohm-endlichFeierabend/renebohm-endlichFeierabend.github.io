@@ -1,0 +1,65 @@
+name: Routine-Medien nach main übernehmen
+
+# Gegenstück zum gleichnamigen Workflow im Repo KI-Fortbildung.
+#
+# Die Posting-Routine legt die Bilder und Videos, die Instagram beim Posten abholt,
+# unter assets/social/ ab. Sie läuft in einer Cloud-Sitzung ohne Schreibrecht auf
+# `main`, ihr Commit bleibt also auf dem Sitzungs-Branch liegen. Für den bereits
+# abgesetzten Beitrag ist das folgenlos – Instagram hat die Datei da längst kopiert –
+# aber der Hoster-Ordner wird löchrig, und beim nächsten Lauf zeigt die URL auf einen
+# Branch statt auf main.
+#
+# Übernommen wird nur, was ausschließlich unter assets/social/ liegt und sich als
+# Fast-Forward anfügen lässt. Alles andere bleibt Pull Request.
+
+on:
+  push:
+    branches:
+      - 'claude/**'
+    paths:
+      - 'assets/social/**'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: routine-medien-uebernehmen
+  cancel-in-progress: false
+
+jobs:
+  fast-forward:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prüfen, ob der Branch nur Social-Medien ändert
+        id: pruefung
+        run: |
+          set -euo pipefail
+          geaendert="$(git diff --name-only origin/main...HEAD)"
+          echo "Geänderte Dateien gegenüber main:"
+          echo "$geaendert" | sed 's/^/  /'
+
+          fremd="$(echo "$geaendert" | grep -v '^assets/social/' || true)"
+          if [ -n "$fremd" ]; then
+            echo "::notice::Branch fasst mehr als assets/social/ an – kein automatischer Merge."
+            echo "uebernehmen=nein" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if ! git merge-base --is-ancestor origin/main HEAD; then
+            echo "::warning::main ist kein Vorfahre – kein Fast-Forward möglich, bitte von Hand mergen."
+            echo "uebernehmen=nein" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "uebernehmen=ja" >> "$GITHUB_OUTPUT"
+
+      - name: Nach main übernehmen
+        if: steps.pruefung.outputs.uebernehmen == 'ja'
+        run: |
+          set -euo pipefail
+          git push origin HEAD:main
+          echo "::notice::Medien nach main übernommen."
