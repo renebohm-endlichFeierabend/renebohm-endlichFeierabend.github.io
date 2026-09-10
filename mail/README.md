@@ -92,6 +92,29 @@ Es gibt keinen Server von mir dazwischen.
 
 Noch nicht drin: Anhänge, Ordner außer Posteingang, Suche, Weiterleiten.
 
+## Übergabe aus dem Feierabend-Cockpit
+
+Das Cockpit kann Schulmail nicht senden. Es reicht einen fertigen Entwurf hierher
+weiter, per Adresszeile:
+
+```
+/mail/?reply=<messageId>&owner=<upn>&subject=<betreff>&body=<text>&alle=1
+/mail/?compose=1&to=<adresse>&subject=<betreff>&body=<text>
+```
+
+`reply` öffnet die Nachricht und legt den Text ins Antwortfeld — es entsteht also
+eine **echte Antwort im selben Thread** (`createReply`), keine neue Mail. `owner`
+wählt ein freigegebenes Postfach, `alle=0` antwortet nur dem Absender.
+
+Zwei Feinheiten, die leicht übersehen werden:
+
+- Die Parameter werden **sofort beim Laden** nach `sessionStorage` gesichert und die
+  Adresszeile bereinigt. Der MSAL-Redirect kehrt ohne Query zurück; ohne diesen
+  Zwischenschritt wäre der Entwurf nach dem Login weg.
+- Sehr lange Entwürfe passen nicht in eine URL. Das Cockpit prüft die Länge
+  (Grenze 1800 Zeichen) und schickt dann nur den Bezug mit — der Text landet in der
+  Zwischenablage, mit Hinweis.
+
 ## Datenschutz
 
 Für Schulmail gilt `KI-Fortbildung/DSGVO-Richtlinie.md`. Zwei Punkte:
