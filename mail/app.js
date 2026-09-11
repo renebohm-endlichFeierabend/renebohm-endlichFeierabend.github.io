@@ -78,6 +78,34 @@ function cfgLaden(){
 }
 function cfgSpeichern(){ try { localStorage.setItem(CKEY, JSON.stringify(CFG)); } catch { toast("Einstellungen konnten nicht gespeichert werden.", "bad"); } }
 
+/* ---------------------- Übergabe aus dem Cockpit --------------------------
+   Das Feierabend-Cockpit kann Schulmail nicht senden. Es reicht darum einen
+   fertigen Entwurf hierher weiter — als echte Antwort auf eine Nachricht, nicht
+   als neue Mail, damit der Thread erhalten bleibt.
+   Die Parameter werden SOFORT weggesichert: der MSAL-Redirect kehrt ohne sie
+   zurück, und nach dem Login wären sie sonst verloren. */
+const UKEY = "ef.schulpost.uebergabe";
+(function uebergabeSichern(){
+  try {
+    const q = new URLSearchParams(location.search);
+    if (!q.get("reply") && !q.get("compose")) return;
+    sessionStorage.setItem(UKEY, JSON.stringify({
+      reply:q.get("reply") || "", owner:q.get("owner") || "",
+      to:q.get("to") || "", subject:q.get("subject") || "",
+      body:q.get("body") || "", alle:q.get("alle") !== "0"
+    }));
+    history.replaceState(null, "", location.pathname);   // nicht bei jedem Neuladen erneut
+  } catch {}
+})();
+function uebergabeHolen(){
+  try {
+    const roh = sessionStorage.getItem(UKEY);
+    if (!roh) return null;
+    sessionStorage.removeItem(UKEY);
+    return JSON.parse(roh);
+  } catch { return null; }
+}
+
 /** Die Redirect-URI, die in Azure als „Single-page application“ eingetragen sein muss. */
 const REDIRECT = location.origin + location.pathname.replace(/index\.html$/i, "");
 
@@ -647,7 +675,7 @@ function vEinstellungen(){
 }
 
 /* --------------------------------- Start --------------------------------- */
-function nachLogin(){ ST.view = "liste"; mailsLaden(); }
+function nachLogin(){ ST.view = "liste"; mailsLaden(); uebergabeAnwenden(); }
 
 async function start(neuAufbauen){
   cfgLaden();
@@ -664,7 +692,35 @@ async function start(neuAufbauen){
   ST.konto = ST.app.getActiveAccount() || konten[0] || null;
   if (ST.konto && !ST.app.getActiveAccount()) ST.app.setActiveAccount(ST.konto);
   render();
-  if (ST.konto) mailsLaden();
+  if (ST.konto){ mailsLaden(); uebergabeAnwenden(); }
+}
+
+/** Einen aus dem Cockpit übergebenen Entwurf öffnen. */
+async function uebergabeAnwenden(){
+  const u = uebergabeHolen();
+  if (!u) return;
+  if (u.owner && (CFG.postfaecher || []).some(p => p.mail === u.owner)) ST.aktivesPostfach = u.owner;
+  if (u.reply){
+    ST.view = "lesen"; ST.offenLaden = true;
+    ST.offen = { id:u.reply, subject:u.subject || "", receivedDateTime:null };
+    ST.antwort = u.body || ""; ST.antwortAn = u.alle ? "alle" : "absender";
+    render();
+    try {
+      const d = await graph(`${box(ST.aktivesPostfach)}/messages/${encodeURIComponent(u.reply)}` +
+        `?$select=id,subject,from,sender,toRecipients,ccRecipients,receivedDateTime,body,bodyPreview,hasAttachments,webLink`);
+      ST.offen = { ...d };
+    } catch (e){
+      ST.offen.fehler = e instanceof GraphFehler ? e : new GraphFehler(0, null, null);
+    }
+    ST.offenLaden = false;
+    toast(u.body ? "Entwurf aus dem Cockpit übernommen — bitte prüfen." : "Nachricht geöffnet.");
+    render();
+  } else {
+    ST.view = "neu";
+    ST.neu = { an:u.to || "", cc:"", betreff:u.subject || "", text:u.body || "" };
+    render();
+    toast("Entwurf aus dem Cockpit übernommen — bitte prüfen.");
+  }
 }
 
 $("#btnSet").addEventListener("click", () => {
