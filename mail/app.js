@@ -68,6 +68,7 @@ const CFG_STD = {
   geteilteScopes: false,
   postfaecher: [],                 // [{mail, label}] freigegebene Postfächer
   loginArt: "redirect",            // redirect | popup
+  redirectUri: "",                 // leer = aus der Adresse dieser Seite abgeleitet
   proxyUrl: "", proxyToken: "", proxyRolle: "standard",
   bilderLaden: false               // externe Bilder in HTML-Mails (Tracking-Pixel!)
 };
@@ -106,8 +107,11 @@ function uebergabeHolen(){
   } catch { return null; }
 }
 
-/** Die Redirect-URI, die in Azure als „Single-page application“ eingetragen sein muss. */
-const REDIRECT = location.origin + location.pathname.replace(/index\.html$/i, "");
+/** Die Redirect-URI, die in Azure als „Single-page application“ eingetragen sein muss.
+    Überschreibbar, falls in Azure eine abweichende Schreibweise registriert ist —
+    dann muss nicht Azure nachgeben, sondern die App passt sich an. */
+const REDIRECT_STD = location.origin + location.pathname.replace(/index\.html$/i, "");
+const redirectUri = () => (CFG.redirectUri || "").trim() || REDIRECT_STD;
 
 const SCOPES_BASIS = ["User.Read", "Mail.ReadWrite", "Mail.Send"];
 const SCOPES_GETEILT = ["Mail.ReadWrite.Shared", "Mail.Send.Shared"];
@@ -129,7 +133,7 @@ const ST = {
 async function msalStarten(){
   if (!CFG.clientId) return null;
   const conf = {
-    auth: { clientId:CFG.clientId, authority:CFG.authority, redirectUri:REDIRECT, navigateToLoginRequestUrl:false },
+    auth: { clientId:CFG.clientId, authority:CFG.authority, redirectUri:redirectUri(), navigateToLoginRequestUrl:false },
     cache: { cacheLocation:"localStorage", storeAuthStateInCookie:false },
     system: { loggerOptions: { loggerCallback:() => {}, piiLoggingEnabled:false } }
   };
@@ -153,13 +157,16 @@ async function anmelden(){
 }
 async function abmelden(){
   if (!ST.app || !ST.konto) return;
-  try { await ST.app.logoutRedirect({ account:ST.konto, postLogoutRedirectUri:REDIRECT }); }
+  try { await ST.app.logoutRedirect({ account:ST.konto, postLogoutRedirectUri:redirectUri() }); }
   catch { ST.konto = null; render(); }
 }
 function authFehlerText(e){
   const c = (e && (e.errorCode || e.code)) || "";
-  if (/redirect_uri|invalid_request/i.test(String(c) + String(e && e.errorMessage)))
-    return "Die Redirect-URI ist in Azure nicht (als Single-page application) eingetragen.";
+  if (/AADSTS50011|redirect_uri|invalid_request/i.test(String(c) + String(e && e.errorMessage)))
+    return "Azure kennt diese Redirect-URI nicht: " + redirectUri() +
+           " \u2014 sie muss unter Authentifizierung als Plattform \u201eEinzelseitige Anwendung\u201c stehen, " +
+           "zeichengenau samt Schr\u00e4gstrich am Ende. Ist in Azure eine andere Schreibweise eingetragen, " +
+           "trag sie in den Einstellungen unter \u201eRedirect-URI\u201c ein.";
   if (/unauthorized_client|invalid_client/i.test(c)) return "Die Client-ID passt nicht zu dieser Authority.";
   if (/consent|interaction_required|login_required/i.test(c)) return "Die Anmeldung braucht eine Zustimmung — bitte erneut anmelden.";
   if (/user_cancelled|popup_window_error|popup_blocked/i.test(c)) return "Anmeldung abgebrochen oder Popup blockiert. Probiere die Redirect-Anmeldung.";
@@ -393,10 +400,10 @@ function vSetup(){
       el("p", { class:"lede", text:"Einmalig die Kennungen deiner Azure-App eintragen. Ein Secret gibt es hier nicht — dieser Client arbeitet mit PKCE." })),
 
     notiz("info", "Azure", el("div", { html:"Trage in der App-Registrierung unter <b>Authentifizierung</b> eine Plattform <b>„Single-page application“</b> mit genau dieser Redirect-URI ein:" }),
-      el("div", { class:"mono", style:"margin-top:8px; overflow-wrap:anywhere; font-size:12.5px", text:REDIRECT }),
+      el("div", { class:"mono", style:"margin-top:8px; overflow-wrap:anywhere; font-size:12.5px", text:redirectUri() }),
       el("div", { style:"margin-top:9px" },
         el("button", { class:"btn btn--ghost btn--sm", onclick:async () => {
-          try { await navigator.clipboard.writeText(REDIRECT); toast("Redirect-URI kopiert."); }
+          try { await navigator.clipboard.writeText(redirectUri()); toast("Redirect-URI kopiert."); }
           catch { toast("Kopieren nicht erlaubt — Text markieren.", "bad"); }
         }, text:"Redirect-URI kopieren" }))),
 
@@ -601,16 +608,23 @@ function vEinstellungen(){
   const art = el("select", null,
     el("option", { value:"redirect", text:"Weiterleitung (empfohlen)", selected:CFG.loginArt === "redirect" }),
     el("option", { value:"popup", text:"Popup", selected:CFG.loginArt === "popup" }));
+  const rdi = el("input", { type:"text", autocapitalize:"off", autocomplete:"off",
+    placeholder:REDIRECT_STD, value:CFG.redirectUri || "" });
   w.append(el("div", { class:"card card--pad stack" },
     el("span", { class:"eyebrow", text:"Azure-App" }),
     el("label", { class:"fld" }, "Application (client) ID", cid),
     el("label", { class:"fld" }, "Authority", auth),
+    el("label", { class:"fld" }, "Redirect-URI", rdi,
+      el("span", { class:"small", style:"font-weight:400",
+        text:"Leer lassen: wird aus der Adresse dieser Seite abgeleitet. Nur ausf\u00fcllen, wenn in Azure eine abweichende Schreibweise steht." })),
     el("label", { class:"fld" }, "Anmeldeart", art),
     el("label", { class:"switch" }, shared, el("span", { html:"Freigegebene Postfächer nutzen (<code>*.Shared</code>-Scopes)" })),
-    el("div", { class:"small", style:"overflow-wrap:anywhere" }, "Redirect-URI für Azure: ", el("span", { class:"mono", text:REDIRECT })),
+    el("div", { class:"small", style:"overflow-wrap:anywhere" }, "Redirect-URI für Azure: ", el("span", { class:"mono", text:redirectUri() })),
     el("button", { class:"btn btn--sm", onclick:async () => {
-      const neuClient = cid.value.trim() !== CFG.clientId || auth.value.trim() !== CFG.authority;
+      const neuClient = cid.value.trim() !== CFG.clientId || auth.value.trim() !== CFG.authority
+        || rdi.value.trim() !== (CFG.redirectUri || "");
       CFG.clientId = cid.value.trim(); CFG.authority = auth.value.trim() || CFG_STD.authority;
+      CFG.redirectUri = rdi.value.trim();
       CFG.geteilteScopes = shared.checked; CFG.loginArt = art.value; cfgSpeichern();
       toast("Gespeichert.");
       if (neuClient) await start(true); else render();
@@ -665,7 +679,7 @@ function vEinstellungen(){
       el("span", { text:"Externe Bilder in HTML-Mails laden. Aus heißt: Tracking-Pixel bleiben blind." })),
     el("button", { class:"btn btn--sm", onclick:() => { CFG.bilderLaden = bilder.checked; cfgSpeichern(); toast("Gespeichert."); render(); }, text:"Speichern" })));
 
-  w.append(notiz("info", "Version", el("div", { text:"MSAL " + (msal.version || "?") + " · Graph v1.0 · Redirect: " + REDIRECT })));
+  w.append(notiz("info", "Version", el("div", { text:"MSAL " + (msal.version || "?") + " · Graph v1.0 · Redirect: " + redirectUri() })));
   w.append(el("button", { class:"btn btn--danger", onclick:() => {
     if (!confirm("Alle Einstellungen dieses Geräts löschen? Die Anmeldung bleibt bestehen, bis du dich abmeldest.")) return;
     try { localStorage.removeItem(CKEY); } catch {}

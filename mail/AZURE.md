@@ -51,6 +51,31 @@ notiert werden.
 
 5. **Konfigurieren** klicken.
 
+**Wo genau das steht.** Die Seite *Authentifizierung* führt mehrere getrennte Listen
+untereinander, eine je Plattform. Für Lehrer-KI liegt `http://localhost` unter
+**Mobile Geräte und Desktopanwendungen** — das ist eine **andere Liste** als die, die
+eine Web-App braucht. Gesucht ist ein eigener Abschnitt **Einzelseitige Anwendung**
+(englisch *Single-page application*). Fehlt er noch, entsteht er erst durch
+*Plattform hinzufügen*; danach steht er als eigener Block auf derselben Seite.
+
+**Falls „Plattform hinzufügen" nicht auffindbar ist**, geht es auch über das
+Manifest — links im Menü **Manifest**. Je nach Portalversion siehst du eines von
+beidem; ergänze nur die Zeile mit der URI und speichere:
+
+```jsonc
+// neueres Format (Microsoft-Graph-App-Manifest)
+"spa": { "redirectUris": [ "https://renebohm-endlichfeierabend.github.io/mail/" ] }
+
+// älteres Format (AAD-Graph-Manifest)
+"replyUrlsWithType": [
+  { "url": "http://localhost", "type": "InstalledClient" },
+  { "url": "https://renebohm-endlichfeierabend.github.io/mail/", "type": "Spa" }
+]
+```
+
+Im älteren Format ist `"type": "Spa"` das Entscheidende — mit `InstalledClient`
+oder `Web` scheitert die Anmeldung, obwohl die Adresse dasteht.
+
 Wichtig dabei:
 
 - **Keine** der Haken bei „Implizite Genehmigung" (Zugriffstoken / ID-Token) setzen.
@@ -129,7 +154,7 @@ erneut einzutragen — es steht bewusst nicht im Repo.
 
 | Meldung | Ursache | Abhilfe |
 |---|---|---|
-| `AADSTS50011` / „Umleitungs-URI stimmt nicht überein" | URI fehlt, hat einen Tippfehler oder den Schrägstrich am Ende nicht | Schritt 1b, Zeichen für Zeichen vergleichen |
+| `AADSTS50011` / „Umleitungs-URI stimmt nicht überein" | Die Zeichenkette steht in **keiner** Liste dieser Registrierung: sie fehlt, hat einen Tippfehler, der Schrägstrich am Ende fehlt — oder sie landete in einer anderen App | Schritt 1b, Zeichen für Zeichen. Die Fehlermeldung nennt die App-ID: prüfen, ob das die Registrierung ist, die du bearbeitet hast. Alternativ die in Azure vorhandene Schreibweise in den App-Einstellungen unter **Redirect-URI** eintragen |
 | Login lädt, bricht dann mit CORS- oder „cross-origin token redemption"-Fehler ab | Plattformtyp ist „Web" statt *Single-page application* | in Azure die Web-Plattform entfernen, als SPA neu anlegen |
 | `AADSTS65001` „keine Zustimmung" | Zustimmung nie gegeben oder Admin-Consent nötig | erneut anmelden und annehmen; sonst Schul-IT |
 | `AADSTS700016` „Anwendung nicht gefunden" | Registrierung ist auf einen anderen Tenant beschränkt | Authority auf `https://login.microsoftonline.com/<Verzeichnis-ID>` setzen |
