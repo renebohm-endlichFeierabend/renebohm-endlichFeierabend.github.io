@@ -17,6 +17,9 @@ Vollbild), braucht keinen Store und kein Signing.
 
 ## Einrichtung
 
+Schritt für Schritt mit Menüpfaden und Fehlertabelle: **[AZURE.md](AZURE.md)**.
+Kurzfassung:
+
 ### 1. Azure: Redirect-URI ergänzen
 
 Die App nutzt **dieselbe App-Registrierung wie Lehrer-KI**
