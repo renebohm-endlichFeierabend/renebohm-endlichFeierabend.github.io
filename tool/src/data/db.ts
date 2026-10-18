@@ -1,5 +1,5 @@
 import { openDB, type IDBPDatabase } from 'idb';
-import type { AppData, DriveConfig } from '../types';
+import type { AppData, AppSettings, DriveConfig } from '../types';
 
 const DB_NAME = 'lehrer-tool';
 const DB_VERSION = 1;
@@ -22,19 +22,28 @@ function getDb() {
   return dbPromise;
 }
 
-const INITIAL_DATA: AppData = {
-  version: 1,
-  lastModified: new Date().toISOString(),
-  classes: [],
-  todos: [],
-  videos: [],
-  meditationSessions: [],
-};
+export const DEFAULT_SETTINGS: AppSettings = { somiWeight: 50 };
+
+/** Ergänzt fehlende Felder älterer Datenstände (lokal, Drive oder Import). */
+export function normalizeAppData(raw: Partial<AppData> | null | undefined): AppData {
+  const d = raw ?? {};
+  return {
+    version: d.version ?? 1,
+    lastModified: d.lastModified ?? new Date().toISOString(),
+    classes: d.classes ?? [],
+    todos: d.todos ?? [],
+    videos: d.videos ?? [],
+    meditationSessions: d.meditationSessions ?? [],
+    plannedExams: d.plannedExams ?? [],
+    feierabendLogs: d.feierabendLogs ?? [],
+    settings: { ...DEFAULT_SETTINGS, ...(d.settings ?? {}) },
+  };
+}
 
 export async function loadAppData(): Promise<AppData> {
   const db = await getDb();
   const data = await db.get('appData', 'main');
-  return data ?? { ...INITIAL_DATA };
+  return normalizeAppData(data);
 }
 
 export async function saveAppData(data: AppData): Promise<void> {

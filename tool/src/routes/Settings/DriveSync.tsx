@@ -1,13 +1,17 @@
 import { useState } from 'react';
-import { Cloud, CloudOff, RefreshCw, LogOut, Check } from 'lucide-react';
+import { useRef } from 'react';
+import { Cloud, CloudOff, RefreshCw, LogOut, Check, Download, Upload } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import { useStore } from '../../data/store';
+import { normalizeAppData } from '../../data/db';
 import { requestGoogleToken, isTokenValid } from '../../data/auth';
 
 export default function DriveSyncSettings() {
   const navigate = useNavigate();
-  const { driveConfig, syncStatus, connectDrive, disconnectDrive, syncNow } = useStore();
+  const { driveConfig, syncStatus, connectDrive, disconnectDrive, syncNow, settings, setSettings, saveData } = useStore();
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [backupMsg, setBackupMsg] = useState('');
   const [clientId, setClientId] = useState(driveConfig?.clientId ?? '');
   const [connecting, setConnecting] = useState(false);
   const [error, setError] = useState('');
@@ -32,6 +36,44 @@ export default function DriveSyncSettings() {
     if (confirm('Google Drive trennen? Lokale Daten bleiben erhalten.')) {
       await disconnectDrive();
       setClientId('');
+    }
+  };
+
+  const exportBackup = () => {
+    const s = useStore.getState();
+    const data = normalizeAppData({
+      version: s.version, lastModified: s.lastModified, classes: s.classes, todos: s.todos,
+      videos: s.videos, meditationSessions: s.meditationSessions, plannedExams: s.plannedExams,
+      feierabendLogs: s.feierabendLogs, settings: s.settings,
+    });
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `lehrer-tool-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    setBackupMsg('Backup heruntergeladen.');
+  };
+
+  const importBackup = async (file: File) => {
+    try {
+      const parsed = JSON.parse(await file.text());
+      if (!parsed || typeof parsed !== 'object' || !Array.isArray(parsed.classes) || !Array.isArray(parsed.todos)) {
+        throw new Error('Datei ist kein Lehrer-Tool-Backup.');
+      }
+      const data = normalizeAppData(parsed);
+      const stand = new Date(data.lastModified).toLocaleString('de-DE');
+      if (!confirm(
+        `Backup vom ${stand} einspielen?\n\n${data.classes.length} Klassen, ${data.todos.length} Aufgaben, ${data.videos.length} Videos.\n` +
+        `ACHTUNG: Die aktuellen Daten auf diesem Gerät werden ersetzt.`
+      )) return;
+      await saveData(data);
+      setBackupMsg('Backup eingespielt.');
+    } catch (e) {
+      setBackupMsg(`Import fehlgeschlagen: ${e instanceof Error ? e.message : String(e)}`);
+    } finally {
+      if (fileRef.current) fileRef.current.value = '';
     }
   };
 
@@ -111,6 +153,39 @@ export default function DriveSyncSettings() {
               </button>
             </div>
           )}
+        </div>
+
+        <div className="p-5 bg-white/60 rounded-2xl border border-stone-200/60">
+          <div className="text-sm font-medium text-stone-800 mb-1">Zeugnisnote: Gewichtung</div>
+          <p className="text-xs text-stone-500 mb-3">Anteil der sonstigen Mitarbeit (SoMi) an der Zeugnisnote. Gilt für alle Klassen.</p>
+          <input
+            type="range" min={0} max={100} step={5}
+            value={settings.somiWeight}
+            onChange={(e) => setSettings({ ...settings, somiWeight: Number(e.target.value) })}
+            className="w-full"
+          />
+          <div className="flex justify-between text-xs text-stone-600 mt-1">
+            <span>SoMi {settings.somiWeight} %</span>
+            <span>Klausuren {100 - settings.somiWeight} %</span>
+          </div>
+        </div>
+
+        <div className="p-5 bg-white/60 rounded-2xl border border-stone-200/60">
+          <div className="text-sm font-medium text-stone-800 mb-1">Backup</div>
+          <p className="text-xs text-stone-500 mb-3">Sichert alle Daten als Datei, unabhängig von Google Drive. Das Backup enthält Schülernamen und Noten, bitte sicher aufbewahren.</p>
+          <div className="flex gap-2">
+            <button onClick={exportBackup} className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-stone-100 rounded-xl text-stone-700 text-sm font-medium min-h-[44px]">
+              <Download size={16} />Exportieren
+            </button>
+            <button onClick={() => fileRef.current?.click()} className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-stone-100 rounded-xl text-stone-700 text-sm font-medium min-h-[44px]">
+              <Upload size={16} />Importieren
+            </button>
+            <input
+              ref={fileRef} type="file" accept="application/json,.json" className="hidden"
+              onChange={(e) => { const f = e.target.files?.[0]; if (f) importBackup(f); }}
+            />
+          </div>
+          {backupMsg && <p className="text-xs text-stone-500 mt-2">{backupMsg}</p>}
         </div>
 
         <div className="p-5 bg-white/60 rounded-2xl border border-stone-200/60">

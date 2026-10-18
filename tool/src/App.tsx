@@ -8,6 +8,9 @@ import ClassesView from './routes/Grades/ClassesView';
 import ClassOverview from './routes/Grades/ClassOverview';
 import QuickEntryWizard from './routes/Grades/QuickEntryWizard';
 import StudentDetail from './routes/Grades/StudentDetail';
+import ClassStats from './routes/Grades/ClassStats';
+import ExamPlanner from './routes/Exams/ExamPlanner';
+import FeierabendCheck from './routes/Feierabend/FeierabendCheck';
 import TodosView from './routes/Todos/TodosView';
 import VideosView from './routes/Videos/VideosView';
 import MeditationView from './routes/Meditation/MeditationView';
@@ -23,6 +26,9 @@ function AppRoutes() {
         <Route path="/grades/:classId/quick-somi" element={<QuickEntryWizard type="somi" />} />
         <Route path="/grades/:classId/add-exam" element={<QuickEntryWizard type="exam" />} />
         <Route path="/grades/:classId/student/:studentId" element={<StudentDetail />} />
+        <Route path="/grades/:classId/stats" element={<ClassStats />} />
+        <Route path="/exams" element={<ExamPlanner />} />
+        <Route path="/feierabend" element={<FeierabendCheck />} />
         <Route path="/todos" element={<TodosView />} />
         <Route path="/videos" element={<VideosView />} />
         <Route path="/meditation" element={<MeditationView />} />
