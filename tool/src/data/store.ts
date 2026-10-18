@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import type { AppData, Class, Todo, Video, MeditationSession, DriveConfig } from '../types';
-import { loadAppData, saveAppData, loadDriveConfig, saveDriveConfig, clearDriveConfig } from './db';
+import type { AppData, Class, Todo, Video, MeditationSession, DriveConfig, PlannedExam, FeierabendEntry, AppSettings } from '../types';
+import { loadAppData, saveAppData, loadDriveConfig, saveDriveConfig, clearDriveConfig, normalizeAppData, DEFAULT_SETTINGS } from './db';
 import { syncToDrive, loadFromDrive } from './driveSync';
 
 interface AppStore extends AppData {
@@ -14,6 +14,9 @@ interface AppStore extends AppData {
   setTodos: (todos: Todo[]) => void;
   setVideos: (videos: Video[]) => void;
   setMeditationSessions: (sessions: MeditationSession[]) => void;
+  setPlannedExams: (plannedExams: PlannedExam[]) => void;
+  setFeierabendLogs: (logs: FeierabendEntry[]) => void;
+  setSettings: (settings: AppSettings) => void;
   saveData: (data: Partial<AppData>) => Promise<void>;
   connectDrive: (config: DriveConfig) => Promise<void>;
   disconnectDrive: () => Promise<void>;
@@ -30,6 +33,9 @@ export const useStore = create<AppStore>((set, get) => ({
   todos: [],
   videos: [],
   meditationSessions: [],
+  plannedExams: [],
+  feierabendLogs: [],
+  settings: DEFAULT_SETTINGS,
   driveConfig: null,
   syncStatus: 'idle',
   pendingSync: false,
@@ -47,6 +53,9 @@ export const useStore = create<AppStore>((set, get) => ({
   setTodos: (todos) => get().saveData({ todos }),
   setVideos: (videos) => get().saveData({ videos }),
   setMeditationSessions: (sessions) => get().saveData({ meditationSessions: sessions }),
+  setPlannedExams: (plannedExams) => get().saveData({ plannedExams }),
+  setFeierabendLogs: (feierabendLogs) => get().saveData({ feierabendLogs }),
+  setSettings: (settings) => get().saveData({ settings }),
 
   saveData: async (partial) => {
     const current = get();
@@ -57,6 +66,9 @@ export const useStore = create<AppStore>((set, get) => ({
       todos: partial.todos ?? current.todos,
       videos: partial.videos ?? current.videos,
       meditationSessions: partial.meditationSessions ?? current.meditationSessions,
+      plannedExams: partial.plannedExams ?? current.plannedExams,
+      feierabendLogs: partial.feierabendLogs ?? current.feierabendLogs,
+      settings: partial.settings ?? current.settings,
     };
     set(updated);
     await saveAppData(updated);
@@ -95,6 +107,9 @@ export const useStore = create<AppStore>((set, get) => ({
         todos: get().todos,
         videos: get().videos,
         meditationSessions: get().meditationSessions,
+        plannedExams: get().plannedExams,
+        feierabendLogs: get().feierabendLogs,
+        settings: get().settings,
       };
 
       if (remoteData && remoteData.lastModified > localData.lastModified) {
@@ -104,8 +119,9 @@ export const useStore = create<AppStore>((set, get) => ({
           `Drive-Version übernehmen?`
         );
         if (useRemote) {
-          set(remoteData);
-          await saveAppData(remoteData);
+          const normalized = normalizeAppData(remoteData);
+          set(normalized);
+          await saveAppData(normalized);
         } else {
           await syncToDrive(driveConfig, localData);
         }

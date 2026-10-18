@@ -1,16 +1,16 @@
 import { useState } from 'react';
-import { MessageCircle, FileText, Plus, Trash2, ChevronRight } from 'lucide-react';
+import { MessageCircle, FileText, Plus, Trash2, ChevronRight, BarChart3 } from 'lucide-react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Header from '../../components/Header';
 import { useStore } from '../../data/store';
-import { getCurrentSchoolYear, getCurrentTerm, getTermData, formatGrade, gradeColorClass } from './gradeUtils';
+import { getCurrentSchoolYear, getCurrentTerm, getTermData, formatGrade, gradeColorClass, roundToGrade } from './gradeUtils';
 import type { Student } from '../../types';
 
 export default function ClassOverview() {
   const { classId } = useParams<{ classId: string }>();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { classes, setClasses } = useStore();
+  const { classes, setClasses, settings } = useStore();
 
   const cls = classes.find((c) => c.id === classId);
   const [showAddStudent, setShowAddStudent] = useState(false);
@@ -100,6 +100,15 @@ export default function ClassOverview() {
         </div>
       )}
 
+      {cls.students.length > 0 && (
+        <button
+          onClick={() => navigate(`/grades/${cls.id}/stats?term=${activeTermKey}`)}
+          className="w-full flex items-center justify-center gap-2 p-3 mb-4 bg-white border border-stone-200 text-stone-700 rounded-2xl min-h-[48px]"
+        >
+          <BarChart3 size={16} /><span className="text-xs font-medium">Statistik &amp; Notenspiegel</span>
+        </button>
+      )}
+
       <div className="space-y-2 mb-4">
         {cls.students.length === 0 && !showAddStudent && (
           <div className="text-center py-12 text-stone-400">
@@ -107,7 +116,7 @@ export default function ClassOverview() {
           </div>
         )}
         {cls.students.map((student) => {
-          const data = getTermData(student, activeTermKey);
+          const data = getTermData(student, activeTermKey, settings.somiWeight);
           return (
             <div key={student.id} className="flex items-center gap-2 p-4 bg-white/60 rounded-2xl border border-stone-200/60">
               <button
@@ -125,7 +134,7 @@ export default function ClassOverview() {
                 {data.finalGrade !== null && (
                   <div className={`px-3 py-2 rounded-xl flex-shrink-0 ${gradeColorClass(data.finalGrade)}`}>
                     <div className="text-lg font-medium leading-none font-display">{formatGrade(data.finalGrade)}</div>
-                    <div className="text-[9px] uppercase tracking-wider mt-0.5">Zeugnis</div>
+                    <div className="text-[9px] uppercase tracking-wider mt-0.5">Vorschlag {roundToGrade(data.finalGrade)}</div>
                   </div>
                 )}
                 <ChevronRight size={14} className="text-stone-400 flex-shrink-0" />

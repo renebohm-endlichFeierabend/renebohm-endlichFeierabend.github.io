@@ -12,6 +12,14 @@ export interface Student {
   somiGrades: Grade[];
   examGrades: Grade[];
   notes?: string;
+  observations?: Observation[];
+}
+
+export interface Observation {
+  id: string;
+  date: string; // YYYY-MM-DD
+  text: string;
+  tag: 'positiv' | 'neutral' | 'hinweis';
 }
 
 export interface Class {
@@ -57,6 +65,27 @@ export interface MeditationSession {
   notes?: string;
 }
 
+export interface PlannedExam {
+  id: string;
+  classId: string;
+  title: string;
+  date: string; // YYYY-MM-DD, Termin der Arbeit
+  correctionDue: string | null; // YYYY-MM-DD
+  todoId?: string; // verknüpfte Korrektur-Aufgabe
+}
+
+export interface FeierabendEntry {
+  id: string;
+  date: string; // YYYY-MM-DD
+  highlight: string;
+  note: string;
+  tomorrowTodoIds: string[];
+}
+
+export interface AppSettings {
+  somiWeight: number; // Anteil SoMi an der Zeugnisnote, 0–100
+}
+
 export interface AppData {
   version: number;
   lastModified: string;
@@ -64,6 +93,9 @@ export interface AppData {
   todos: Todo[];
   videos: Video[];
   meditationSessions: MeditationSession[];
+  plannedExams: PlannedExam[];
+  feierabendLogs: FeierabendEntry[];
+  settings: AppSettings;
 }
 
 export interface DriveConfig {

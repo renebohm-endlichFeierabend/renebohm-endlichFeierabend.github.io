@@ -1,6 +1,8 @@
-import { GraduationCap, CheckSquare, Youtube, Timer, Settings, ChevronRight, Cloud } from 'lucide-react';
+import { GraduationCap, CheckSquare, Youtube, Timer, Settings, ChevronRight, Cloud, CalendarClock, Moon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../data/store';
+import { toDateKey } from '../data/dates';
+import TodayPanel from '../components/TodayPanel';
 
 interface ModuleCardProps {
   icon: React.ReactNode;
@@ -29,7 +31,7 @@ function ModuleCard({ icon, title, subtitle, onClick, badge }: ModuleCardProps) 
 
 export default function Home() {
   const navigate = useNavigate();
-  const { classes, todos, videos, meditationSessions, driveConfig, syncStatus } = useStore();
+  const { classes, todos, videos, meditationSessions, plannedExams, driveConfig, syncStatus } = useStore();
 
   const openTodos = todos.filter((t) => !t.done).length;
   const totalMedMinutes = Math.round(meditationSessions.reduce((s, m) => s + m.durationSeconds, 0) / 60);
@@ -55,11 +57,19 @@ export default function Home() {
         </div>
       </div>
 
+      <TodayPanel />
+
       <ModuleCard
         icon={<GraduationCap size={22} className="text-stone-700" />}
         title="Noten"
         subtitle={`${classes.length} ${classes.length === 1 ? 'Klasse' : 'Klassen'}`}
         onClick={() => navigate('/grades')}
+      />
+      <ModuleCard
+        icon={<CalendarClock size={22} className="text-stone-700" />}
+        title="Klassenarbeiten"
+        subtitle={`${plannedExams.filter((e) => e.date >= toDateKey()).length} anstehend`}
+        onClick={() => navigate('/exams')}
       />
       <ModuleCard
         icon={<CheckSquare size={22} className="text-stone-700" />}
@@ -83,6 +93,12 @@ export default function Home() {
         title="Meditation"
         subtitle={totalMedMinutes > 0 ? `${totalMedMinutes} Minuten gesamt` : 'Timer & Sitzungen'}
         onClick={() => navigate('/meditation')}
+      />
+      <ModuleCard
+        icon={<Moon size={22} className="text-stone-700" />}
+        title="Feierabend-Check"
+        subtitle="Tag abschließen, morgen vorbereiten"
+        onClick={() => navigate('/feierabend')}
       />
     </div>
   );
