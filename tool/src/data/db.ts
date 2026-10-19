@@ -1,5 +1,6 @@
 import { openDB, type IDBPDatabase } from 'idb';
 import type { AppData, AppSettings, DriveConfig } from '../types';
+import { COCKPIT } from './serverSync';
 
 const DB_NAME = 'lehrer-tool';
 const DB_VERSION = 1;
@@ -48,7 +49,11 @@ export async function loadAppData(): Promise<AppData> {
 
 export async function saveAppData(data: AppData): Promise<void> {
   const db = await getDb();
-  await db.put('appData', { ...data, lastModified: new Date().toISOString() }, 'main');
+  // Im Cockpit bleibt der Zeitstempel des Stands erhalten: Er entscheidet beim Abgleich mit
+  // dem Server, welcher Stand neuer ist. Ein Neustempeln beim bloßen Zwischenspeichern
+  // ließe jeden vom Server geholten Stand wieder als „lokal neuer“ erscheinen.
+  const lastModified = COCKPIT && data.lastModified ? data.lastModified : new Date().toISOString();
+  await db.put('appData', { ...data, lastModified }, 'main');
 }
 
 export async function loadDriveConfig(): Promise<DriveConfig | null> {

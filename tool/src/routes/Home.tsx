@@ -1,6 +1,7 @@
 import { GraduationCap, CheckSquare, Youtube, Timer, Settings, ChevronRight, Cloud, CalendarClock, Moon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../data/store';
+import { COCKPIT } from '../data/serverSync';
 import { toDateKey } from '../data/dates';
 import TodayPanel from '../components/TodayPanel';
 
@@ -44,7 +45,7 @@ export default function Home() {
           <p className="text-stone-500 text-sm mt-1">Was möchtest du heute tun?</p>
         </div>
         <div className="flex items-center gap-2">
-          {driveConfig && (
+          {(driveConfig || COCKPIT) && (
             <div className={`w-2 h-2 rounded-full mt-1 ${
               syncStatus === 'idle' ? 'bg-emerald-400' :
               syncStatus === 'syncing' ? 'bg-amber-400 animate-pulse' :
@@ -52,7 +53,7 @@ export default function Home() {
             }`} title={syncStatus} />
           )}
           <button onClick={() => navigate('/settings')} className="p-2 text-stone-400 min-h-[44px] min-w-[44px] flex items-center justify-center">
-            {driveConfig ? <Cloud size={20} /> : <Settings size={20} />}
+            {driveConfig && !COCKPIT ? <Cloud size={20} /> : <Settings size={20} />}
           </button>
         </div>
       </div>

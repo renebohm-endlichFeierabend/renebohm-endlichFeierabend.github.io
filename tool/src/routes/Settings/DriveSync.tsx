@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useRef } from 'react';
-import { Cloud, CloudOff, RefreshCw, LogOut, Check, Download, Upload } from 'lucide-react';
+import { Cloud, CloudOff, RefreshCw, LogOut, Check, Download, Upload, Server } from 'lucide-react';
+import { COCKPIT } from '../../data/serverSync';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import { useStore } from '../../data/store';
@@ -89,6 +90,32 @@ export default function DriveSyncSettings() {
       <Header title="Einstellungen" onBack={() => navigate('/')} />
 
       <div className="space-y-4">
+        {COCKPIT ? (
+        <div className="p-5 bg-white/60 rounded-2xl border border-stone-200/60">
+          <div className="flex items-center gap-3 mb-4">
+            {syncStatus === 'error' || syncStatus === 'offline'
+              ? <CloudOff size={24} className="text-red-500" />
+              : <Server size={24} className="text-emerald-600" />}
+            <div>
+              <div className="font-medium text-stone-800">Gespeichert auf dem Server</div>
+              <div className="text-xs text-stone-500">Handy und PC sehen denselben Stand. Kein Cloud-Abgleich.</div>
+            </div>
+            {syncStatusLabel && (
+              <span className={`ml-auto text-xs ${syncStatus === 'error' ? 'text-red-500' : 'text-stone-400'}`}>
+                {syncStatus === 'error' ? 'Server nicht erreichbar' : syncStatusLabel}
+              </span>
+            )}
+          </div>
+          <button
+            onClick={() => syncNow()}
+            disabled={syncStatus === 'syncing'}
+            className="w-full flex items-center justify-center gap-2 py-2.5 bg-stone-100 rounded-xl text-stone-700 text-sm font-medium disabled:opacity-40 min-h-[44px]"
+          >
+            <RefreshCw size={16} className={syncStatus === 'syncing' ? 'animate-spin' : ''} />
+            Jetzt abgleichen
+          </button>
+        </div>
+        ) : (
         <div className="p-5 bg-white/60 rounded-2xl border border-stone-200/60">
           <div className="flex items-center gap-3 mb-4">
             {isConnected ? <Cloud size={24} className="text-emerald-600" /> : <CloudOff size={24} className="text-stone-400" />}
@@ -154,6 +181,7 @@ export default function DriveSyncSettings() {
             </div>
           )}
         </div>
+        )}
 
         <div className="p-5 bg-white/60 rounded-2xl border border-stone-200/60">
           <div className="text-sm font-medium text-stone-800 mb-1">Zeugnisnote: Gewichtung</div>
@@ -172,7 +200,7 @@ export default function DriveSyncSettings() {
 
         <div className="p-5 bg-white/60 rounded-2xl border border-stone-200/60">
           <div className="text-sm font-medium text-stone-800 mb-1">Backup</div>
-          <p className="text-xs text-stone-500 mb-3">Sichert alle Daten als Datei, unabhängig von Google Drive. Das Backup enthält Schülernamen und Noten, bitte sicher aufbewahren.</p>
+          <p className="text-xs text-stone-500 mb-3">Sichert alle Daten als Datei, unabhängig vom Abgleich. Das Backup enthält Schülernamen und Noten, bitte sicher aufbewahren.</p>
           <div className="flex gap-2">
             <button onClick={exportBackup} className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-stone-100 rounded-xl text-stone-700 text-sm font-medium min-h-[44px]">
               <Download size={16} />Exportieren
@@ -192,8 +220,14 @@ export default function DriveSyncSettings() {
           <div className="text-sm font-medium text-stone-700 mb-1">Über die App</div>
           <div className="text-xs text-stone-500 space-y-1">
             <p>Lehrer-Tool · Privates Werkzeug für René Bohm</p>
-            <p>Daten werden lokal im Browser (IndexedDB) gespeichert.</p>
-            <p>Mit Google Drive Sync werden alle Geräte synchronisiert.</p>
+            {COCKPIT ? (
+              <p>Daten liegen auf dem eigenen Server (Cockpit), dazu eine Kopie im Browser für kurze Ausfälle.</p>
+            ) : (
+              <>
+                <p>Daten werden lokal im Browser (IndexedDB) gespeichert.</p>
+                <p>Mit Google Drive Sync werden alle Geräte synchronisiert.</p>
+              </>
+            )}
           </div>
         </div>
       </div>
