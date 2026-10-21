@@ -45,7 +45,7 @@ export default function DriveSyncSettings() {
     const data = normalizeAppData({
       version: s.version, lastModified: s.lastModified, classes: s.classes, todos: s.todos,
       videos: s.videos, meditationSessions: s.meditationSessions, plannedExams: s.plannedExams,
-      feierabendLogs: s.feierabendLogs, settings: s.settings,
+      feierabendLogs: s.feierabendLogs, yogaFlows: s.yogaFlows, settings: s.settings,
     });
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);

@@ -37,6 +37,7 @@ export function normalizeAppData(raw: Partial<AppData> | null | undefined): AppD
     meditationSessions: d.meditationSessions ?? [],
     plannedExams: d.plannedExams ?? [],
     feierabendLogs: d.feierabendLogs ?? [],
+    yogaFlows: d.yogaFlows ?? [],
     settings: { ...DEFAULT_SETTINGS, ...(d.settings ?? {}) },
   };
 }

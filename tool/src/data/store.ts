@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { AppData, Class, Todo, Video, MeditationSession, DriveConfig, PlannedExam, FeierabendEntry, AppSettings } from '../types';
+import type { AppData, Class, Todo, Video, MeditationSession, DriveConfig, PlannedExam, FeierabendEntry, AppSettings, YogaFlow } from '../types';
 import { loadAppData, saveAppData, loadDriveConfig, saveDriveConfig, clearDriveConfig, normalizeAppData, DEFAULT_SETTINGS } from './db';
 import { syncToDrive, loadFromDrive } from './driveSync';
 import { COCKPIT, holeVomServer, schreibeAufServer, hatInhalt } from './serverSync';
@@ -17,6 +17,7 @@ interface AppStore extends AppData {
   setMeditationSessions: (sessions: MeditationSession[]) => void;
   setPlannedExams: (plannedExams: PlannedExam[]) => void;
   setFeierabendLogs: (logs: FeierabendEntry[]) => void;
+  setYogaFlows: (flows: YogaFlow[]) => void;
   setSettings: (settings: AppSettings) => void;
   saveData: (data: Partial<AppData>) => Promise<void>;
   connectDrive: (config: DriveConfig) => Promise<void>;
@@ -36,6 +37,7 @@ export const useStore = create<AppStore>((set, get) => ({
   meditationSessions: [],
   plannedExams: [],
   feierabendLogs: [],
+  yogaFlows: [],
   settings: DEFAULT_SETTINGS,
   driveConfig: null,
   syncStatus: 'idle',
@@ -67,6 +69,7 @@ export const useStore = create<AppStore>((set, get) => ({
   setMeditationSessions: (sessions) => get().saveData({ meditationSessions: sessions }),
   setPlannedExams: (plannedExams) => get().saveData({ plannedExams }),
   setFeierabendLogs: (feierabendLogs) => get().saveData({ feierabendLogs }),
+  setYogaFlows: (yogaFlows) => get().saveData({ yogaFlows }),
   setSettings: (settings) => get().saveData({ settings }),
 
   saveData: async (partial) => {
@@ -80,6 +83,7 @@ export const useStore = create<AppStore>((set, get) => ({
       meditationSessions: partial.meditationSessions ?? current.meditationSessions,
       plannedExams: partial.plannedExams ?? current.plannedExams,
       feierabendLogs: partial.feierabendLogs ?? current.feierabendLogs,
+      yogaFlows: partial.yogaFlows ?? current.yogaFlows,
       settings: partial.settings ?? current.settings,
     };
     set(updated);
@@ -147,6 +151,7 @@ export const useStore = create<AppStore>((set, get) => ({
         meditationSessions: get().meditationSessions,
         plannedExams: get().plannedExams,
         feierabendLogs: get().feierabendLogs,
+        yogaFlows: get().yogaFlows,
         settings: get().settings,
       };
 
@@ -183,6 +188,7 @@ function aktuellerStand(s: AppStore): AppData {
     meditationSessions: s.meditationSessions,
     plannedExams: s.plannedExams,
     feierabendLogs: s.feierabendLogs,
+    yogaFlows: s.yogaFlows,
     settings: s.settings,
   };
 }

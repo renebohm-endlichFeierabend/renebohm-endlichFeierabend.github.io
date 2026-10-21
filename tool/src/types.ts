@@ -82,6 +82,28 @@ export interface FeierabendEntry {
   tomorrowTodoIds: string[];
 }
 
+export interface YogaUebung {
+  id: string;
+  block: string;
+  name: string;
+  sanskrit: string;
+  sekunden: number; // Grunddauer der Haltung (je Seite, wenn beidseitig)
+  beidseitig: boolean;
+  standard: boolean; // im Grund-Flow vorausgewählt
+  anleitung: string;
+  bild: string; // relativ zur App, z. B. yoga/tadasana.webp
+  quelle: { urheber: string; lizenz: string; lizenzUrl: string; seite: string };
+}
+
+export interface YogaFlow {
+  id: string;
+  name: string;
+  uebungen: string[]; // ausgewählte Übungs-IDs
+  tempo: 'kurz' | 'normal' | 'lang';
+  erstellt: number;
+  zuletzt?: number;
+}
+
 export interface AppSettings {
   somiWeight: number; // Anteil SoMi an der Zeugnisnote, 0–100
 }
@@ -95,6 +117,7 @@ export interface AppData {
   meditationSessions: MeditationSession[];
   plannedExams: PlannedExam[];
   feierabendLogs: FeierabendEntry[];
+  yogaFlows: YogaFlow[];
   settings: AppSettings;
 }
 

@@ -30,6 +30,6 @@ export async function schreibeAufServer(data: AppData): Promise<void> {
 /** Hat der Stand echte Inhalte? Ein leerer Stand darf nie einen vollen überschreiben. */
 export function hatInhalt(d: Partial<AppData> | null | undefined): boolean {
   if (!d) return false;
-  return [d.classes, d.todos, d.videos, d.meditationSessions, d.plannedExams, d.feierabendLogs]
+  return [d.classes, d.todos, d.videos, d.meditationSessions, d.plannedExams, d.feierabendLogs, d.yogaFlows]
     .some((liste) => Array.isArray(liste) && liste.length > 0);
 }

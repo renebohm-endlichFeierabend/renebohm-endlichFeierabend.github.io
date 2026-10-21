@@ -1,4 +1,4 @@
-import { GraduationCap, CheckSquare, Youtube, Timer, Settings, ChevronRight, Cloud, CalendarClock, Moon } from 'lucide-react';
+import { GraduationCap, CheckSquare, Youtube, Timer, Settings, ChevronRight, Cloud, CalendarClock, Moon, Flower2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../data/store';
 import { COCKPIT } from '../data/serverSync';
@@ -32,7 +32,7 @@ function ModuleCard({ icon, title, subtitle, onClick, badge }: ModuleCardProps) 
 
 export default function Home() {
   const navigate = useNavigate();
-  const { classes, todos, videos, meditationSessions, plannedExams, driveConfig, syncStatus } = useStore();
+  const { classes, todos, videos, meditationSessions, plannedExams, yogaFlows, driveConfig, syncStatus } = useStore();
 
   const openTodos = todos.filter((t) => !t.done).length;
   const totalMedMinutes = Math.round(meditationSessions.reduce((s, m) => s + m.durationSeconds, 0) / 60);
@@ -88,6 +88,12 @@ export default function Home() {
         title="Videos"
         subtitle={`${videos.length} gespeichert`}
         onClick={() => navigate('/videos')}
+      />
+      <ModuleCard
+        icon={<Flower2 size={22} className="text-stone-700" />}
+        title="Yoga-Flow"
+        subtitle={yogaFlows.length ? `${yogaFlows.length} ${yogaFlows.length === 1 ? 'eigener Flow' : 'eigene Flows'}` : 'Flow zusammenstellen und üben'}
+        onClick={() => navigate('/yoga')}
       />
       <ModuleCard
         icon={<Timer size={22} className="text-stone-700" />}

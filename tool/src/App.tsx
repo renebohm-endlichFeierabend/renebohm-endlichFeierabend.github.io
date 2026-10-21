@@ -14,6 +14,7 @@ import FeierabendCheck from './routes/Feierabend/FeierabendCheck';
 import TodosView from './routes/Todos/TodosView';
 import VideosView from './routes/Videos/VideosView';
 import MeditationView from './routes/Meditation/MeditationView';
+import YogaFlowView from './routes/Yoga/YogaFlowView';
 import DriveSyncSettings from './routes/Settings/DriveSync';
 
 function AppRoutes() {
@@ -32,6 +33,7 @@ function AppRoutes() {
         <Route path="/todos" element={<TodosView />} />
         <Route path="/videos" element={<VideosView />} />
         <Route path="/meditation" element={<MeditationView />} />
+        <Route path="/yoga" element={<YogaFlowView />} />
         <Route path="/settings" element={<DriveSyncSettings />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
