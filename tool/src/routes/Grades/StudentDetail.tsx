@@ -179,7 +179,7 @@ export default function StudentDetail() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-medium text-stone-800 truncate">{g.label}</div>
-                <div className="text-xs text-stone-500">{new Date(g.date).toLocaleDateString('de-DE')}</div>
+                <div className="text-xs text-stone-500">{new Date(g.date).toLocaleDateString('de-DE')}{g.weight === 0.5 ? ' · Beobachtung, zählt halb' : ''}</div>
               </div>
               <button onClick={() => deleteGrade(g.id, 'somi')} className="p-2 text-stone-400 min-h-[44px] min-w-[44px] flex items-center justify-center">
                 <Trash2 size={14} />

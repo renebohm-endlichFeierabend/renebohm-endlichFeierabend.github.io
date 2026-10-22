@@ -22,6 +22,13 @@ export function avg(values: number[]): number | null {
   return values.reduce((a, b) => a + b, 0) / values.length;
 }
 
+/** Gewichteter Schnitt; Einträge ohne Gewicht zählen 1. */
+export function weightedAvg(grades: { value: number; weight?: number }[]): number | null {
+  const sumW = grades.reduce((a, g) => a + (g.weight ?? 1), 0);
+  if (sumW === 0) return null;
+  return grades.reduce((a, g) => a + g.value * (g.weight ?? 1), 0) / sumW;
+}
+
 export function formatGrade(val: number | null | undefined): string {
   if (val === null || val === undefined) return '–';
   return val.toFixed(2);
@@ -54,7 +61,7 @@ export interface TermData {
 export function getTermData(student: Student, termKey: string, somiWeight = 50): TermData {
   const somi = (student.somiGrades ?? []).filter((g) => g.termKey === termKey);
   const exams = (student.examGrades ?? []).filter((g) => g.termKey === termKey);
-  const somiAvg = avg(somi.map((g) => g.value));
+  const somiAvg = weightedAvg(somi);
   const examAvg = avg(exams.map((g) => g.value));
   let finalGrade: number | null = null;
   if (somiAvg !== null && examAvg !== null) {

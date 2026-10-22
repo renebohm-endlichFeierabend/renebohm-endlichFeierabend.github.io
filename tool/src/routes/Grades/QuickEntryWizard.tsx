@@ -21,6 +21,7 @@ export default function QuickEntryWizard({ type }: QuickEntryWizardProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [entered, setEntered] = useState<Record<string, number>>({});
   const [customGrade, setCustomGrade] = useState('');
+  const [beobachtung, setBeobachtung] = useState(false);
 
   if (!cls) { navigate(`/grades/${classId}`); return null; }
 
@@ -64,6 +65,7 @@ export default function QuickEntryWizard({ type }: QuickEntryWizardProps) {
             label: label.trim() || defaultLabel,
             date,
             termKey,
+            ...(beobachtung && !isExam ? { weight: 0.5 } : {}),
           };
           return { ...s, [field]: [newGrade, ...(s[field] ?? [])] };
         }),
@@ -105,6 +107,12 @@ export default function QuickEntryWizard({ type }: QuickEntryWizardProps) {
               ? 'Schüler die gefehlt haben einfach überspringen'
               : `Wird für alle ${students.length} Schüler verwendet`}
           </p>
+          {!isExam && (
+            <label className="flex items-center gap-3 mt-4 text-sm text-stone-700 min-h-[44px]">
+              <input type="checkbox" checked={beobachtung} onChange={(e) => setBeobachtung(e.target.checked)} className="w-5 h-5" />
+              <span>Beobachtung aus dem Unterricht <span className="text-stone-500">(zählt halb)</span></span>
+            </label>
+          )}
         </div>
         <button
           onClick={() => setStep('grading')}
@@ -131,7 +139,7 @@ export default function QuickEntryWizard({ type }: QuickEntryWizardProps) {
       </div>
 
       <div className="text-center mb-6">
-        <div className="text-xs uppercase tracking-widest text-stone-400 mb-2">{label}</div>
+        <div className="text-xs uppercase tracking-widest text-stone-400 mb-2">{label}{beobachtung && !isExam ? ' · zählt halb' : ''}</div>
         <h2 className="text-3xl font-light text-stone-800 font-display">{currentStudent.name}</h2>
         {entered[currentStudent.id] !== undefined && (
           <div className="mt-2 inline-block px-3 py-1 bg-stone-200 rounded-full text-xs text-stone-600">

@@ -4,6 +4,7 @@ export interface Grade {
   label: string;
   date: string;
   termKey: string;
+  weight?: number; // Gewicht im SoMi-Schnitt, Standard 1; Unterrichtsbeobachtung 0.5
 }
 
 export interface Student {
