@@ -73,12 +73,13 @@ export function getTermData(student: Student, termKey: string, somiWeight = 50):
   return { somi, exams, somiAvg, examAvg, finalGrade };
 }
 
+/** Je Zeile eine Note (+, glatt, -); 1+ zählt 0,7 wie die übrigen Tendenzen ±0,3. */
 export const GRADE_BUTTONS = [
-  { value: 1, display: '1' }, { value: 1.7, display: '1-' }, { value: 2.3, display: '2+' },
-  { value: 2, display: '2' }, { value: 2.7, display: '2-' }, { value: 3.3, display: '3+' },
-  { value: 3, display: '3' }, { value: 3.7, display: '3-' }, { value: 4.3, display: '4+' },
-  { value: 4, display: '4' }, { value: 4.7, display: '4-' }, { value: 5.3, display: '5+' },
-  { value: 5, display: '5' }, { value: 6, display: '6' },
+  { value: 0.7, display: '1+' }, { value: 1, display: '1' }, { value: 1.7, display: '1-' },
+  { value: 2.3, display: '2+' }, { value: 2, display: '2' }, { value: 2.7, display: '2-' },
+  { value: 3.3, display: '3+' }, { value: 3, display: '3' }, { value: 3.7, display: '3-' },
+  { value: 4.3, display: '4+' }, { value: 4, display: '4' }, { value: 4.7, display: '4-' },
+  { value: 5.3, display: '5+' }, { value: 5, display: '5' }, { value: 6, display: '6' },
 ];
 
 /** Auf ganze Note runden; x,5 geht zur schlechteren Note. Nur ein Vorschlag, keine Rechtsvorgabe. */
