@@ -1,0 +1,16 @@
+[Unit]
+Description=Sicherung der Website-Datenbank
+
+[Service]
+Type=oneshot
+User=website
+Group=website
+EnvironmentFile=/etc/website/website.env
+ExecStart=/opt/website-venv/bin/python /opt/website/server/websiteapi.py sichern /var/backups/website
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/website /var/backups/website
+InaccessiblePaths=-/var/lib/lerncoach -/etc/lerncoach -/var/backups/lerncoach -/opt/lerncoach
+UMask=0077

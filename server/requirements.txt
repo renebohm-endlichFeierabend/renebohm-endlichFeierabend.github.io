@@ -1,0 +1,4 @@
+# Backend der Website (server/websiteapi.py). Bewusst wenige Pakete.
+fastapi>=0.115,<1
+uvicorn>=0.30,<1
+python-multipart>=0.0.18

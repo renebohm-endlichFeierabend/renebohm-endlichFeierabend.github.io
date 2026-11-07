@@ -1,0 +1,28 @@
+# Vorlage für /etc/caddy/sites/website.caddy; setup.sh ersetzt __DOMAIN__.
+# /etc/caddy/Caddyfile bindet das mit "import /etc/caddy/sites/*.caddy" ein.
+# Kein Zugriffsprotokoll (Caddy protokolliert Aufrufe nur, wenn "log" gesetzt ist).
+www.__DOMAIN__ {
+	redir https://__DOMAIN__{uri} permanent
+}
+
+__DOMAIN__ {
+	encode zstd gzip
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		X-Frame-Options "SAMEORIGIN"
+		-Server
+	}
+	handle /api/* {
+		request_body {
+			max_size 16KB
+		}
+		reverse_proxy 127.0.0.1:8100
+	}
+	handle {
+		root * /srv/website/current
+		try_files {path} {path}.html {path}/index.html
+		file_server
+	}
+}

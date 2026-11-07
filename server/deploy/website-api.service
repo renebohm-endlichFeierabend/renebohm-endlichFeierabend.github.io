@@ -1,0 +1,48 @@
+# Backend der Website (server/websiteapi.py), nur auf 127.0.0.1:8100, Caddy leitet /api/ dorthin.
+# Getrennt vom Lerncoach: eigener Benutzer, eigene Daten, Lerncoach-Pfade unsichtbar.
+[Unit]
+Description=Website-Backend (Anmeldungen mit Double-Opt-in)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=website
+Group=website
+WorkingDirectory=/opt/website/server
+EnvironmentFile=/etc/website/website.env
+ExecStart=/opt/website-venv/bin/uvicorn websiteapi:create_app --factory --app-dir /opt/website/server --host 127.0.0.1 --port 8100 --workers 1 --proxy-headers --forwarded-allow-ips 127.0.0.1 --no-server-header --no-access-log
+Restart=on-failure
+RestartSec=5
+
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+ProtectClock=true
+ProtectHostname=true
+ProtectProc=invisible
+ProcSubset=pid
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+CapabilityBoundingSet=
+AmbientCapabilities=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources
+UMask=0077
+ReadWritePaths=/var/lib/website
+InaccessiblePaths=-/var/lib/lerncoach -/etc/lerncoach -/var/backups/lerncoach -/opt/lerncoach
+MemoryMax=300M
+TasksMax=64
+
+[Install]
+WantedBy=multi-user.target

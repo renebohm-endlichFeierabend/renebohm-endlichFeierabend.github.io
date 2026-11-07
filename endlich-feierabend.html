@@ -50,6 +50,10 @@
     background:rgba(255,255,255,.08);color:#fff;font-family:var(--body);font-size:16px;outline:none;}
   .wl-form input::placeholder{color:rgba(234,241,248,.55);}
   .wl-form input:focus{border-color:var(--amber);}
+  .wl-form .wl-consent{flex-basis:100%;display:flex;gap:10px;align-items:flex-start;text-align:left;font-size:13.5px;line-height:1.5;color:var(--on-dark-soft);}
+  .wl-form .wl-consent input{flex:none;min-width:0;width:18px;height:18px;margin-top:2px;padding:0;accent-color:var(--amber);}
+  .wl-form .wl-consent a{color:var(--amber);}
+  .wl-hp{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;}
   @media (max-width:680px){ .wl-form{flex-direction:column;} .wl-form .btn{justify-content:center;} }
 </style>
 </head>
@@ -180,9 +184,13 @@
       <div class="eyebrow on-dark" style="justify-content:center;">Warteliste</div>
       <h2 style="color:#fff;">Kurs in Entwicklung</h2>
       <p class="lead" style="color:var(--on-dark-soft);margin:16px auto 0;max-width:540px;">Der Online-Kurs wird aktuell auf Basis meiner Workshop-Erfahrungen entwickelt. Trage dich ein und erfahre als Erste/r, wenn er startet.</p>
-      <form class="wl-form" action="https://submit-form.com/YOUR-FORM-ID" method="POST">
-        <input type="email" name="email" placeholder="Deine E-Mail-Adresse" required>
+      <form class="wl-form" action="/api/anmelden" method="post">
+        <input type="hidden" name="liste" value="warteliste">
+        <div class="wl-hp" aria-hidden="true"><label>Bitte leer lassen <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+        <input type="email" name="email" placeholder="Deine E-Mail-Adresse" autocomplete="email" required>
         <button type="submit" class="btn btn--primary">Auf die Warteliste <svg><use href="#i-arrow"/></svg></button>
+        <label class="wl-consent"><input type="checkbox" name="einwilligung" value="ja" required>
+          <span>Ich möchte per E-Mail informiert werden, sobald der Kurs startet. Du bekommst zuerst eine E-Mail zur Bestätigung. Abmelden jederzeit über den Link in jeder E-Mail. Details in der <a href="impressum.html#datenschutz">Datenschutzerklärung</a>.</span></label>
       </form>
       <p style="margin-top:24px;font-family:var(--mono);font-size:13.5px;color:var(--on-dark-soft);">
         Bis dahin: Starte mit dem <a href="ki-kickstart.html" style="color:var(--amber);text-decoration:none;">KI-Kickstart für 14,99 €</a>

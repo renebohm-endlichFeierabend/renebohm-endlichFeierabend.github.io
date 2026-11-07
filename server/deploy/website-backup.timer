@@ -1,0 +1,9 @@
+[Unit]
+Description=Nächtliche Sicherung der Website-Datenbank (die letzten 14)
+
+[Timer]
+OnCalendar=*-*-* 03:27
+Persistent=true
+
+[Install]
+WantedBy=timers.target
