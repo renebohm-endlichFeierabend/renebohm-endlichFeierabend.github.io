@@ -1,19 +1,22 @@
 {
-  "_hinweis": "Zuordnung Produkt -> Moodle und Anzeigepreise des Kursshops. Preise sind Platzhalter (bohm entscheidet). Der Preis hier muss zum Stripe-Preis passen, sonst lehnt die Bestellseite ab. Stripe-Preis-IDs kommen aus der Umgebung (Name in stripe_preis_env), nie ins Repo. Bei Änderungen auch kurse/index.html anpassen (der Test prüft das).",
+  "_hinweis": "Zuordnung Produkt -> Moodle und Anzeigepreise des Kursshops. Titel, Texte und Preise mit platzhalter: true sind Platzhalter (bohm entscheidet). Der Preis hier muss zum Stripe-Preis passen, sonst lehnt die Bestellseite ab. sichtbar: false blendet ein Produkt auf /kurse/ aus und sperrt die Bestellseite; Webhooks, Kohorte und Kündigung funktionieren weiter. Stripe-Preis-IDs kommen aus der Umgebung (Name in stripe_preis_env), nie ins Repo. /kurse/ lädt die Liste von /api/kauf/produkte; der statische Rückfall in kurse/index.html muss zu den sichtbaren Produkten passen (der Test prüft das).",
   "moodle_url": "https://moodle.endlich-feierabend-ki.de",
   "produkte": {
-    "beispiel-bezahlt": {
+    "moodle-kurse-mit-ki": {
       "art": "einzelkurs",
       "aktiv": true,
-      "titel": "Beispielkurs (Platzhalter)",
-      "beschreibung": "Platzhalter für den ersten Bezahlkurs. Einmal zahlen, dauerhaft Zugang im Moodle.",
+      "sichtbar": true,
+      "platzhalter": true,
+      "titel": "Moodle-Kurse mit KI bauen",
+      "beschreibung": "[Platzhalter] Wie du mit KI in kurzer Zeit eigene Moodle-Kurse planst und baust. Einmal zahlen, dauerhaft Zugang im Moodle.",
       "preis_cent": 2900,
       "moodle_kurs_id": 31,
-      "stripe_preis_env": "STRIPE_PRICE_BEISPIEL_BEZAHLT"
+      "stripe_preis_env": "STRIPE_PRICE_MOODLE_KURSE_MIT_KI"
     },
     "abo-alle-kurse": {
       "art": "abo",
       "aktiv": true,
+      "sichtbar": false,
       "titel": "Abo: alle Kurse",
       "beschreibung": "Zugang zu allen Bezahlkursen, solange das Abo läuft. Monatlich kündbar.",
       "preis_cent": 499,

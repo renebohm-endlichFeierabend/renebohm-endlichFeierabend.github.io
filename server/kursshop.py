@@ -13,8 +13,9 @@ Ablauf
                                     (Einzelkurs) bzw. in die Kohorte aufnehmen (Abo), Bestätigungsmail
        invoice.paid                → Abo verlängert: Kohorte sicherstellen
        customer.subscription.deleted / .updated (canceled, unpaid) → aus der Kohorte entfernen
-       charge.refunded / charge.dispute.created → Einschreibung beenden (Einzelkurs nur mit Schalter, sonst
-                                    Mail an bohm), Abo: aus der Kohorte entfernen
+       charge.refunded / charge.dispute.created → Einzelkurs: austragen (im Fehlerfall Mail an bohm);
+                                    Abo: in Stripe sofort kündigen, aus der Kohorte entfernen
+  GET /api/kauf/produkte        Liste für /kurse/ (sichtbare Produkte, Einstiegskurse nur mit KURSSHOP_FREI_AKTIV=1)
   4. POST /api/kuendigen        Kündigungsschaltfläche nach § 312k BGB (Formular: /vertraege-kuendigen.html).
 
 Rechtliche Punkte sind mit [U] markiert: ungeprüft, keine Rechtsberatung. Siehe server/README.md.
@@ -52,7 +53,8 @@ log = logging.getLogger("kursshop")
 STRIPE_API = "https://api.stripe.com"
 SIGNATUR_TOLERANZ_S = 300
 OFFEN_LOESCHEN_NACH_S = 7 * 24 * 3600      # Checkout-Sitzungen laufen nach 24 h ab
-EREIGNISSE_LOESCHEN_NACH_S = 90 * 24 * 3600  # Stripe wiederholt höchstens 3 Tage
+EREIGNISSE_LOESCHEN_NACH_S = 90 * 24 * 3600  # Stripe wiederholt höchstens 3 Tage; nur IDs, keine Personendaten
+JAHR_S = 365 * 24 * 3600
 PREIS_CACHE_S = 600
 
 # [U] Wortlaut der Zustimmung nach § 356 Abs. 5 BGB. Wird mit jeder Bestellung gespeichert und in der
@@ -157,7 +159,18 @@ def konfig() -> dict:
 
 
 def produkte() -> dict:
+    """Alle aktiven Produkte (auch unsichtbare): für Webhooks, Erstattung, Kündigung."""
     return {k: p for k, p in konfig()["produkte"].items() if p.get("aktiv", True)}
+
+
+def kaufbar() -> dict:
+    """Produkte, die auf /kurse/ erscheinen und bestellt werden können (sichtbar: false blendet aus)."""
+    return {k: p for k, p in produkte().items() if p.get("sichtbar", True)}
+
+
+def kostenlose_kurse() -> list[dict]:
+    """Einstiegskurse mit „kostenlos starten“; ausgeblendet, solange KURSSHOP_FREI_AKTIV nicht 1 ist."""
+    return list(konfig().get("kostenlos", [])) if schalter("KURSSHOP_FREI_AKTIV") else []
 
 
 def moodle_url() -> str:
@@ -173,8 +186,9 @@ def kohorte_id(produkt: dict) -> int | None:
     return int(wert) if wert.strip().isdigit() else None
 
 
-def schalter(name: str) -> bool:
-    return os.environ.get(name, "").strip().lower() in ("1", "ja", "true", "an")
+def schalter(name: str, standard: bool = False) -> bool:
+    wert = os.environ.get(name, "").strip().lower()
+    return standard if not wert else wert in ("1", "ja", "true", "an")
 
 
 def shop_bereit() -> bool:
@@ -187,6 +201,7 @@ def status() -> dict:
         "stripe": bool(os.environ.get("STRIPE_SECRET_KEY")),
         "webhook": bool(os.environ.get("STRIPE_WEBHOOK_SECRET")),
         "moodle": bool(os.environ.get("MOODLE_KURSSHOP_TOKEN")),
+        "frei": schalter("KURSSHOP_FREI_AKTIV"),
     }
 
 
@@ -221,11 +236,30 @@ def db() -> sqlite3.Connection:
     return con
 
 
+def jahre(name: str, standard: int) -> int:
+    wert = os.environ.get(name, "").strip()
+    return int(wert) if wert.isdigit() and int(wert) > 0 else standard
+
+
 def aufraeumen(con: sqlite3.Connection) -> None:
+    """Wird auch von websiteapi.aufraeumen() aufgerufen (Anmeldungen, nächtliche Sicherung).
+
+    [U] Fristen sind eine Einschätzung, keine Rechtsauskunft: Bestellungen/Zahlungen 8 Jahre nach Abschluss
+    (Buchungsbelege, § 147 AO / § 257 HGB), Kündigungen und Übriges 3 Jahre (regelmäßige Verjährung).
+    """
+    con.executescript(SCHEMA)
+    jetzt = w.jetzt()
     con.execute("DELETE FROM kauf_bestellungen WHERE status = 'offen' AND angelegt_am < ?",
-                (w.jetzt() - OFFEN_LOESCHEN_NACH_S,))
+                (jetzt - OFFEN_LOESCHEN_NACH_S,))
+    buchung = jetzt - jahre("KURSSHOP_AUFBEWAHRUNG_BUCHUNG_JAHRE", 8) * JAHR_S
+    con.execute("DELETE FROM kauf_bestellungen WHERE status NOT IN ('aktiv', 'gekuendigt', 'offen', "
+                "'zahlung_ausstehend', 'klaerung') AND COALESCE(beendet_am, bezahlt_am, angelegt_am) < ?", (buchung,))
+    con.execute("DELETE FROM kauf_bestellungen WHERE status IN ('zahlung_ausstehend', 'klaerung') "
+                "AND angelegt_am < ?", (buchung,))
+    sonst = jetzt - jahre("KURSSHOP_AUFBEWAHRUNG_SONST_JAHRE", 3) * JAHR_S
+    con.execute("DELETE FROM kauf_kuendigungen WHERE eingegangen_am < ?", (sonst,))
     con.execute("DELETE FROM kauf_ereignisse WHERE erledigt = 1 AND empfangen_am < ?",
-                (w.jetzt() - EREIGNISSE_LOESCHEN_NACH_S,))
+                (jetzt - EREIGNISSE_LOESCHEN_NACH_S,))
 
 
 def bestellung(con: sqlite3.Connection, spalte: str, wert) -> sqlite3.Row | None:
@@ -363,9 +397,10 @@ def kundenmail(b: sqlite3.Row, p: dict, username: str, passwort: str | None, kon
                   f"Beim ersten Anmelden wählst du ein eigenes Passwort. Bitte bewahre diese Mail nicht dauerhaft "
                   f"mit dem Startpasswort auf.\n")
     elif konto_neu:
-        zugang = (f"Für dich wurde ein Konto im Moodle angelegt (Benutzername: {username}). Moodle verschickt "
-                  f"selbst eine E-Mail mit deinen Zugangsdaten. Falls sie nicht ankommt, antworte einfach auf "
-                  f"diese Mail.\n  Anmeldung: {m}/login/index.php\n")
+        zugang = (f"Für dich wurde ein Konto im Moodle angelegt (Benutzername: {username}).\n"
+                  f"Deine Zugangsdaten kommen per Mail von Moodle (Absender: Moodle von Endlich Feierabend). "
+                  f"Schau auch im Spam-Ordner nach; falls nichts ankommt, antworte einfach auf diese Mail.\n"
+                  f"  Anmeldung: {m}/login/index.php\n")
     else:
         zugang = (f"Du hast schon ein Konto im Moodle (Benutzername: {username}). Melde dich wie gewohnt an:\n"
                   f"  {m}/login/index.php\n"
@@ -586,8 +621,8 @@ def abo_ende(con: sqlite3.Connection, sub: dict, grund: str) -> str:
     b = bestellung(con, "stripe_subscription", sub.get("id"))
     if b is None:
         return "ignoriert: kein Abo aus dem Kursshop bekannt"
-    if b["status"] in ("beendet",):
-        return "schon beendet"
+    if b["status"] in ("beendet", "erstattet"):
+        return f"schon erledigt ({b['status']})"
     p = konfig()["produkte"].get(b["produkt"])
     ergebnis = kohorte_entfernen(p, b, grund) if p else "Produkt unbekannt"
     bestellung_setzen(con, b["bestellnr"], status="beendet", beendet_am=w.jetzt(),
@@ -609,6 +644,28 @@ def abo_geaendert(con: sqlite3.Connection, sub: dict) -> str:
         bestellung_setzen(con, b["bestellnr"], status="aktiv", kuendigung_zum=None)
         return "Kündigung zurückgenommen"
     return "keine Änderung"
+
+
+def austragen_melden(b: sqlite3.Row, p: dict, anlass: str, warum: str) -> None:
+    admin_melden(f"Bitte austragen: {anlass} ({b['bestellnr']})",
+                 f"{anlass} zu Bestellung {b['bestellnr']} ({p['titel']}, {b['email']}).\n{warum}\n"
+                 f"Bitte im Moodle Benutzer {b['moodle_username']} (id {b['moodle_userid']}) aus Kurs "
+                 f"{p['moodle_kurs_id']} austragen: {moodle_url()}/user/index.php?id={p['moodle_kurs_id']}\n")
+
+
+def abo_sofort_beenden(b: sqlite3.Row, anlass: str) -> str:
+    """Erstattung/Rückbuchung beim Abo: Abo in Stripe sofort kündigen (nicht erst zum Periodenende)."""
+    if not b["stripe_subscription"]:
+        return "kein Stripe-Abo bekannt"
+    try:
+        stripe_anfrage("DELETE", f"/v1/subscriptions/{b['stripe_subscription']}",
+                       idempotenz=f"erstattung-{b['bestellnr']}")
+        return "Abo in Stripe sofort gekündigt"
+    except Klaerung as e:  # z. B. schon gekündigt
+        admin_melden(f"Abo nicht gekündigt ({b['bestellnr']})",
+                     f"{anlass}: Das Abo {b['stripe_subscription']} ließ sich in Stripe nicht kündigen ({e}). "
+                     f"Bitte im Dashboard prüfen.\n")
+        return "Abo-Kündigung in Stripe fehlgeschlagen, Verwaltung benachrichtigt"
 
 
 def zahlung_zurueck(con: sqlite3.Connection, obj: dict, typ: str) -> str:
@@ -639,23 +696,21 @@ def zahlung_zurueck(con: sqlite3.Connection, obj: dict, typ: str) -> str:
     if p is None or not b["moodle_userid"]:
         raise Klaerung(f"{anlass} zu {b['bestellnr']}: Produkt oder Moodle-Konto unbekannt")
     if p["art"] == "abo":
-        ergebnis = kohorte_entfernen(p, b, anlass)
-        admin_melden(f"{anlass} beim Abo ({b['bestellnr']})",
-                     f"{b['email']} wurde aus der Kohorte entfernt ({ergebnis}). Das Abo selbst läuft in Stripe "
-                     f"weiter: bitte dort kündigen, falls gewünscht (sonst schaltet die nächste Zahlung wieder frei).\n")
-    elif schalter("KURSSHOP_AUSTRAGEN"):
-        moodle_aufruf("enrol_manual_unenrol_users", enrolments=[
-            {"roleid": 5, "userid": b["moodle_userid"], "courseid": p["moodle_kurs_id"]}])
-        ergebnis = "aus dem Kurs ausgetragen"
-        admin_melden(f"{anlass}: ausgetragen ({b['bestellnr']})", f"{b['email']}: {ergebnis}.\n")
+        ergebnis = abo_sofort_beenden(b, anlass)
+        ergebnis += "; " + kohorte_entfernen(p, b, anlass)
+        admin_melden(f"{anlass} beim Abo ({b['bestellnr']})", f"{b['email']}: {ergebnis}.\n")
+    elif schalter("KURSSHOP_AUSTRAGEN", standard=True):
+        try:
+            moodle_aufruf("enrol_manual_unenrol_users", enrolments=[
+                {"roleid": 5, "userid": b["moodle_userid"], "courseid": p["moodle_kurs_id"]}])
+            ergebnis = "aus dem Kurs ausgetragen"
+            admin_melden(f"{anlass}: ausgetragen ({b['bestellnr']})", f"{b['email']}: {ergebnis}.\n")
+        except Klaerung as e:
+            ergebnis = "Austragen fehlgeschlagen, Verwaltung benachrichtigt"
+            austragen_melden(b, p, anlass, f"Automatisches Austragen fehlgeschlagen: {e}")
     else:
         ergebnis = "Austragen nötig, Verwaltung benachrichtigt"
-        admin_melden(f"Bitte austragen: {anlass} ({b['bestellnr']})",
-                     f"{anlass} zu Bestellung {b['bestellnr']} ({p['titel']}, {b['email']}).\n"
-                     f"Bitte im Moodle Benutzer {b['moodle_username']} (id {b['moodle_userid']}) aus Kurs "
-                     f"{p['moodle_kurs_id']} austragen: {moodle_url()}/user/index.php?id={p['moodle_kurs_id']}\n"
-                     f"(Automatisch geht das erst, wenn enrol_manual_unenrol_users freigegeben und "
-                     f"KURSSHOP_AUSTRAGEN=1 gesetzt ist.)\n")
+        austragen_melden(b, p, anlass, "Automatisches Austragen ist abgeschaltet (KURSSHOP_AUSTRAGEN=0).")
     bestellung_setzen(con, b["bestellnr"], status="erstattet", beendet_am=w.jetzt(), notiz=f"{anlass}: {ergebnis}")
     log.info("Bestellung %s: %s, %s", b["bestellnr"], anlass, ergebnis)
     return ergebnis
@@ -801,9 +856,24 @@ def einbinden(app: FastAPI) -> None:
         return w.seite("Buchung noch nicht geöffnet", "<p>Die Buchung über die Website ist noch nicht geöffnet. "
                        "Bitte schau bald wieder vorbei.</p><p><a href=\"/kurse/\">Zur Kursübersicht</a></p>", 503)
 
+    @app.get("/api/kauf/produkte")
+    def produktliste():
+        """Für /kurse/: welche Kurse gerade angezeigt werden (Schalter wirken ohne Neubau der Seite)."""
+        m = moodle_url().rstrip("/")
+        return JSONResponse({
+            "buchung_offen": shop_bereit(),
+            "kaufbar": [{"produkt": k, "art": p["art"], "titel": p["titel"], "beschreibung": p["beschreibung"],
+                         "preis": euro(p["preis_cent"]),
+                         "preis_zusatz": f"pro {p['intervall']}" if p["art"] == "abo" else "einmalig",
+                         "platzhalter": bool(p.get("platzhalter")),
+                         "link": f"/api/kauf/bestellen?produkt={k}"} for k, p in kaufbar().items()],
+            "kostenlos": [{"titel": f["titel"], "beschreibung": f["beschreibung"],
+                           "link": f"{m}/course/view.php?id={f['moodle_kurs_id']}"} for f in kostenlose_kurse()],
+        }, headers={"Cache-Control": "no-cache"})
+
     @app.get("/api/kauf/bestellen")
     def bestellen_seite(produkt: str = ""):
-        p = produkte().get(produkt)
+        p = kaufbar().get(produkt)
         if p is None:
             return w.seite("Nicht gefunden", "<p>Dieses Angebot gibt es nicht (mehr).</p>"
                            "<p><a href=\"/kurse/\">Zur Kursübersicht</a></p>", 404)
@@ -814,7 +884,7 @@ def einbinden(app: FastAPI) -> None:
     @app.post("/api/kauf/bestellen")
     def bestellen(request: Request, produkt: str = Form(""), widerruf: str = Form(""), wohnsitz: str = Form(""),
                   website: str = Form("")):
-        p = produkte().get(produkt)
+        p = kaufbar().get(produkt)
         if p is None or website:
             return w.seite("Nicht gefunden", "<p>Dieses Angebot gibt es nicht (mehr).</p>", 404)
         if not shop_bereit():
@@ -1034,7 +1104,7 @@ def pruefen() -> int:
         print("Moodle:", info.get("sitename"), "| Konto:", info.get("username"))
         print("  Funktionen:", ", ".join(funktionen))
         print("  Austragen bei Erstattung:", "freigegeben" if "enrol_manual_unenrol_users" in funktionen
-              else "nicht freigegeben (Mail an Verwaltung)", "| Schalter:", schalter("KURSSHOP_AUSTRAGEN"))
+              else "nicht freigegeben (Mail an Verwaltung)", "| Schalter:", schalter("KURSSHOP_AUSTRAGEN", standard=True))
     except Exception as e:
         ok = False
         print("Moodle: FEHLER", e)
@@ -1044,9 +1114,11 @@ def pruefen() -> int:
         if p["art"] == "abo":
             zeile += f" | Kohorte {p['moodle_kohorte']} id={kohorte_id(p) or 'FEHLT'}"
             ok = ok and kohorte_id(p) is not None
+        if not p.get("sichtbar", True):
+            zeile += " | ausgeblendet (sichtbar: false)"
         if not pid:
             print(zeile, f"| {p['stripe_preis_env']} FEHLT")
-            ok = False
+            ok = ok and not p.get("sichtbar", True)
             continue
         try:
             passt = preis_passt(p, stripe_preis(pid))

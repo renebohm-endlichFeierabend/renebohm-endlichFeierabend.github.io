@@ -77,7 +77,8 @@ angesprochen (je ein Formular-POST, dafür lohnt kein SDK).
 
 | Was | Wo |
 |---|---|
-| Kursliste (statisch) | `/kurse/` (`kurse/index.html`): Einstiegskurs „kostenlos starten“ (Moodle-Link), Bezahlkurse mit Kaufknopf |
+| Kursliste | `/kurse/` (`kurse/index.html`): lädt die Liste von `GET /api/kauf/produkte` (JSON). Ohne JavaScript bleibt der statische Rückfall (sichtbare Bezahlkurse). Schalter wirken also mit einer env-Zeile + Neustart des Backends, ohne Neubau |
+| Produktliste | `GET /api/kauf/produkte`: sichtbare Produkte (`sichtbar` in `kursshop.json`), Einstiegskurse nur mit `KURSSHOP_FREI_AKTIV=1` |
 | Bestellseite | `GET /api/kauf/bestellen?produkt=…`: Preis, zwei Pflicht-Häkchen, Knopf „Zahlungspflichtig bestellen“ |
 | Weiter zu Stripe | `POST /api/kauf/bestellen`: prüft den Stripe-Preis gegen `kursshop.json`, legt die Bestellung `offen` an (Zeitpunkt und Wortlaut der Zustimmung, noch **ohne** Mailadresse), 303 zu Stripe Checkout |
 | Erfolg / Abbruch | `/kurse/danke.html`, `/kurse/abbruch.html` (statisch) |
@@ -95,7 +96,7 @@ Bestellung ihren Status):
 | `invoice.paid` | Abo verlängert → Kohorte sicherstellen, `bezahlt_bis` merken (erste Rechnung: Freischaltung macht der Checkout) |
 | `customer.subscription.updated` | `canceled`/`unpaid`/`incomplete_expired` → aus Kohorte entfernen; `cancel_at_period_end` → Status `gekuendigt` (Zugang bis Periodenende) |
 | `customer.subscription.deleted` | aus Kohorte entfernen (`core_cohort_delete_cohort_members`) |
-| `charge.refunded` (vollständig), `charge.dispute.created` | Einzelkurs: mit `KURSSHOP_AUSTRAGEN=1` austragen, sonst (Standard, weil `enrol_manual_unenrol_users` nicht freigegeben) Mail an bohm mit Benutzer, Kurs und Link. Abo: aus Kohorte entfernen + Mail (Abo in Stripe ggf. kündigen). Teilerstattung: nur Mail |
+| `charge.refunded` (vollständig), `charge.dispute.created` | Einzelkurs: austragen (`enrol_manual_unenrol_users`, Standard an; schlägt es fehl oder ist `KURSSHOP_AUSTRAGEN=0`: Mail an bohm mit Benutzer, Kurs und Link). Abo: in Stripe **sofort** kündigen (`DELETE /v1/subscriptions/…`), dann aus der Kohorte entfernen, Mail an bohm. Teilerstattung: nur Mail |
 
 Antworten an Stripe: 200 (erledigt oder „Klärung nötig“, dann Mail an `KURSSHOP_ADMIN_MAIL`), 503 bei vorübergehenden
 Fehlern (Moodle/Stripe nicht erreichbar, SMTP fehlt) → Stripe wiederholt bis zu 3 Tage. Nach einer Klärung:
@@ -119,12 +120,16 @@ Die Vorlage `deploy/website.env.vorlage` enthält alle neuen Zeilen; eine besteh
 |---|---|
 | `STRIPE_SECRET_KEY` | zuerst der **Test**-Schlüssel `sk_test_…` (besser: eingeschränkter Schlüssel `rk_test_…` mit Schreibrecht auf Checkout Sessions und Subscriptions, Leserecht auf Prices und Charges) |
 | `STRIPE_WEBHOOK_SECRET` | `whsec_…` des Webhook-Endpunkts (von bohm aus dem Dashboard) |
-| `STRIPE_PRICE_BEISPIEL_BEZAHLT`, `STRIPE_PRICE_ABO_ALLE_KURSE` | Preis-IDs `price_…` |
+| `STRIPE_PRICE_MOODLE_KURSE_MIT_KI` (`STRIPE_PRICE_ABO_ALLE_KURSE` erst, wenn das Abo sichtbar wird) | Preis-IDs `price_…` |
 | `MOODLE_KURSSHOP_TOKEN` | aus `/var/lib/moodle-kursbau/.kursshop-token` |
-| `MOODLE_ABO_KOHORTE_ID` | numerische ID der Kohorte `abo-alle-kurse` (zum Entfernen nötig, `core_cohort_delete_cohort_members` will die ID) |
+| `MOODLE_ABO_KOHORTE_ID` | `1` (ID der Kohorte `abo-alle-kurse` laut root; zum Entfernen nötig, `core_cohort_delete_cohort_members` will die ID) |
 | `KURSSHOP_ADMIN_MAIL` | Adresse von bohm für Meldungen |
 | `KURSSHOP_AKTIV` | `1` erst, wenn `web.sh kauf-pruefen` ohne Fehler durchläuft |
-| optional | `STRIPE_PORTAL_LOGIN_URL`, `MOODLE_CREATEPASSWORD=0`, `KURSSHOP_AUSTRAGEN=0` |
+| Schalter | `KURSSHOP_FREI_AKTIV=0`, `MOODLE_CREATEPASSWORD=0`, `KURSSHOP_AUSTRAGEN=1` (Standard), `KURSSHOP_AUFBEWAHRUNG_BUCHUNG_JAHRE=8`, `KURSSHOP_AUFBEWAHRUNG_SONST_JAHRE=3`, optional `STRIPE_PORTAL_LOGIN_URL` |
+
+**Umstellen, sobald Moodle Mails schickt:** `KURSSHOP_FREI_AKTIV=1`, `MOODLE_CREATEPASSWORD=1`, dann
+`systemctl restart website-api`. Mit `MOODLE_CREATEPASSWORD=1` steht in unserer Mail statt des Startpassworts
+„Deine Zugangsdaten kommen per Mail von Moodle“.
 
 Danach `update.sh` (baut `kurse/` mit, schreibt die Caddy-Datei neu: `/api/kauf/stripe` darf bis 1 MB groß sein,
 der Rest von `/api/` bleibt bei 16 KB) und `web.sh kauf-pruefen` (zeigt Testmodus/Live, Moodle-Funktionen, ob die
@@ -152,7 +157,7 @@ Stripe-Preise zu `kursshop.json` passen und ob die Kohorten-ID fehlt; ändert ni
 
 ### Testen (Testmodus, ohne echtes Geld)
 
-- Lokal ohne Stripe: `python -m pytest server/` (Stripe und Moodle nachgestellt; 23 Tests: Bestellseite,
+- Lokal ohne Stripe: `python -m pytest server/` (Stripe und Moodle nachgestellt; 27 Tests: Bestellseite,
   Signatur, Idempotenz, alle Ereignisarten, Erstattung mit/ohne Schalter, Abo-Ablauf, Kündigung, HTTP-Schicht,
   Abgleich `kurse/index.html` ↔ `kursshop.json`).
 - Mit Stripe-Testmodus: auf `/kurse/` kaufen, Testkarte `4242 4242 4242 4242`, beliebiges künftiges Datum,
@@ -207,18 +212,23 @@ Stripe-Preise zu `kursshop.json` passen und ob die Kohorten-ID fehlt; ändert ni
 `kauf_bestellungen`: Bestellnummer, Produkt, Status, Zustimmung (Zeit, Version, Wortlaut), nach der Zahlung
 E-Mail, Rechnungsland, Betrag, Stripe-IDs, Moodle-Benutzer-ID und -name; **kein** Name, **kein** Passwort, keine
 IP-Adressen. Offene (nie bezahlte) Bestellungen werden nach 7 Tagen gelöscht. `kauf_ereignisse`: Event-ID, Typ,
-Ergebnis (nach 90 Tagen gelöscht). `kauf_kuendigungen`: die Kündigungserklärung (Nachweis). Aufbewahrungsfristen
-dafür festlegen (offen).
+Ergebnis (nach 90 Tagen gelöscht, nur IDs). `kauf_kuendigungen`: die Kündigungserklärung (Nachweis).
+
+Aufbewahrung (Einschätzung, keine Rechtsauskunft [U]): abgeschlossene Bestellungen/Zahlungen 8 Jahre nach Ende
+(`KURSSHOP_AUFBEWAHRUNG_BUCHUNG_JAHRE`, angelehnt an die Frist für Buchungsbelege), Kündigungen und Übriges 3 Jahre
+(`KURSSHOP_AUFBEWAHRUNG_SONST_JAHRE`, regelmäßige Verjährung). Laufende Abos bleiben. Gelöscht wird in
+`aufraeumen()`, das `websiteapi.aufraeumen()` mit aufruft (Anmeldungen, Webhooks und die nächtliche Sicherung).
+Die Belege selbst liegen bei Stripe bzw. in der Buchhaltung.
 
 ### Offen
 
-- Preise und Kursliste (bohm): `kursshop.json` und `kurse/index.html` enthalten Platzhalter (Beispielkurs 29 €,
-  Abo 4,99 €/Monat). Bei Änderung beide Dateien anpassen; der Test vergleicht sie.
-- „Kostenlos starten“ (Kurs 30) führt ins Moodle; Kurs 30 ist noch verborgen, und ohne Selbstregistrierung (braucht
-  Moodle-Mailversand) können Neue sich dort nicht anmelden.
-- Moodle-Mailversand: bis dahin Startpasswort in unserer Mail, „Passwort vergessen“ geht nicht.
-- `enrol_manual_unenrol_users` freigeben (root), dann `KURSSHOP_AUSTRAGEN=1`.
-- Kohorten-ID `abo-alle-kurse` an root (`MOODLE_ABO_KOHORTE_ID`).
+- Zum Start (Entscheidung bohm 20.11.): ein Bezahlkurs „Moodle-Kurse mit KI bauen“ (Kurs 31). Titel, Text und Preis
+  (29 €) sind Platzhalter (`platzhalter: true`, auf der Seite rot markiert), Preis legt bohm fest. Bei Änderung
+  `kursshop.json` und den statischen Rückfall in `kurse/index.html` anpassen; der Test vergleicht sie.
+- Abo (4,99 €/Monat) ist ausgeblendet (`sichtbar: false`): keine Anzeige, keine Bestellseite; Webhooks, Kohorte und
+  Kündigung funktionieren. Einblenden: `sichtbar: true`, Preis-ID eintragen, statischen Rückfall ergänzen.
+- „Kostenlos starten“ (Kurs 30): ausgeblendet bis `KURSSHOP_FREI_AKTIV=1` (Moodle-Mailversand und
+  Selbstregistrierung nötig; Kurs 30 sichtbar schalten).
 - Ungeprüft gegen das echte Moodle: `preferences`/`auth_forcepasswordchange` beim Anlegen, Verhalten von
   `core_cohort_add_cohort_members` bei schon vorhandenem Mitglied (Code erwartet: nur Warnung).
 - Schullizenzen / B2B: nicht gebaut.

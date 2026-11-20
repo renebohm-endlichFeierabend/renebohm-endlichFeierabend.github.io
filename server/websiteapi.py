@@ -112,6 +112,8 @@ def aufraeumen(con: sqlite3.Connection) -> int:
     cur = con.execute(
         "DELETE FROM eintraege WHERE status = 'offen' AND angemeldet_am < ?", (jetzt() - BESTAETIGEN_FRIST_S,)
     )
+    import kursshop  # Aufbewahrungsfristen des Kursshops (läuft auch bei der nächtlichen Sicherung)
+    kursshop.aufraeumen(con)
     return cur.rowcount
 
 

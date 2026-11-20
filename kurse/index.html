@@ -92,47 +92,32 @@
 
 <section class="section" id="kurse">
   <div class="container">
-    <div class="section-head">
-      <div class="eyebrow">Kostenlos starten</div>
-      <h2>Der Einstieg kostet nichts</h2>
-    </div>
-    <div class="frei">
-      <div>
-        <span class="tag tag--gruen">Kostenlos</span>
-        <h3 style="margin-top:12px;">Einstieg: KI im Schulalltag</h3>
-        <p>Der kostenlose Einstiegskurs: erste Schritte mit KI im Unterricht und in der Vorbereitung.</p>
+    <!-- Kostenlos starten: erscheint nur, wenn das Backend KURSSHOP_FREI_AKTIV=1 meldet (/api/kauf/produkte) -->
+    <div id="frei-bereich" hidden>
+      <div class="section-head">
+        <div class="eyebrow">Kostenlos starten</div>
+        <h2>Der Einstieg kostet nichts</h2>
       </div>
-      <a href="https://moodle.endlich-feierabend-ki.de/course/view.php?id=30" class="btn btn--primary">Kostenlos starten <svg><use href="#i-arrow"/></svg></a>
+      <div id="frei-liste"></div>
     </div>
 
-    <div class="section-head" style="margin-top:72px;">
+    <div class="section-head" id="buchen-kopf">
       <div class="eyebrow">Kurse buchen</div>
-      <h2>Einzeln oder alles im Abo</h2>
-      <p class="lead">Ein Kurs für ein Thema oder alle Bezahlkurse, solange das Abo läuft.</p>
+      <h2>Lernen im eigenen Tempo</h2>
+      <p class="lead">Einmal buchen, dauerhaft Zugang im Moodle.</p>
     </div>
-    <div class="grid grid-2">
+    <!-- Statischer Rückfall ohne JavaScript; mit JavaScript ersetzt durch /api/kauf/produkte -->
+    <div class="grid grid-2" id="kaufbar">
       <article class="card kurs">
-        <div class="tags"><span class="tag tag--ink">Einzelkurs</span></div>
-        <h3>Beispielkurs (Platzhalter)</h3>
-        <p>Platzhalter für den ersten Bezahlkurs. Einmal zahlen, dauerhaft Zugang im Moodle.</p>
+        <div class="tags"><span class="tag tag--ink">Einzelkurs</span><span class="tag tag--rot">Platzhalter</span></div>
+        <h3>Moodle-Kurse mit KI bauen</h3>
+        <p>[Platzhalter] Wie du mit KI in kurzer Zeit eigene Moodle-Kurse planst und baust. Einmal zahlen, dauerhaft Zugang im Moodle.</p>
         <ul class="ticks">
           <li><span class="tick"><svg><use href="#i-check"/></svg></span>Zugang sofort nach der Zahlung</li>
           <li><span class="tick"><svg><use href="#i-check"/></svg></span>Dauerhaft, ohne Abo</li>
         </ul>
         <div class="preis">29,00&nbsp;€<small>einmalig</small></div>
-        <a href="/api/kauf/bestellen?produkt=beispiel-bezahlt" class="btn btn--primary">Jetzt buchen <svg><use href="#i-arrow"/></svg></a>
-      </article>
-      <article class="card kurs">
-        <span class="badge">Alle Kurse</span>
-        <div class="tags"><span class="tag tag--amber">Abo</span></div>
-        <h3>Abo: alle Kurse</h3>
-        <p>Zugang zu allen Bezahlkursen, solange das Abo läuft. Monatlich kündbar.</p>
-        <ul class="ticks">
-          <li><span class="tick"><svg><use href="#i-check"/></svg></span>Alle Bezahlkurse, auch neue</li>
-          <li><span class="tick"><svg><use href="#i-check"/></svg></span>Jederzeit zum Monatsende kündbar</li>
-        </ul>
-        <div class="preis">4,99&nbsp;€<small>pro Monat</small></div>
-        <a href="/api/kauf/bestellen?produkt=abo-alle-kurse" class="btn btn--primary">Abo abschließen <svg><use href="#i-arrow"/></svg></a>
+        <a href="/api/kauf/bestellen?produkt=moodle-kurse-mit-ki" class="btn btn--primary">Jetzt buchen <svg><use href="#i-arrow"/></svg></a>
       </article>
     </div>
 
@@ -154,7 +139,7 @@
     </div>
     <div class="grid grid-3 schritte">
       <div class="card"><div class="num">1</div><h4>Bestellen</h4><p>Kurs auswählen, bestätigen und sicher bei unserem Zahlungsdienstleister Stripe bezahlen.</p></div>
-      <div class="card"><div class="num">2</div><h4>E-Mail lesen</h4><p>Du bekommst sofort eine E-Mail mit Benutzername, Startpasswort und Link zum Kurs.</p></div>
+      <div class="card"><div class="num">2</div><h4>E-Mail lesen</h4><p>Du bekommst eine E-Mail mit deinen Zugangsdaten und dem Link zum Kurs.</p></div>
       <div class="card"><div class="num">3</div><h4>Loslegen</h4><p>Im Moodle anmelden, eigenes Passwort wählen und direkt mit dem Kurs beginnen.</p></div>
     </div>
     <div class="kleingedruckt">
@@ -204,6 +189,35 @@
   </div>
 </footer>
 
+<script>
+  // Kursliste vom Backend: Schalter (KURSSHOP_FREI_AKTIV, sichtbar in kursshop.json) wirken ohne Neubau der Seite.
+  (function(){
+    const esc=t=>String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const pfeil='<svg><use href="#i-arrow"/></svg>', haken='<span class="tick"><svg><use href="#i-check"/></svg></span>';
+    fetch('/api/kauf/produkte',{headers:{'Accept':'application/json'}}).then(r=>r.ok?r.json():Promise.reject()).then(d=>{
+      const frei=d.kostenlos||[];
+      if(frei.length){
+        document.getElementById('frei-liste').innerHTML=frei.map(f=>`<div class="frei" style="margin-bottom:20px;"><div>
+          <span class="tag tag--gruen">Kostenlos</span><h3 style="margin-top:12px;">${esc(f.titel)}</h3>
+          <p>${esc(f.beschreibung)}</p></div>
+          <a href="${esc(f.link)}" class="btn btn--primary">Kostenlos starten ${pfeil}</a></div>`).join('');
+        document.getElementById('frei-bereich').hidden=false;
+        document.getElementById('buchen-kopf').style.marginTop='72px';
+      }
+      const k=d.kaufbar||[];
+      document.getElementById('kaufbar').innerHTML=k.length?k.map(p=>{
+        const abo=p.art==='abo';
+        return `<article class="card kurs">${abo?'<span class="badge">Alle Kurse</span>':''}
+          <div class="tags"><span class="tag ${abo?'tag--amber':'tag--ink'}">${abo?'Abo':'Einzelkurs'}</span>${p.platzhalter?'<span class="tag tag--rot">Platzhalter</span>':''}</div>
+          <h3>${esc(p.titel)}</h3><p>${esc(p.beschreibung)}</p>
+          <ul class="ticks"><li>${haken}Zugang sofort nach der Zahlung</li>
+          <li>${haken}${abo?'Jederzeit zum Ende des Abrechnungszeitraums kündbar':'Dauerhaft, ohne Abo'}</li></ul>
+          <div class="preis">${esc(p.preis).replace(' ','&nbsp;')}<small>${esc(p.preis_zusatz)}</small></div>
+          <a href="${esc(p.link)}" class="btn btn--primary">${abo?'Abo abschließen':'Jetzt buchen'} ${pfeil}</a></article>`;
+      }).join(''):'<p class="muted">Gerade sind keine Kurse buchbar. Schau bald wieder vorbei.</p>';
+    }).catch(()=>{});
+  })();
+</script>
 <script>
   const burger=document.getElementById('burger'),nav=document.getElementById('nav');
   burger.addEventListener('click',()=>nav.classList.toggle('open'));
