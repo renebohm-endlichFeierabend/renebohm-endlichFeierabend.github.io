@@ -14,6 +14,13 @@ __DOMAIN__ {
 		X-Frame-Options "SAMEORIGIN"
 		-Server
 	}
+	# Stripe-Webhooks sind größer als Formulare (Signatur und Größenprüfung macht das Backend)
+	handle /api/kauf/stripe {
+		request_body {
+			max_size 1MB
+		}
+		reverse_proxy 127.0.0.1:8100
+	}
 	handle /api/* {
 		request_body {
 			max_size 16KB

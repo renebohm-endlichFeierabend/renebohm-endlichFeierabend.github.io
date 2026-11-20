@@ -1,0 +1,33 @@
+{
+  "_hinweis": "Zuordnung Produkt -> Moodle und Anzeigepreise des Kursshops. Preise sind Platzhalter (bohm entscheidet). Der Preis hier muss zum Stripe-Preis passen, sonst lehnt die Bestellseite ab. Stripe-Preis-IDs kommen aus der Umgebung (Name in stripe_preis_env), nie ins Repo. Bei Änderungen auch kurse/index.html anpassen (der Test prüft das).",
+  "moodle_url": "https://moodle.endlich-feierabend-ki.de",
+  "produkte": {
+    "beispiel-bezahlt": {
+      "art": "einzelkurs",
+      "aktiv": true,
+      "titel": "Beispielkurs (Platzhalter)",
+      "beschreibung": "Platzhalter für den ersten Bezahlkurs. Einmal zahlen, dauerhaft Zugang im Moodle.",
+      "preis_cent": 2900,
+      "moodle_kurs_id": 31,
+      "stripe_preis_env": "STRIPE_PRICE_BEISPIEL_BEZAHLT"
+    },
+    "abo-alle-kurse": {
+      "art": "abo",
+      "aktiv": true,
+      "titel": "Abo: alle Kurse",
+      "beschreibung": "Zugang zu allen Bezahlkursen, solange das Abo läuft. Monatlich kündbar.",
+      "preis_cent": 499,
+      "intervall": "Monat",
+      "moodle_kohorte": "abo-alle-kurse",
+      "moodle_kohorte_id_env": "MOODLE_ABO_KOHORTE_ID",
+      "stripe_preis_env": "STRIPE_PRICE_ABO_ALLE_KURSE"
+    }
+  },
+  "kostenlos": [
+    {
+      "titel": "Einstieg: KI im Schulalltag",
+      "beschreibung": "Der kostenlose Einstiegskurs: erste Schritte mit KI im Unterricht und in der Vorbereitung.",
+      "moodle_kurs_id": 30
+    }
+  ]
+}

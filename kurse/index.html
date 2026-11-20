@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kurse · Endlich Feierabend</title>
+<meta name="description" content="Online-Kurse zu KI im Schulalltag: kostenlos starten oder Kurse buchen. Lernen im eigenen Tempo, mit Community für Lehrkräfte.">
+<link rel="icon" href="/assets/logo-mark.svg">
+<link rel="stylesheet" href="/assets/ef.css">
+<!-- Preise und Produkte: server/kursshop.json (der Test server/test_kursshop.py prüft, dass beides zusammenpasst) -->
+<style>
+  .page-hero{background:linear-gradient(160deg,#0B2240,#0D3A6B);color:var(--on-dark);
+    padding:88px 0 80px;position:relative;overflow:hidden;}
+  .page-hero::after{content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;
+    background:radial-gradient(circle,rgba(206,138,44,.24),transparent 62%);}
+  .page-hero .container{position:relative;z-index:1;max-width:820px;}
+  .page-hero h1{color:#fff;}
+  .page-hero h1 em{color:#fff;background-image:linear-gradient(var(--amber),var(--amber));
+    background-repeat:no-repeat;background-position:0 92%;background-size:100% .1em;}
+  .page-hero .lead{color:var(--on-dark-soft);margin:20px 0 32px;max-width:660px;}
+
+  .kurs{display:flex;flex-direction:column;gap:14px;position:relative;}
+  .kurs .tags{display:flex;flex-wrap:wrap;gap:8px;}
+  .kurs p{flex:1;}
+  .kurs .preis{font-family:var(--display);font-weight:800;font-size:34px;color:var(--ink);line-height:1;}
+  .kurs .preis small{font-family:var(--body);font-weight:500;font-size:15px;color:var(--text-soft);margin-left:4px;}
+  .kurs .ticks li{font-size:15.5px;}
+  .kurs .btn{align-self:flex-start;}
+
+  .frei{display:grid;grid-template-columns:1fr auto;gap:28px;align-items:center;background:var(--gruen-tint);
+    border:1px solid #C9E3D2;border-radius:var(--r-lg);padding:30px 34px;}
+  .frei h3{color:var(--gruen-deep);margin-bottom:6px;}
+  .frei p{margin:0;color:#2C5A3E;font-size:16px;}
+
+  .community{display:flex;gap:22px;align-items:flex-start;background:var(--amber-soft);
+    border:1px solid #EAD9B8;border-radius:var(--r-lg);padding:30px 32px;margin-top:44px;}
+  .community .num{background:var(--amber);}
+  .community h4{margin-bottom:6px;}
+  .community p{margin:0;color:#7A5418;font-size:16px;}
+  .community a{color:#7A5418;font-weight:600;}
+
+  .schritte .num{margin-bottom:16px;}
+  .schritte p{color:var(--text-soft);font-size:15.5px;}
+  .kleingedruckt{margin-top:40px;font-size:14.5px;color:var(--text-soft);max-width:780px;}
+  .kleingedruckt p{margin-bottom:8px;}
+  .kleingedruckt a{color:var(--ink);}
+  @media (max-width:680px){
+    .frei{grid-template-columns:1fr;padding:26px 22px;}
+    .community{flex-direction:column;padding:26px 22px;}
+    .page-hero{padding:64px 0 60px;}
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+</svg>
+
+<nav class="ef-nav">
+  <div class="ef-nav__in">
+    <a href="/index.html" class="ef-logo">
+      <img src="/assets/logo-mark.svg" alt="">
+      <span class="ef-logo__wm">endlich feierabend<small>KI für Lehrkräfte</small></span>
+    </a>
+    <ul class="ef-nav__menu" id="nav">
+      <li><a href="/index.html">Start</a></li>
+      <li><a href="/ki-app.html">KI-App</a></li>
+      <li><a href="/workshops.html">Workshops</a></li>
+      <li><a href="/erstgespraech.html">Schulleitungen</a></li>
+      <li><a href="/kurse/" class="active">Kurse</a></li>
+      <li><a href="/ueber-mich.html">Über mich</a></li>
+    </ul>
+    <div class="ef-nav__right">
+      <a href="/ki-kickstart.html" class="btn btn--primary">KI-Kickstart</a>
+      <button class="ef-burger" id="burger" aria-label="Menü"><svg><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="eyebrow on-dark">Online-Kurse im Moodle</div>
+    <h1>KI im Schulalltag, <em>in deinem Tempo</em></h1>
+    <p class="lead">Kurze Lerneinheiten, echte Beispiele aus dem Unterricht und eine Community von Lehrkräften. Starte kostenlos und buche weitere Kurse, wenn du mehr willst.</p>
+    <a href="#kurse" class="btn btn--primary btn--lg">Zu den Kursen <svg><use href="#i-arrow"/></svg></a>
+  </div>
+</section>
+
+<section class="section" id="kurse">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Kostenlos starten</div>
+      <h2>Der Einstieg kostet nichts</h2>
+    </div>
+    <div class="frei">
+      <div>
+        <span class="tag tag--gruen">Kostenlos</span>
+        <h3 style="margin-top:12px;">Einstieg: KI im Schulalltag</h3>
+        <p>Der kostenlose Einstiegskurs: erste Schritte mit KI im Unterricht und in der Vorbereitung.</p>
+      </div>
+      <a href="https://moodle.endlich-feierabend-ki.de/course/view.php?id=30" class="btn btn--primary">Kostenlos starten <svg><use href="#i-arrow"/></svg></a>
+    </div>
+
+    <div class="section-head" style="margin-top:72px;">
+      <div class="eyebrow">Kurse buchen</div>
+      <h2>Einzeln oder alles im Abo</h2>
+      <p class="lead">Ein Kurs für ein Thema oder alle Bezahlkurse, solange das Abo läuft.</p>
+    </div>
+    <div class="grid grid-2">
+      <article class="card kurs">
+        <div class="tags"><span class="tag tag--ink">Einzelkurs</span></div>
+        <h3>Beispielkurs (Platzhalter)</h3>
+        <p>Platzhalter für den ersten Bezahlkurs. Einmal zahlen, dauerhaft Zugang im Moodle.</p>
+        <ul class="ticks">
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span>Zugang sofort nach der Zahlung</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span>Dauerhaft, ohne Abo</li>
+        </ul>
+        <div class="preis">29,00&nbsp;€<small>einmalig</small></div>
+        <a href="/api/kauf/bestellen?produkt=beispiel-bezahlt" class="btn btn--primary">Jetzt buchen <svg><use href="#i-arrow"/></svg></a>
+      </article>
+      <article class="card kurs">
+        <span class="badge">Alle Kurse</span>
+        <div class="tags"><span class="tag tag--amber">Abo</span></div>
+        <h3>Abo: alle Kurse</h3>
+        <p>Zugang zu allen Bezahlkursen, solange das Abo läuft. Monatlich kündbar.</p>
+        <ul class="ticks">
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span>Alle Bezahlkurse, auch neue</li>
+          <li><span class="tick"><svg><use href="#i-check"/></svg></span>Jederzeit zum Monatsende kündbar</li>
+        </ul>
+        <div class="preis">4,99&nbsp;€<small>pro Monat</small></div>
+        <a href="/api/kauf/bestellen?produkt=abo-alle-kurse" class="btn btn--primary">Abo abschließen <svg><use href="#i-arrow"/></svg></a>
+      </article>
+    </div>
+
+    <div class="community">
+      <div class="num">✦</div>
+      <div>
+        <h4>Die Community im Moodle</h4>
+        <p>Nach dem Anmelden landest du auf der Startseite mit dem Community-Bereich: In „Fragen &amp; Antworten“ hilfst du dir gegenseitig mit anderen Lehrkräften, in „Zeig dein Ergebnis“ teilst du, was du ausprobiert hast. <a href="https://moodle.endlich-feierabend-ki.de/">Zum Moodle</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section section--paper2">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">So läuft die Buchung</div>
+      <h2>In drei Schritten im Kurs</h2>
+    </div>
+    <div class="grid grid-3 schritte">
+      <div class="card"><div class="num">1</div><h4>Bestellen</h4><p>Kurs auswählen, bestätigen und sicher bei unserem Zahlungsdienstleister Stripe bezahlen.</p></div>
+      <div class="card"><div class="num">2</div><h4>E-Mail lesen</h4><p>Du bekommst sofort eine E-Mail mit Benutzername, Startpasswort und Link zum Kurs.</p></div>
+      <div class="card"><div class="num">3</div><h4>Loslegen</h4><p>Im Moodle anmelden, eigenes Passwort wählen und direkt mit dem Kurs beginnen.</p></div>
+    </div>
+    <div class="kleingedruckt">
+      <p>Alle Preise sind Endpreise. Nach § 19 Abs. 1 UStG wird keine Umsatzsteuer berechnet (Kleinunternehmerregelung).</p>
+      <p>Buchungen sind derzeit nur für Privatpersonen mit Wohnsitz in Deutschland möglich. Angebote für Schulen folgen.</p>
+      <p>Es gelten die <a href="/impressum.html#agb">AGB</a>. <a href="/impressum.html#widerruf">Widerrufsbelehrung</a> · <a href="/impressum.html#datenschutz">Datenschutz</a> · <a href="/vertraege-kuendigen.html">Verträge hier kündigen</a></p>
+    </div>
+  </div>
+</section>
+
+<footer class="ef-footer">
+  <div class="container">
+    <div class="ef-footer__grid">
+      <div>
+        <div class="ef-footer__brand"><img src="/assets/logo-mark.svg" alt=""><span class="ef-logo__wm">endlich feierabend</span></div>
+        <p>KI-Fortbildungen für Lehrkräfte im DACH-Raum. Systematisch, praxisnah und DSGVO-konform.</p>
+        <p style="margin-top:18px;"><strong style="color:#fff;">René Bohm</strong><br>Mathe- &amp; Informatiklehrer in NRW · KI-Fortbildner</p>
+        <p style="margin-top:14px;"><a class="ig" href="https://instagram.com/endlich.feierabend.mit.ki" target="_blank"><svg style="width:16px;height:16px;"><use href="#i-ig"/></svg> @endlich.feierabend.mit.ki</a></p>
+      </div>
+      <div>
+        <h4>Angebote</h4>
+        <ul class="ef-footer__links">
+          <li><a href="/kurse/">Kurse</a></li>
+          <li><a href="/ki-app.html">KI-App (Download)</a></li>
+          <li><a href="/assistenten.html">KI-Assistenten</a></li>
+          <li><a href="/ki-kickstart.html">KI-Kickstart PDF</a></li>
+          <li><a href="/workshops.html">Workshops</a></li>
+          <li><a href="/erstgespraech.html">Schulleitungen</a></li>
+          <li><a href="/ueber-mich.html">Über mich</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Rechtliches</h4>
+        <ul class="ef-footer__links">
+          <li><a href="/impressum.html">Impressum</a></li>
+          <li><a href="/impressum.html#datenschutz">Datenschutz</a></li>
+          <li><a href="/impressum.html#agb">AGB</a></li>
+          <li><a href="/impressum.html#widerruf">Widerruf</a></li>
+          <li><a href="/vertraege-kuendigen.html">Verträge hier kündigen</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ef-footer__bottom">
+      <span>© 2026 René Bohm · Endlich Feierabend</span>
+      <span>Mit Sorgfalt gebaut in NRW.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const burger=document.getElementById('burger'),nav=document.getElementById('nav');
+  burger.addEventListener('click',()=>nav.classList.toggle('open'));
+  document.addEventListener('click',e=>{if(!e.target.closest('.ef-nav'))nav.classList.remove('open');});
+</script>
+</body>
+</html>

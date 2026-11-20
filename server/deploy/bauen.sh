@@ -30,12 +30,13 @@ systemd-run --wait --pipe --collect --quiet \
 echo "== Seite zusammenstellen"
 neu="$WWW/releases/$(date +%Y%m%d-%H%M%S)-$rev"
 mkdir -p "$neu/tool"
-# wie bisher der GitHub-Workflow: Seiten und Dateien im Hauptordner, assets/, gebautes Tool unter /tool/
+# wie bisher der GitHub-Workflow: Seiten und Dateien im Hauptordner, assets/, kurse/, gebautes Tool unter /tool/
 cp "$REPO"/*.html "$neu/"
 for ext in jpg jpeg png webp svg ico css js txt xml; do
     cp "$REPO"/*."$ext" "$neu/" 2>/dev/null || true
 done
 cp -r "$REPO/assets" "$neu/"
+cp -r "$REPO/kurse" "$neu/"          # Kursshop: /kurse/ (index, danke, abbruch)
 cp -r "$CACHE/src/dist/." "$neu/tool/"
 chown -R root:root "$neu"
 chmod -R u=rwX,go=rX "$neu"

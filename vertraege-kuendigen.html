@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verträge hier kündigen · Endlich Feierabend</title>
+<meta name="description" content="Laufende Verträge (z. B. Abo) direkt online kündigen.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/logo-mark.svg">
+<link rel="stylesheet" href="/assets/ef.css">
+<style>
+  .schmal{max-width:720px;margin:0 auto;padding:72px var(--gut) 88px;}
+  .schmal h1{font-size:clamp(34px,5vw,52px);margin-bottom:18px;}
+  .schmal p{margin-bottom:14px;}
+  .box{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:28px 30px;
+    box-shadow:var(--shadow-sm);margin:28px 0;}
+  .box p{color:var(--text-soft);font-size:16.5px;}
+  .feld{display:flex;flex-direction:column;gap:6px;margin-bottom:18px;}
+  .feld label,.feld legend{font-weight:600;font-size:15.5px;color:var(--ink);}
+  .feld input[type=text],.feld input[type=email],.feld input[type=date],.feld select,.feld textarea{
+    font:inherit;font-size:16px;padding:12px 14px;border:1.5px solid var(--line-strong);border-radius:var(--r);
+    background:#fff;color:var(--text);width:100%;}
+  .feld textarea{min-height:96px;}
+  .feld .hilfe{font-size:14px;color:var(--text-soft);}
+  fieldset.feld{border:0;}
+  .wahl{display:flex;gap:10px;align-items:center;font-size:16px;margin:4px 0;}
+  .wahl input{width:18px;height:18px;}
+  .hp{position:absolute;left:-9999px;}
+  .klein{font-size:14.5px;color:var(--text-soft);}
+  @media (max-width:680px){ .schmal{padding:48px var(--gut) 64px;} .box{padding:22px 20px;} }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+</svg>
+
+<nav class="ef-nav">
+  <div class="ef-nav__in">
+    <a href="/index.html" class="ef-logo">
+      <img src="/assets/logo-mark.svg" alt="">
+      <span class="ef-logo__wm">endlich feierabend<small>KI für Lehrkräfte</small></span>
+    </a>
+    <ul class="ef-nav__menu" id="nav">
+      <li><a href="/index.html">Start</a></li>
+      <li><a href="/ki-app.html">KI-App</a></li>
+      <li><a href="/workshops.html">Workshops</a></li>
+      <li><a href="/erstgespraech.html">Schulleitungen</a></li>
+      <li><a href="/kurse/">Kurse</a></li>
+      <li><a href="/ueber-mich.html">Über mich</a></li>
+    </ul>
+    <div class="ef-nav__right">
+      <a href="/ki-kickstart.html" class="btn btn--primary">KI-Kickstart</a>
+      <button class="ef-burger" id="burger" aria-label="Menü"><svg><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</nav>
+
+<main class="schmal">
+<div class="eyebrow">Kündigung</div>
+<h1>Verträge hier kündigen</h1>
+<p class="lead">Hier kündigst du einen laufenden Vertrag mit Endlich Feierabend, zum Beispiel dein Abo. Du bekommst sofort eine Eingangsbestätigung per E-Mail.</p>
+<!-- [U] Bestätigungsseite nach § 312k Abs. 2 BGB: Angaben und Schaltfläche „Jetzt kündigen“. Nicht rechtlich geprüft. -->
+<form class="box" method="post" action="/api/kuendigen">
+  <label class="hp" aria-hidden="true">Bitte leer lassen <input name="website" tabindex="-1" autocomplete="off"></label>
+  <div class="feld">
+    <label for="name">Dein Name</label>
+    <input type="text" id="name" name="name" required maxlength="200" autocomplete="name">
+  </div>
+  <div class="feld">
+    <label for="email">E-Mail-Adresse</label>
+    <input type="email" id="email" name="email" required maxlength="254" autocomplete="email">
+    <span class="hilfe">Die Adresse, mit der du bestellt hast. Dorthin schicken wir die Bestätigung deiner Kündigung.</span>
+  </div>
+  <div class="feld">
+    <label for="vertrag">Welcher Vertrag?</label>
+    <select id="vertrag" name="vertrag" required>
+      <option value="abo-alle-kurse">Abo: alle Kurse</option>
+      <option value="sonstiges">Anderer Vertrag</option>
+    </select>
+  </div>
+  <div class="feld">
+    <label for="bestellnr">Bestellnummer (falls zur Hand)</label>
+    <input type="text" id="bestellnr" name="bestellnr" maxlength="40" placeholder="EF-…">
+  </div>
+  <fieldset class="feld">
+    <legend>Art der Kündigung</legend>
+    <label class="wahl"><input type="radio" name="art" value="ordentlich" checked> Ordentliche Kündigung</label>
+    <label class="wahl"><input type="radio" name="art" value="ausserordentlich"> Außerordentliche Kündigung (aus wichtigem Grund)</label>
+  </fieldset>
+  <div class="feld">
+    <label for="grund">Grund (nur bei außerordentlicher Kündigung nötig)</label>
+    <textarea id="grund" name="grund" maxlength="2000"></textarea>
+  </div>
+  <fieldset class="feld">
+    <legend>Zeitpunkt</legend>
+    <label class="wahl"><input type="radio" name="zeitpunkt" value="naechstmoeglich" checked> Zum nächstmöglichen Zeitpunkt</label>
+    <label class="wahl"><input type="radio" name="zeitpunkt" value="datum"> Zu einem bestimmten Datum:</label>
+    <input type="date" name="datum" aria-label="Datum der Kündigung">
+  </fieldset>
+  <p class="klein">Ein Abo endet bei ordentlicher Kündigung zum Ende des bereits bezahlten Abrechnungszeitraums; bis dahin bleibt dein Zugang bestehen.</p>
+  <p style="margin-top:20px;"><button type="submit" class="btn btn--primary btn--lg">Jetzt kündigen</button></p>
+</form>
+<p class="klein">Du kannst auch formlos per E-Mail oder Brief kündigen (Kontakt im <a href="/impressum.html">Impressum</a>).</p>
+</main>
+
+<footer class="ef-footer">
+  <div class="container">
+    <div class="ef-footer__grid">
+      <div>
+        <div class="ef-footer__brand"><img src="/assets/logo-mark.svg" alt=""><span class="ef-logo__wm">endlich feierabend</span></div>
+        <p>KI-Fortbildungen für Lehrkräfte im DACH-Raum. Systematisch, praxisnah und DSGVO-konform.</p>
+        <p style="margin-top:18px;"><strong style="color:#fff;">René Bohm</strong><br>Mathe- &amp; Informatiklehrer in NRW · KI-Fortbildner</p>
+        <p style="margin-top:14px;"><a class="ig" href="https://instagram.com/endlich.feierabend.mit.ki" target="_blank"><svg style="width:16px;height:16px;"><use href="#i-ig"/></svg> @endlich.feierabend.mit.ki</a></p>
+      </div>
+      <div>
+        <h4>Angebote</h4>
+        <ul class="ef-footer__links">
+          <li><a href="/kurse/">Kurse</a></li>
+          <li><a href="/ki-app.html">KI-App (Download)</a></li>
+          <li><a href="/assistenten.html">KI-Assistenten</a></li>
+          <li><a href="/ki-kickstart.html">KI-Kickstart PDF</a></li>
+          <li><a href="/workshops.html">Workshops</a></li>
+          <li><a href="/erstgespraech.html">Schulleitungen</a></li>
+          <li><a href="/ueber-mich.html">Über mich</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Rechtliches</h4>
+        <ul class="ef-footer__links">
+          <li><a href="/impressum.html">Impressum</a></li>
+          <li><a href="/impressum.html#datenschutz">Datenschutz</a></li>
+          <li><a href="/impressum.html#agb">AGB</a></li>
+          <li><a href="/impressum.html#widerruf">Widerruf</a></li>
+          <li><a href="/vertraege-kuendigen.html">Verträge hier kündigen</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ef-footer__bottom">
+      <span>© 2026 René Bohm · Endlich Feierabend</span>
+      <span>Mit Sorgfalt gebaut in NRW.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const burger=document.getElementById('burger'),nav=document.getElementById('nav');
+  burger.addEventListener('click',()=>nav.classList.toggle('open'));
+  document.addEventListener('click',e=>{if(!e.target.closest('.ef-nav'))nav.classList.remove('open');});
+</script>
+</body>
+</html>

@@ -13,8 +13,12 @@ Ablauf
 
 Die Links tragen ein HMAC-Token (Schlüssel WEBSITE_SECRET), es werden keine Tokens gespeichert.
 
+Der Kursshop (Kauf über Stripe → Einschreibung im Moodle, Kündigung) steht in kursshop.py und wird in
+create_app() eingebunden.
+
 Verwaltung (als Benutzer website, Umgebung aus /etc/website/website.env), siehe server/deploy/web.sh:
   python websiteapi.py zaehlen | export LISTE | loeschen EMAIL | testmail EMAIL | sichern ORDNER
+  python websiteapi.py kauf-pruefen | kauf-liste | kauf-kuendigungen | kauf-nachholen BESTELLNR
 """
 from __future__ import annotations
 
@@ -216,7 +220,7 @@ def seite(titel: str, inhalt: str, status: int = 200):
 <link rel="icon" href="/assets/logo-mark.svg"><link rel="stylesheet" href="/assets/ef.css">
 <style>.box{{max-width:560px;margin:12vh auto;padding:0 16px}}.box form{{margin-top:24px}}</style></head>
 <body><main class="box"><h1>{html.escape(titel)}</h1>{inhalt}
-<p style="margin-top:32px"><a href="/">Zur Startseite</a></p></main></body></html>"""
+<p style="margin-top:32px"><a href="/">Zur Startseite</a> · <a href="/vertraege-kuendigen.html">Verträge hier kündigen</a></p></main></body></html>"""
     return HTMLResponse(body, status_code=status, headers={"Cache-Control": "no-store"})
 
 
@@ -235,6 +239,8 @@ def create_app():
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
     app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None)
     begrenzer = Begrenzer()
+    import kursshop  # Kauf über Stripe → Einschreibung im Moodle (server/kursshop.py)
+    kursshop.einbinden(app)
     with closing(db()) as con:
         aufraeumen(con)
 
@@ -242,7 +248,7 @@ def create_app():
     def health():
         with closing(db()) as con:
             con.execute("SELECT 1").fetchone()
-        return {"status": "ok", "smtp": smtp_eingerichtet()}
+        return {"status": "ok", "smtp": smtp_eingerichtet(), "kursshop": kursshop.status()}
 
     @app.post("/api/anmelden")
     def anmelden(request: Request, email: str = Form(""), liste: str = Form(""),
@@ -339,6 +345,9 @@ def create_app():
 
 def cli(argv: list[str]) -> int:
     befehl, rest = (argv[0], argv[1:]) if argv else ("", [])
+    if befehl.startswith("kauf-"):
+        import kursshop
+        return kursshop.cli(befehl, rest)
     with closing(db()) as con:
         aufraeumen(con)
         if befehl == "zaehlen":
@@ -374,7 +383,8 @@ def cli(argv: list[str]) -> int:
             mail_senden(rest[0], "Testmail vom Website-Server", "Wenn diese Mail ankommt, funktioniert der Versand.")
             print("verschickt")
             return 0
-    print("Aufruf: websiteapi.py zaehlen | export LISTE | loeschen EMAIL | testmail EMAIL | sichern ORDNER", file=sys.stderr)
+    print("Aufruf: websiteapi.py zaehlen | export LISTE | loeschen EMAIL | testmail EMAIL | sichern ORDNER | "
+          "kauf-pruefen | kauf-liste | kauf-kuendigungen | kauf-nachholen BESTELLNR", file=sys.stderr)
     return 2
 
 

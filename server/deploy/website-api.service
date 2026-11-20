@@ -1,7 +1,7 @@
 # Backend der Website (server/websiteapi.py), nur auf 127.0.0.1:8100, Caddy leitet /api/ dorthin.
 # Getrennt vom Lerncoach: eigener Benutzer, eigene Daten, Lerncoach-Pfade unsichtbar.
 [Unit]
-Description=Website-Backend (Anmeldungen mit Double-Opt-in)
+Description=Website-Backend (Anmeldungen mit Double-Opt-in, Kursshop)
 After=network-online.target
 Wants=network-online.target
 

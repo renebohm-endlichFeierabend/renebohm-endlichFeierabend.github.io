@@ -4,6 +4,10 @@
 #   web.sh export warteliste       bestätigte Adressen als CSV (mit Abmeldelink je Adresse)
 #   web.sh loeschen ADRESSE        Adresse aus allen Listen löschen (Auskunft/Löschung nach DSGVO)
 #   web.sh testmail ADRESSE        Mailversand prüfen
+#   web.sh kauf-pruefen            Kursshop: Moodle-Zugang, Stripe-Modus und -Preise prüfen (ändert nichts)
+#   web.sh kauf-liste              Kursshop: letzte Bestellungen
+#   web.sh kauf-kuendigungen       Kursshop: eingegangene Kündigungen
+#   web.sh kauf-nachholen EF-…     Kursshop: Freischaltung einer Bestellung erneut versuchen (nach Klärung)
 set -euo pipefail
 exec systemd-run --wait --pipe --collect --quiet \
     -p User=website -p Group=website -p EnvironmentFile=/etc/website/website.env \
