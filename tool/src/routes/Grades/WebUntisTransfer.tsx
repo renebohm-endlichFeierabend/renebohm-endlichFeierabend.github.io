@@ -10,11 +10,13 @@ import type { Student } from '../../types';
 // Der Server (cockpit/webuntis.py) spricht mit WebUntis; hier wird ausgewählt und vorgeschaut.
 
 interface Kurs { lsId: number; klassen: string; gruppe: string; fach: string; fachname: string }
-interface UNote { id: number; examTypeId: number; art: string; note: string; datum: string; text: string }
+interface UNote { id: number; examTypeId: number; examId: number; art: string; note: string; datum: string; text: string }
+interface Pruefung { examId: number; name: string; datum: string; examTypeId: number; art: string }
 interface USchueler { id: number; name: string; noten: UNote[] }
 interface Matrix {
   lsId: number; schuljahr: string; darfAnlegen: boolean; darfAendern: boolean;
   notenarten: { id: number; name: string; kurz: string }[];
+  pruefungen: Pruefung[];
   notenschluessel: { id: number; name: string; noten: { id: number; name: string }[] } | null;
   schueler: USchueler[];
 }
@@ -100,7 +102,7 @@ export default function WebUntisTransfer() {
   const [fehler, setFehler] = useState('');
   const [laedt, setLaedt] = useState(false);
   const [quelleKey, setQuelleKey] = useState('');
-  const [artId, setArtId] = useState<number | null>(null);
+  const [ziel, setZiel] = useState(''); // 'p:<examId>' angelegte Prüfung, 'a:<examTypeId>' freie Notenart
   const [datum, setDatum] = useState(heute());
   const [text, setText] = useState('');
   const [wahl, setWahl] = useState<Record<string, { an: boolean; note: string }>>({});
@@ -137,6 +139,8 @@ export default function WebUntisTransfer() {
   }, [cls, termKey]);
 
   const quelle = quellen.find((q) => q.key === quelleKey);
+  const pruefung = ziel.startsWith('p:') ? matrix?.pruefungen.find((p) => p.examId === Number(ziel.slice(2))) : undefined;
+  const artId: number | null = pruefung ? pruefung.examTypeId : ziel.startsWith('a:') ? Number(ziel.slice(2)) : null;
 
   useEffect(() => {
     hole<{ kurse: Kurs[] }>('/api/webuntis/kurse')
@@ -175,10 +179,12 @@ export default function WebUntisTransfer() {
       const u = findeSchueler(s.name, matrix.schueler);
       const { v, datum: d } = quelle.wert(s);
       const vorschlag = v != null ? zuNote(v) : null;
-      const vorhanden = u && artId != null ? u.noten.filter((n) => n.examTypeId === artId) : [];
+      const vorhanden = !u || artId == null ? []
+        : pruefung ? u.noten.filter((n) => n.examId === pruefung.examId)
+        : u.noten.filter((n) => n.examTypeId === artId && !n.examId);
       return { s, u, v, d, vorschlag, vorhanden };
     });
-  }, [cls, matrix, quelle, artId]);
+  }, [cls, matrix, quelle, artId, pruefung]);
 
   // Vorbelegung, wenn sich Quelle oder Notenart ändern
   useEffect(() => {
@@ -189,24 +195,25 @@ export default function WebUntisTransfer() {
     }
     setWahl(w);
     const tage = [...new Set(zeilen.map((z) => z.d).filter(Boolean))];
-    setDatum(tage.length === 1 ? (tage[0] as string) : heute());
-  }, [zeilen]);
+    setDatum(pruefung ? pruefung.datum : tage.length === 1 ? (tage[0] as string) : heute());
+  }, [zeilen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!cls) { navigate('/grades'); return null; }
 
   const ausgewaehlt = zeilen.filter((z) => z.u && wahl[z.s.id]?.an && wahl[z.s.id]?.note);
   const art = matrix?.notenarten.find((a) => a.id === artId);
+  const zielName = pruefung ? `${pruefung.name} (${art?.name ?? pruefung.art})` : art?.name;
 
   const senden = async () => {
     if (!matrix || artId == null || !ausgewaehlt.length) return;
     const aendern = ausgewaehlt.filter((z) => z.vorhanden.length > 0).length;
-    const frage = `${ausgewaehlt.length} Noten als „${art?.name}“ mit Datum ${deDatum(datum)} in WebUntis eintragen` +
+    const frage = `${ausgewaehlt.length} Noten als „${zielName}“ mit Datum ${deDatum(datum)} in WebUntis eintragen` +
       (aendern ? ` (davon ${aendern}, die dort schon eine Note dieser Art haben: wird überschrieben)` : '') + '?';
     if (!window.confirm(frage)) return;
     setSendet(true); setFehler('');
     try {
       const eintraege = ausgewaehlt.map((z) => ({
-        studentId: z.u!.id, examTypeId: artId, note: wahl[z.s.id].note, datum, text,
+        studentId: z.u!.id, examTypeId: artId, examId: pruefung ? pruefung.examId : -1, note: wahl[z.s.id].note, datum, text,
         gradeId: z.vorhanden.length === 1 ? z.vorhanden[0].id : -1,
       }));
       const j = await hole<{ ergebnisse: Ergebnis[] }>(`/api/webuntis/eintragen/${matrix.lsId}`, {
@@ -247,17 +254,24 @@ export default function WebUntisTransfer() {
           </select>
         </label>
 
-        <label className="block text-xs text-stone-500">Notenart in WebUntis
+        <label className="block text-xs text-stone-500">Wohin in WebUntis
           <select className="mt-1 w-full p-2 rounded-lg border border-stone-300 bg-white text-sm text-stone-800"
-            value={artId ?? ''} onChange={(e) => setArtId(e.target.value ? Number(e.target.value) : null)} disabled={!matrix}>
+            value={ziel} onChange={(e) => setZiel(e.target.value)} disabled={!matrix}>
             <option value="">{matrix ? 'bitte wählen' : laedt ? 'lädt…' : 'erst Kurs wählen'}</option>
-            {(matrix?.notenarten ?? []).map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
+            {matrix && matrix.pruefungen.length > 0 && (
+              <optgroup label="Angelegte Prüfungen">
+                {matrix.pruefungen.map((p) => <option key={p.examId} value={`p:${p.examId}`}>{p.name} · {deDatum(p.datum)} ({p.art})</option>)}
+              </optgroup>
+            )}
+            <optgroup label="Note eintragen mit Notenart">
+              {(matrix?.notenarten ?? []).map((a) => <option key={a.id} value={`a:${a.id}`}>{a.name}</option>)}
+            </optgroup>
           </select>
         </label>
 
         <div className="grid grid-cols-2 gap-2">
           <label className="block text-xs text-stone-500">Datum
-            <input type="date" className="mt-1 w-full p-2 rounded-lg border border-stone-300 bg-white text-sm" value={datum} onChange={(e) => setDatum(e.target.value)} />
+            <input type="date" className="mt-1 w-full p-2 rounded-lg border border-stone-300 bg-white text-sm disabled:bg-stone-100" value={datum} disabled={!!pruefung} onChange={(e) => setDatum(e.target.value)} />
           </label>
           <label className="block text-xs text-stone-500">Text (optional)
             <input type="text" maxLength={200} className="mt-1 w-full p-2 rounded-lg border border-stone-300 bg-white text-sm" value={text} onChange={(e) => setText(e.target.value)} placeholder="z. B. Erklärvideo" />
