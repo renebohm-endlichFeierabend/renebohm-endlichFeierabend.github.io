@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { GraduationCap, Plus, Trash2, ChevronRight } from 'lucide-react';
+import { GraduationCap, Plus, Trash2, ChevronRight, Download } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import { useStore } from '../../data/store';
@@ -87,12 +87,20 @@ export default function ClassesView() {
           </div>
         </div>
       ) : (
-        <button
-          onClick={() => setShowAdd(true)}
-          className="w-full flex items-center justify-center gap-2 py-3 border-2 border-dashed border-stone-300 rounded-2xl text-stone-500 min-h-[52px]"
-        >
-          <Plus size={18} /><span className="text-sm font-medium">Neue Klasse</span>
-        </button>
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            onClick={() => setShowAdd(true)}
+            className="flex items-center justify-center gap-2 py-3 border-2 border-dashed border-stone-300 rounded-2xl text-stone-500 min-h-[52px]"
+          >
+            <Plus size={18} /><span className="text-sm font-medium">Neue Klasse</span>
+          </button>
+          <button
+            onClick={() => navigate('/grades/import')}
+            className="flex items-center justify-center gap-2 py-3 border-2 border-dashed border-stone-300 rounded-2xl text-stone-500 min-h-[52px]"
+          >
+            <Download size={18} /><span className="text-sm font-medium">Aus WebUntis</span>
+          </button>
+        </div>
       )}
     </div>
   );
