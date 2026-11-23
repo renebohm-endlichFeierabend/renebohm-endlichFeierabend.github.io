@@ -16,8 +16,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icon-192.png', 'icon-512.png', 'sounds/*.mp3'],
       manifest: {
-        name: 'Lehrer-Tool',
-        short_name: 'Lehrer',
+        name: 'Feierabend-Notenbuch',
+        short_name: 'Notenbuch',
         description: 'Noten, Aufgaben, Videos und Meditation für Lehrkräfte',
         start_url: BASE,
         scope: BASE,

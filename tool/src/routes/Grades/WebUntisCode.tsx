@@ -76,7 +76,7 @@ export default function WebUntisCode() {
 
         <div className="p-4 bg-white/80 rounded-2xl border border-stone-200/60">
           <div className="text-sm font-medium text-stone-800 mb-1">2. In WebUntis den Knopf antippen</div>
-          <p className="text-xs text-stone-500">WebUntis öffnen und anmelden (irgendeine Seite), dann das Lesezeichen „Noten aus Lehrer-Tool“ antippen, den Code einfügen, Kurs und Notenart wählen, Vorschau prüfen, eintragen.</p>
+          <p className="text-xs text-stone-500">WebUntis öffnen und anmelden (irgendeine Seite), dann das Lesezeichen „Noten aus dem Notenbuch“ antippen, den Code einfügen, Kurs und Notenart wählen, Vorschau prüfen, eintragen.</p>
         </div>
 
         <details className="p-4 bg-white/80 rounded-2xl border border-stone-200/60">
@@ -85,11 +85,11 @@ export default function WebUntisCode() {
             <div>
               <b>Am PC oder Mac:</b> Diesen Knopf mit der Maus in die Lesezeichenleiste ziehen:
               <div className="mt-2">
-                <a ref={link} onClick={(e) => e.preventDefault()} className="inline-block px-3 py-2 rounded-lg bg-orange-100 text-orange-800 font-medium border border-orange-200">Noten aus Lehrer-Tool</a>
+                <a ref={link} onClick={(e) => e.preventDefault()} className="inline-block px-3 py-2 rounded-lg bg-orange-100 text-orange-800 font-medium border border-orange-200">Noten aus dem Notenbuch</a>
               </div>
             </div>
             <div>
-              <b>Am iPad (Safari):</b> Irgendeine Seite als Lesezeichen sichern, Name „Noten aus Lehrer-Tool“. Dann das Lesezeichen bearbeiten und als Adresse den kopierten Knopf-Text einsetzen.
+              <b>Am iPad (Safari):</b> Irgendeine Seite als Lesezeichen sichern, Name „Noten aus dem Notenbuch“. Dann das Lesezeichen bearbeiten und als Adresse den kopierten Knopf-Text einsetzen.
               <button onClick={() => kopiere('knopf')} className="mt-2 w-full flex items-center justify-center gap-2 p-2.5 rounded-xl bg-white border border-stone-300 text-stone-700">
                 {kopiert === 'knopf' ? <><Check size={14} /> Kopiert</> : <><Copy size={14} /> Knopf-Text kopieren</>}
               </button>

@@ -246,7 +246,7 @@ export default function WebUntisTransfer() {
           </select>
         </label>
 
-        <label className="block text-xs text-stone-500">Was übertragen (aus dem Lehrertool)
+        <label className="block text-xs text-stone-500">Was übertragen (aus dem Notenbuch)
           <select className="mt-1 w-full p-2 rounded-lg border border-stone-300 bg-white text-sm text-stone-800"
             value={quelleKey} onChange={(e) => setQuelleKey(e.target.value)}>
             <option value="">bitte wählen</option>
@@ -309,7 +309,7 @@ export default function WebUntisTransfer() {
                   <div className="flex-1 min-w-0">
                     <div className="text-sm truncate">{z.s.name}</div>
                     <div className="text-[11px] text-stone-500 truncate">
-                      Lehrertool {z.v != null ? z.v.toFixed(2) : '–'}
+                      Notenbuch {z.v != null ? z.v.toFixed(2) : '–'}
                       {z.vorschlag?.grenzfall && <span className="text-amber-700"> · Grenzfall, bitte prüfen</span>}
                       {vorhandenText && <span className="text-sky-700"> · WebUntis hat: {vorhandenText}</span>}
                     </div>

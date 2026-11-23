@@ -88,7 +88,7 @@ export default function TodosView() {
     if (Notification.permission !== 'granted') return;
     const delay = new Date(todo.dueDate!).getTime() - Date.now();
     if (delay > 0) {
-      setTimeout(() => new Notification('Lehrer-Tool', { body: todo.text, icon: '/icon-192.png' }), delay);
+      setTimeout(() => new Notification('Notenbuch', { body: todo.text, icon: '/icon-192.png' }), delay);
     }
   };
 

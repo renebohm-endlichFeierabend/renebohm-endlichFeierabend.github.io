@@ -61,7 +61,7 @@ export default function DriveSyncSettings() {
     try {
       const parsed = JSON.parse(await file.text());
       if (!parsed || typeof parsed !== 'object' || !Array.isArray(parsed.classes) || !Array.isArray(parsed.todos)) {
-        throw new Error('Datei ist kein Lehrer-Tool-Backup.');
+        throw new Error('Datei ist kein Notenbuch-Backup.');
       }
       const data = normalizeAppData(parsed);
       const stand = new Date(data.lastModified).toLocaleString('de-DE');
@@ -219,7 +219,7 @@ export default function DriveSyncSettings() {
         <div className="p-5 bg-white/60 rounded-2xl border border-stone-200/60">
           <div className="text-sm font-medium text-stone-700 mb-1">Über die App</div>
           <div className="text-xs text-stone-500 space-y-1">
-            <p>Lehrer-Tool · Privates Werkzeug für René Bohm</p>
+            <p>Feierabend-Notenbuch · von Endlich Feierabend</p>
             {COCKPIT ? (
               <p>Daten liegen auf dem eigenen Server (Cockpit), dazu eine Kopie im Browser für kurze Ausfälle.</p>
             ) : (

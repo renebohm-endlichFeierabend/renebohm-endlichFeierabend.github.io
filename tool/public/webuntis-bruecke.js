@@ -1,8 +1,8 @@
-/* WebUntis-Brücke des Lehrer-Tools (Lesezeichen-Knopf).
+/* WebUntis-Brücke des Feierabend-Notenbuchs (Lesezeichen-Knopf).
  *
  * Läuft auf einer geöffneten WebUntis-Seite der Lehrkraft und nutzt deren Anmeldung. Es werden keine
  * Zugangsdaten gespeichert oder versendet; außer WebUntis selbst wird nichts aufgerufen.
- * Ablauf: Übertragungscode aus dem Lehrer-Tool einfügen → Kurs, Quelle, Ziel wählen → Vorschau →
+ * Ablauf: Übertragungscode aus dem Notenbuch einfügen → Kurs, Quelle, Ziel wählen → Vorschau →
  * eintragen → Kontrolle an der Notenmatrix.
  *
  * Benutzt werden die Aufrufe der WebUntis-Oberfläche (keine offizielle Schnittstelle, Stand 11/2026):
@@ -112,7 +112,7 @@
   function leseCode(text) {
     const roh = text.trim().replace(/^LT1:/, '');
     let j;
-    try { j = JSON.parse(decodeURIComponent(escape(atob(roh)))); } catch (e) { throw new Error('Der Code ist unvollständig. Bitte im Lehrer-Tool neu kopieren.'); }
+    try { j = JSON.parse(decodeURIComponent(escape(atob(roh)))); } catch (e) { throw new Error('Der Code ist unvollständig. Bitte im Notenbuch neu kopieren.'); }
     if (j.v !== 1 || !Array.isArray(j.schueler)) throw new Error('Unbekanntes Code-Format.');
     return j;
   }
@@ -184,17 +184,17 @@
     .tabs{display:flex;gap:6px;margin-bottom:6px}.t{flex:1;background:#e7e5e4;color:#57534e;padding:9px;font-size:14px}.t.an{background:#1c1917;color:#fafaf9}
   </style>
   <div class="h"><div class="k">
-    <h1>Noten aus dem Lehrer-Tool</h1>
+    <h1>Feierabend-Notenbuch ↔ WebUntis</h1>
     <p class="u">Läuft mit deiner WebUntis-Anmeldung. Es wird nichts gespeichert und nichts außer WebUntis aufgerufen.</p>
     <div class="tabs"><button class="t an" id="tabNoten">Noten eintragen</button><button class="t" id="tabListe">Schülerliste holen</button></div>
     <div id="liste-modus" hidden>
       <label>WebUntis-Kurs<select id="lkurs"><option>lädt…</option></select></label>
       <div id="lmeldung"></div>
       <button class="p" id="lkopie" style="width:100%;margin-top:12px" disabled>Schülerliste kopieren</button>
-      <p class="u" style="margin-top:8px">Danach im Lehrer-Tool unter Noten → „Aus WebUntis“ einfügen.</p>
+      <p class="u" style="margin-top:8px">Danach im Notenbuch unter Noten → „Aus WebUntis“ einfügen.</p>
     </div>
     <div id="noten-modus">
-    <label>Übertragungscode aus dem Lehrer-Tool<textarea id="code" placeholder="LT1:…"></textarea></label>
+    <label>Übertragungscode aus dem Notenbuch<textarea id="code" placeholder="LT1:…"></textarea></label>
     <div id="schritt2" hidden>
       <label>WebUntis-Kurs<select id="kurs"></select></label>
       <label>Was übertragen<select id="quelle"></select></label>
@@ -243,7 +243,7 @@
       const el = document.createElement('div');
       el.className = 'z' + (x.an ? '' : ' aus');
       el.innerHTML = `<input type="checkbox" ${x.an ? 'checked' : ''} ${!x.u || !x.note ? 'disabled' : ''}>
-        <div class="n"><b>${esc(x.s.name)}</b><small>Lehrer-Tool ${x.v != null ? x.v.toFixed(2) : '–'}${x.vs && x.vs.grenz ? ' · <span class="w">Grenzfall, bitte prüfen</span>' : ''}${x.vorh.length ? ' · <span class="c">WebUntis hat: ' + esc(x.vorh.map((n) => `${n.note} (${de(n.datum)})`).join(', ')) + '</span>' : ''}</small></div>
+        <div class="n"><b>${esc(x.s.name)}</b><small>Notenbuch ${x.v != null ? x.v.toFixed(2) : '–'}${x.vs && x.vs.grenz ? ' · <span class="w">Grenzfall, bitte prüfen</span>' : ''}${x.vorh.length ? ' · <span class="c">WebUntis hat: ' + esc(x.vorh.map((n) => `${n.note} (${de(n.datum)})`).join(', ')) + '</span>' : ''}</small></div>
         <select ${x.u ? '' : 'disabled'}><option value="">–</option>${noten.map((n) => `<option ${n === x.note ? 'selected' : ''}>${n}</option>`).join('')}</select>`;
       el.querySelector('input').onchange = (e) => { x.an = e.target.checked; el.className = 'z' + (x.an ? '' : ' aus'); knopf(); };
       el.querySelector('select').onchange = (e) => { x.note = e.target.value; x.an = !!x.note; el.querySelector('input').checked = x.an; el.className = 'z' + (x.an ? '' : ' aus'); knopf(); };
