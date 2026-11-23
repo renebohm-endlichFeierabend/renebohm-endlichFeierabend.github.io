@@ -70,6 +70,22 @@
     });
     return aus;
   }
+  async function schuelerliste(lsId) {
+    const d = new Date(), heute = `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+    const r = await fetch(`${BASIS}/lessonstudentlist.do?lsid=${lsId}&startDate=${heute}`, { credentials: 'same-origin' });
+    const doc = new DOMParser().parseFromString(await r.text(), 'text/html');
+    const kopf = [...doc.querySelectorAll('th')].map((x) => x.textContent.trim());
+    const iN = kopf.indexOf('Familienname'), iV = kopf.indexOf('Vorname'), iA = kopf.indexOf('Austrittsdatum');
+    if (iN < 0 || iV < 0) throw new Error('Schülerliste hat ein unbekanntes Format.');
+    const aus = [];
+    doc.querySelectorAll('tr').forEach((tr) => {
+      const m = tr.innerHTML.match(/studentId=(\d+)/);
+      const z = [...tr.querySelectorAll('td')].map((td) => td.textContent.replace(/\s+/g, ' ').trim());
+      if (!m || z.length <= Math.max(iN, iV)) return;
+      aus.push({ nachname: z[iN], vorname: z[iV], austritt: iA >= 0 ? z[iA] : '' });
+    });
+    return aus;
+  }
   const isoDatum = (n) => { const s = String(n || ''); return s.length === 8 ? `${s.slice(0, 4)}-${s.slice(4, 6)}-${s.slice(6, 8)}` : ''; };
   async function matrix(lsId) {
     const meta = await api('GET', 'api/classreg/gradesmatrix/meta', { lessonId: lsId });
@@ -165,10 +181,19 @@
     button{font:600 15px system-ui,sans-serif;border:0;border-radius:12px;padding:13px 18px;cursor:pointer}
     .p{background:#1c1917;color:#fafaf9;flex:1;max-width:460px}.p:disabled{opacity:.4}
     .s{background:#e7e5e4;color:#1c1917}
+    .tabs{display:flex;gap:6px;margin-bottom:6px}.t{flex:1;background:#e7e5e4;color:#57534e;padding:9px;font-size:14px}.t.an{background:#1c1917;color:#fafaf9}
   </style>
   <div class="h"><div class="k">
     <h1>Noten aus dem Lehrer-Tool</h1>
     <p class="u">Läuft mit deiner WebUntis-Anmeldung. Es wird nichts gespeichert und nichts außer WebUntis aufgerufen.</p>
+    <div class="tabs"><button class="t an" id="tabNoten">Noten eintragen</button><button class="t" id="tabListe">Schülerliste holen</button></div>
+    <div id="liste-modus" hidden>
+      <label>WebUntis-Kurs<select id="lkurs"><option>lädt…</option></select></label>
+      <div id="lmeldung"></div>
+      <button class="p" id="lkopie" style="width:100%;margin-top:12px" disabled>Schülerliste kopieren</button>
+      <p class="u" style="margin-top:8px">Danach im Lehrer-Tool unter Noten → „Aus WebUntis“ einfügen.</p>
+    </div>
+    <div id="noten-modus">
     <label>Übertragungscode aus dem Lehrer-Tool<textarea id="code" placeholder="LT1:…"></textarea></label>
     <div id="schritt2" hidden>
       <label>WebUntis-Kurs<select id="kurs"></select></label>
@@ -178,6 +203,7 @@
     </div>
     <div id="meldung"></div>
     <div id="liste"></div>
+    </div>
   </div></div>
   <div class="leiste"><button class="s" id="zu">Schließen</button><button class="p" id="los" disabled>Eintragen</button></div>`;
   const $ = (id) => root.getElementById(id);
@@ -311,6 +337,43 @@
     } catch (e) { fehler.push('Kontrolle nicht möglich: ' + e.message); }
     vorschau();
     meldung(`${ok} von ${auswahl.length} eingetragen und in WebUntis nachgeprüft.` + (fehler.length ? '<br>' + fehler.map(esc).join('<br>') : ''), fehler.length ? 'f' : 'ok');
+  };
+
+  // ---------------------------------------------------------------- Schülerliste holen
+  let listeCode = '';
+  async function ladeListe() {
+    $('lkopie').disabled = true; listeCode = '';
+    const k = kursListe.find((x) => x.lsId === +$('lkurs').value);
+    if (!k) return;
+    try {
+      const sch = (await schuelerliste(k.lsId)).filter((x) => !x.austritt);
+      const daten = { v: 1, kurs: { klassen: k.klassen, fach: k.fachname, gruppe: k.gruppe },
+        schueler: sch.map((x) => ({ nachname: x.nachname, vorname: x.vorname })) };
+      listeCode = 'LS1:' + btoa(unescape(encodeURIComponent(JSON.stringify(daten))));
+      $('lmeldung').innerHTML = `<div class="ok">${sch.length} Schülerinnen und Schüler gefunden.</div>`;
+      $('lkopie').disabled = false;
+    } catch (e) { $('lmeldung').innerHTML = `<div class="f">${esc(e.message)}</div>`; }
+  }
+  async function zeigeListe() {
+    $('tabListe').classList.add('an'); $('tabNoten').classList.remove('an');
+    $('liste-modus').hidden = false; $('noten-modus').hidden = true; $('los').style.display = 'none';
+    try {
+      await vorbereiten();
+      if (!kursListe.length) kursListe = await kurse();
+      $('lkurs').innerHTML = kursListe.map((k) => `<option value="${k.lsId}">${esc(k.klassen)} · ${esc(k.fachname)} (${esc(k.gruppe)})</option>`).join('');
+      ladeListe();
+    } catch (e) { $('lmeldung').innerHTML = `<div class="f">${esc(e.message)}</div>`; }
+  }
+  $('tabListe').onclick = zeigeListe;
+  $('tabNoten').onclick = () => {
+    $('tabNoten').classList.add('an'); $('tabListe').classList.remove('an');
+    $('liste-modus').hidden = true; $('noten-modus').hidden = false; $('los').style.display = '';
+  };
+  $('lkurs').onchange = ladeListe;
+  $('lkopie').onclick = async () => {
+    try { await navigator.clipboard.writeText(listeCode); $('lkopie').textContent = 'Kopiert ✓'; }
+    catch (e) { window.prompt('Bitte kopieren:', listeCode); }
+    setTimeout(() => { $('lkopie').textContent = 'Schülerliste kopieren'; }, 2500);
   };
 
   document.body.appendChild(wirt);
