@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MessageCircle, FileText, Plus, Trash2, ChevronRight, BarChart3, Upload } from 'lucide-react';
+import { MessageCircle, FileText, Plus, Trash2, ChevronRight, BarChart3, Upload, Copy } from 'lucide-react';
 import { COCKPIT } from '../../data/serverSync';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Header from '../../components/Header';
@@ -110,13 +110,23 @@ export default function ClassOverview() {
         </button>
       )}
 
-      {COCKPIT && cls.students.length > 0 && (
-        <button
-          onClick={() => navigate(`/grades/${cls.id}/webuntis?term=${activeTermKey}`)}
-          className="w-full flex items-center justify-center gap-2 p-3 mb-4 bg-white border border-stone-200 text-stone-700 rounded-2xl min-h-[48px]"
-        >
-          <Upload size={16} /><span className="text-xs font-medium">Nach WebUntis eintragen</span>
-        </button>
+      {cls.students.length > 0 && (
+        <div className={`grid ${COCKPIT ? 'grid-cols-2' : 'grid-cols-1'} gap-2 mb-4`}>
+          {COCKPIT && (
+            <button
+              onClick={() => navigate(`/grades/${cls.id}/webuntis?term=${activeTermKey}`)}
+              className="flex items-center justify-center gap-2 p-3 bg-white border border-stone-200 text-stone-700 rounded-2xl min-h-[48px]"
+            >
+              <Upload size={16} /><span className="text-xs font-medium">Nach WebUntis</span>
+            </button>
+          )}
+          <button
+            onClick={() => navigate(`/grades/${cls.id}/webuntis-code?term=${activeTermKey}`)}
+            className="flex items-center justify-center gap-2 p-3 bg-white border border-stone-200 text-stone-700 rounded-2xl min-h-[48px]"
+          >
+            <Copy size={16} /><span className="text-xs font-medium">WebUntis-Code</span>
+          </button>
+        </div>
       )}
 
       <div className="space-y-2 mb-4">
