@@ -9,6 +9,8 @@ import ClassOverview from './routes/Grades/ClassOverview';
 import QuickEntryWizard from './routes/Grades/QuickEntryWizard';
 import StudentDetail from './routes/Grades/StudentDetail';
 import ClassStats from './routes/Grades/ClassStats';
+import WebUntisTransfer from './routes/Grades/WebUntisTransfer';
+import { COCKPIT } from './data/serverSync';
 import ExamPlanner from './routes/Exams/ExamPlanner';
 import FeierabendCheck from './routes/Feierabend/FeierabendCheck';
 import TodosView from './routes/Todos/TodosView';
@@ -28,6 +30,7 @@ function AppRoutes() {
         <Route path="/grades/:classId/add-exam" element={<QuickEntryWizard type="exam" />} />
         <Route path="/grades/:classId/student/:studentId" element={<StudentDetail />} />
         <Route path="/grades/:classId/stats" element={<ClassStats />} />
+        {COCKPIT && <Route path="/grades/:classId/webuntis" element={<WebUntisTransfer />} />}
         <Route path="/exams" element={<ExamPlanner />} />
         <Route path="/feierabend" element={<FeierabendCheck />} />
         <Route path="/todos" element={<TodosView />} />

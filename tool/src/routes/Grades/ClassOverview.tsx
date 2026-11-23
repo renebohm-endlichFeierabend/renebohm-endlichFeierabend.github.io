@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { MessageCircle, FileText, Plus, Trash2, ChevronRight, BarChart3 } from 'lucide-react';
+import { MessageCircle, FileText, Plus, Trash2, ChevronRight, BarChart3, Upload } from 'lucide-react';
+import { COCKPIT } from '../../data/serverSync';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Header from '../../components/Header';
 import { useStore } from '../../data/store';
@@ -106,6 +107,15 @@ export default function ClassOverview() {
           className="w-full flex items-center justify-center gap-2 p-3 mb-4 bg-white border border-stone-200 text-stone-700 rounded-2xl min-h-[48px]"
         >
           <BarChart3 size={16} /><span className="text-xs font-medium">Statistik &amp; Notenspiegel</span>
+        </button>
+      )}
+
+      {COCKPIT && cls.students.length > 0 && (
+        <button
+          onClick={() => navigate(`/grades/${cls.id}/webuntis?term=${activeTermKey}`)}
+          className="w-full flex items-center justify-center gap-2 p-3 mb-4 bg-white border border-stone-200 text-stone-700 rounded-2xl min-h-[48px]"
+        >
+          <Upload size={16} /><span className="text-xs font-medium">Nach WebUntis eintragen</span>
         </button>
       )}
 
