@@ -1,4 +1,5 @@
-import type { Student, Grade } from '../../types';
+import type { Student, Grade, SomiArt } from '../../types';
+import { somiSchnitt } from './somi';
 
 export function getCurrentSchoolYear(): string {
   const now = new Date();
@@ -58,10 +59,10 @@ export interface TermData {
 }
 
 /** somiWeight: Anteil der SoMi an der Zeugnisnote in Prozent (Standard 50). */
-export function getTermData(student: Student, termKey: string, somiWeight = 50): TermData {
+export function getTermData(student: Student, termKey: string, somiWeight = 50, somiArten?: SomiArt[]): TermData {
   const somi = (student.somiGrades ?? []).filter((g) => g.termKey === termKey);
   const exams = (student.examGrades ?? []).filter((g) => g.termKey === termKey);
-  const somiAvg = weightedAvg(somi);
+  const somiAvg = somiSchnitt(somi, somiArten);
   const examAvg = avg(exams.map((g) => g.value));
   let finalGrade: number | null = null;
   if (somiAvg !== null && examAvg !== null) {

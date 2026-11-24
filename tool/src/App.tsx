@@ -12,6 +12,7 @@ import ClassStats from './routes/Grades/ClassStats';
 import WebUntisTransfer from './routes/Grades/WebUntisTransfer';
 import WebUntisCode from './routes/Grades/WebUntisCode';
 import WebUntisImport from './routes/Grades/WebUntisImport';
+import SomiArten from './routes/Grades/SomiArten';
 import { COCKPIT } from './data/serverSync';
 import ExamPlanner from './routes/Exams/ExamPlanner';
 import FeierabendCheck from './routes/Feierabend/FeierabendCheck';
@@ -33,6 +34,7 @@ function AppRoutes() {
         <Route path="/grades/:classId/add-exam" element={<QuickEntryWizard type="exam" />} />
         <Route path="/grades/:classId/student/:studentId" element={<StudentDetail />} />
         <Route path="/grades/:classId/stats" element={<ClassStats />} />
+        <Route path="/grades/:classId/somi" element={<SomiArten />} />
         {COCKPIT && <Route path="/grades/:classId/webuntis" element={<WebUntisTransfer />} />}
         <Route path="/grades/:classId/webuntis-code" element={<WebUntisCode />} />
         <Route path="/exams" element={<ExamPlanner />} />

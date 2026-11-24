@@ -125,22 +125,37 @@
       return w ? gs.reduce((a, g) => a + g.value * (g.weight ?? 1), 0) / w : null;
     };
     const eintagig = (gs) => { const t = [...new Set(gs.map((g) => g.date.slice(0, 10)))]; return t.length === 1 ? t[0] : ''; };
+    // SoMi-Arten des Kurses: erst Schnitt je Art, dann nach Gewicht (wie im Notenbuch)
+    const arten = Array.isArray(code.somiArten) ? code.somiArten : [];
+    const n2 = (x) => x.toLowerCase().replace(/\s+/g, ' ').trim();
+    const artVon = (l) => { const t = arten.filter((a) => n2(l).startsWith(n2(a.name))).sort((a, b) => b.name.length - a.name.length); return t.length ? t[0].name : null; };
+    const somiSchnitt = (gs) => {
+      if (!gs.length) return null;
+      if (!arten.length) return schnitt(gs);
+      const mittel = arten.reduce((a, x) => a + x.gewicht, 0) / arten.length;
+      const grp = new Map();
+      gs.forEach((g) => { const k = artVon(g.label) || '?' + basisLabel(g.label); grp.set(k, [...(grp.get(k) || []), g]); });
+      let su = 0, wi = 0;
+      grp.forEach((l, k) => { const w = k.startsWith('?') ? mittel : arten.find((a) => a.name === k).gewicht; const v = schnitt(l); if (v != null && w > 0) { su += v * w; wi += w; } });
+      return wi ? su / wi : null;
+    };
     const q = [];
     [...somi].sort().forEach((l) => q.push({ key: 's:' + l, titel: 'SoMi: ' + l, wert: (s) => {
       const gs = s.noten.filter((g) => g.typ !== 'exam' && basisLabel(g.label) === l); return { v: schnitt(gs), d: eintagig(gs) }; } }));
     [...exam].sort().forEach((l) => q.push({ key: 'e:' + l, titel: 'Klausur: ' + l, wert: (s) => {
       const gs = s.noten.filter((g) => g.typ === 'exam' && basisLabel(g.label) === l);
       return { v: gs.length ? gs.reduce((a, g) => a + g.value, 0) / gs.length : null, d: eintagig(gs) }; } }));
-    if (somi.size) q.push({ key: 'schnitt', titel: 'SoMi-Schnitt (alle SoMi-Noten)', wert: (s) => ({ v: schnitt(s.noten.filter((g) => g.typ !== 'exam')), d: '' }) });
+    if (somi.size) q.push({ key: 'schnitt', titel: 'SoMi-Schnitt ' + (code.zeitraum || '') + (arten.length ? ' (gewichtet)' : ''), wert: (s) => ({ v: somiSchnitt(s.noten.filter((g) => g.typ !== 'exam')), d: '' }) });
     return q;
   }
+  // Nächste Stufe; liegt der Wert genau zwischen zwei Stufen, entscheidet die Lehrkraft (wahl).
   function zuNote(v) {
-    let best = SKALA[0], ab = Infinity, grenz = false;
-    for (const s of SKALA) {
-      const d = Math.abs(s[0] - v);
-      if (d < ab - 1e-9) { best = s; ab = d; grenz = false; } else if (Math.abs(d - ab) < 1e-9) grenz = true;
+    const s = [...SKALA].sort((a, b) => Math.abs(a[0] - v) - Math.abs(b[0] - v));
+    if (Math.abs(Math.abs(s[0][0] - v) - Math.abs(s[1][0] - v)) < 1e-6) {
+      const [a, b] = s[0][0] < s[1][0] ? [s[0], s[1]] : [s[1], s[0]];
+      return { note: '', wahl: [a[1], b[1]] };
     }
-    return { note: best[1], grenz };
+    return { note: s[0][1], wahl: null };
   }
   const norm = (s) => s.toLowerCase().replace(/[(),.]/g, ' ').replace(/\s+/g, ' ').trim();
   function finde(name, liste) {
@@ -174,6 +189,7 @@
     .z .n small{font-size:11px;color:#78716c}.z select{width:auto;margin:0;padding:6px}
     .z input[type=checkbox]{width:20px;height:20px;margin:0}
     .w{color:#b45309}.c{color:#0369a1}
+    button.g{padding:6px 9px;font-size:14px;background:#fffbeb;border:1px solid #fcd34d;color:#78350f;border-radius:8px}button.g.an{background:#1c1917;color:#fafaf9;border-color:#1c1917}
     .f{background:#fef2f2;color:#b91c1c;padding:10px;border-radius:10px;margin-top:10px;font-size:13px}
     .ok{background:#ecfdf5;color:#047857;padding:10px;border-radius:10px;margin-top:10px;font-size:13px}
     .zwei{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -232,8 +248,8 @@
       if (d) tage.add(d);
       const vs = v != null ? zuNote(v) : null;
       const vorh = !u ? [] : z.examId > 0 ? u.noten.filter((n) => n.examId === z.examId) : u.noten.filter((n) => n.examTypeId === z.examTypeId && !n.examId);
-      const gleich = vs && vorh.some((n) => n.note === vs.note);
-      zeilen.push({ s, u, v, vs, vorh, an: !!(u && vs && !gleich && !vorh.length), note: vs ? vs.note : '' });
+      const gleich = vs && vs.note && vorh.some((n) => n.note === vs.note);
+      zeilen.push({ s, u, v, vs, vorh, an: !!(u && vs && vs.note && !gleich && !vorh.length), note: vs ? vs.note : '' });
     });
     $('datum').value = z.examId > 0 ? z.datum : (tage.size === 1 ? [...tage][0] : ($('datum').value || heute()));
     const noten = (M.schema ? M.schema.noten : []).map((m) => m.name);
@@ -243,9 +259,11 @@
       const el = document.createElement('div');
       el.className = 'z' + (x.an ? '' : ' aus');
       el.innerHTML = `<input type="checkbox" ${x.an ? 'checked' : ''} ${!x.u || !x.note ? 'disabled' : ''}>
-        <div class="n"><b>${esc(x.s.name)}</b><small>Notenbuch ${x.v != null ? x.v.toFixed(2) : '–'}${x.vs && x.vs.grenz ? ' · <span class="w">Grenzfall, bitte prüfen</span>' : ''}${x.vorh.length ? ' · <span class="c">WebUntis hat: ' + esc(x.vorh.map((n) => `${n.note} (${de(n.datum)})`).join(', ')) + '</span>' : ''}</small></div>
+        <div class="n"><b>${esc(x.s.name)}</b><small>Notenbuch ${x.v != null ? x.v.toFixed(2) : '–'}${x.vs && x.vs.wahl ? ' · <span class="w">genau dazwischen, bitte entscheiden</span>' : ''}${x.vorh.length ? ' · <span class="c">WebUntis hat: ' + esc(x.vorh.map((n) => `${n.note} (${de(n.datum)})`).join(', ')) + '</span>' : ''}</small></div>
+        ${x.u && x.vs && x.vs.wahl ? x.vs.wahl.map((n) => `<button class="g" data-n="${n}">${n}</button>`).join('') : ''}
         <select ${x.u ? '' : 'disabled'}><option value="">–</option>${noten.map((n) => `<option ${n === x.note ? 'selected' : ''}>${n}</option>`).join('')}</select>`;
       el.querySelector('input').onchange = (e) => { x.an = e.target.checked; el.className = 'z' + (x.an ? '' : ' aus'); knopf(); };
+      el.querySelectorAll('button.g').forEach((bt) => { bt.onclick = () => { x.note = bt.dataset.n; x.an = true; el.querySelector('select').value = x.note; el.querySelector('input').checked = true; el.querySelector('input').disabled = false; el.className = 'z'; el.querySelectorAll('button.g').forEach((o) => o.classList.toggle('an', o === bt)); knopf(); }; });
       el.querySelector('select').onchange = (e) => { x.note = e.target.value; x.an = !!x.note; el.querySelector('input').checked = x.an; el.className = 'z' + (x.an ? '' : ' aus'); knopf(); };
       $('liste').appendChild(el);
     });

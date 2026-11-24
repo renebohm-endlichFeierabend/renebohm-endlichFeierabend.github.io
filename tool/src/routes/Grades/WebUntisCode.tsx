@@ -4,6 +4,7 @@ import { Copy, Check, Bookmark } from 'lucide-react';
 import Header from '../../components/Header';
 import { useStore } from '../../data/store';
 import { getCurrentSchoolYear, getCurrentTerm } from './gradeUtils';
+import { imZeitraum, zeitraumName, type Zeitraum } from './somi';
 
 // Übertragungscode für den WebUntis-Knopf (Lesezeichen). Der Knopf lädt webuntis-bruecke.js in die
 // geöffnete WebUntis-Seite; dort wird der Code eingefügt und eingetragen. Läuft ohne Server.
@@ -22,7 +23,8 @@ export default function WebUntisCode() {
   const { classId } = useParams<{ classId: string }>();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { classes } = useStore();
+  const { classes, settings } = useStore();
+  const [zeitraum, setZeitraum] = useState<Zeitraum>('hj');
   const cls = classes.find((c) => c.id === classId);
   const termKey = searchParams.get('term') ?? `${getCurrentSchoolYear()}-${getCurrentTerm()}`;
   const [kopiert, setKopiert] = useState<'' | 'code' | 'knopf'>('');
@@ -33,18 +35,20 @@ export default function WebUntisCode() {
 
   const code = useMemo(() => {
     if (!cls) return '';
+    const drin = (g: Parameters<typeof imZeitraum>[0]) => imZeitraum(g, termKey, zeitraum, settings);
     const daten = {
-      v: 1, klasse: cls.name, termKey,
+      v: 1, klasse: cls.name, termKey, zeitraum: zeitraumName(termKey, zeitraum),
+      somiArten: cls.somiArten ?? [],
       schueler: cls.students.map((s) => ({
         name: s.name,
         noten: [
-          ...(s.somiGrades ?? []).filter((g) => g.termKey === termKey).map((g) => ({ typ: 'somi', label: g.label, value: g.value, date: g.date, weight: g.weight })),
-          ...(s.examGrades ?? []).filter((g) => g.termKey === termKey).map((g) => ({ typ: 'exam', label: g.label, value: g.value, date: g.date })),
+          ...(s.somiGrades ?? []).filter(drin).map((g) => ({ typ: 'somi', label: g.label, value: g.value, date: g.date, weight: g.weight })),
+          ...(s.examGrades ?? []).filter(drin).map((g) => ({ typ: 'exam', label: g.label, value: g.value, date: g.date })),
         ],
       })),
     };
     return 'LT1:' + zuBase64(JSON.stringify(daten));
-  }, [cls, termKey]);
+  }, [cls, termKey, zeitraum, settings]);
 
   if (!cls) { navigate('/grades'); return null; }
 
@@ -58,16 +62,24 @@ export default function WebUntisCode() {
     }
   };
 
-  const anzahl = cls.students.reduce((a, s) => a + (s.somiGrades ?? []).filter((g) => g.termKey === termKey).length
-    + (s.examGrades ?? []).filter((g) => g.termKey === termKey).length, 0);
+  const anzahl = cls.students.reduce((a, s) => a + [...(s.somiGrades ?? []), ...(s.examGrades ?? [])]
+    .filter((g) => imZeitraum(g, termKey, zeitraum, settings)).length, 0);
 
   return (
     <div>
-      <Header title="WebUntis-Code" subtitle={`${cls.name} · ${anzahl} Noten in diesem Halbjahr`} onBack={() => navigate(`/grades/${cls.id}?term=${termKey}`)} />
+      <Header title="WebUntis-Code" subtitle={`${cls.name} · ${anzahl} Noten · ${zeitraumName(termKey, zeitraum)}`} onBack={() => navigate(`/grades/${cls.id}?term=${termKey}`)} />
 
       <div className="space-y-4">
         <div className="p-4 bg-white/80 rounded-2xl border border-stone-200/60">
           <div className="text-sm font-medium text-stone-800 mb-1">1. Code kopieren</div>
+          <div className="grid grid-cols-3 gap-1 mb-3">
+            {(['hj', 'q1', 'q2'] as Zeitraum[]).map((z) => (
+              <button key={z} onClick={() => setZeitraum(z)}
+                className={`p-2 rounded-lg border text-sm ${zeitraum === z ? 'bg-stone-800 text-stone-50 border-stone-800' : 'bg-white border-stone-300 text-stone-700'}`}>
+                {zeitraumName(termKey, z)}
+              </button>
+            ))}
+          </div>
           <p className="text-xs text-stone-500 mb-3">Der Code enthält Namen und Noten dieser Klasse. Er bleibt auf deinem Gerät, bis du ihn in WebUntis einfügst.</p>
           <button onClick={() => kopiere('code')} className="w-full flex items-center justify-center gap-2 p-3 rounded-xl bg-stone-800 text-stone-50 min-h-[48px]">
             {kopiert === 'code' ? <><Check size={16} /> Kopiert</> : <><Copy size={16} /> Code kopieren</>}

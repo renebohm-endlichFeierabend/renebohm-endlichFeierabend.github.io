@@ -23,11 +23,17 @@ export interface Observation {
   tag: 'positiv' | 'neutral' | 'hinweis';
 }
 
+export interface SomiArt {
+  name: string;    // z. B. „Test“; Noten zählen dazu, wenn ihre Bezeichnung so beginnt
+  gewicht: number; // Schieberegler 0–100, relativ zu den anderen Arten des Kurses
+}
+
 export interface Class {
   id: string;
   name: string;
   students: Student[];
   createdAt: number;
+  somiArten?: SomiArt[]; // fehlt = noch nicht eingerichtet (alle SoMi-Noten zählen gleich)
 }
 
 export interface Todo {
@@ -107,6 +113,9 @@ export interface YogaFlow {
 
 export interface AppSettings {
   somiWeight: number; // Anteil SoMi an der Zeugnisnote, 0–100
+  /** Beginn des 2. und 4. Quartals je Schuljahr ("2026/27" → { q2: "2026-11-16", q4: "2027-04-19" }).
+   *  Quartal 1 und 3 beginnen mit dem Halbjahr. */
+  quartale?: Record<string, { q2: string; q4: string }>;
 }
 
 export interface AppData {

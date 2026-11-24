@@ -82,6 +82,14 @@ export default function ClassOverview() {
         </div>
       </div>
 
+      {cls.students.length > 0 && !cls.somiArten && (
+        <button onClick={() => navigate(`/grades/${cls.id}/somi`)}
+          className="w-full text-left p-4 mb-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900">
+          <div className="text-sm font-medium">Sonstige Leistungen festlegen</div>
+          <div className="text-xs mt-1">Welche Arten gibt es in diesem Kurs (Test, Mitarbeit, Video …) und wie stark zählen sie im SoMi-Schnitt?</div>
+        </button>
+      )}
+
       {cls.students.length > 0 && (
         <div className="grid grid-cols-2 gap-2 mb-4">
           <button
@@ -107,6 +115,12 @@ export default function ClassOverview() {
           className="w-full flex items-center justify-center gap-2 p-3 mb-4 bg-white border border-stone-200 text-stone-700 rounded-2xl min-h-[48px]"
         >
           <BarChart3 size={16} /><span className="text-xs font-medium">Statistik &amp; Notenspiegel</span>
+        </button>
+      )}
+
+      {cls.somiArten && cls.somiArten.length > 0 && (
+        <button onClick={() => navigate(`/grades/${cls.id}/somi`)} className="w-full text-xs text-stone-500 mb-3 underline-offset-2 hover:underline">
+          SoMi: {cls.somiArten.map((a) => a.name).join(', ')} · Gewichtung ändern
         </button>
       )}
 
@@ -136,7 +150,7 @@ export default function ClassOverview() {
           </div>
         )}
         {cls.students.map((student) => {
-          const data = getTermData(student, activeTermKey, settings.somiWeight);
+          const data = getTermData(student, activeTermKey, settings.somiWeight, cls.somiArten);
           return (
             <div key={student.id} className="flex items-center gap-2 p-4 bg-white/60 rounded-2xl border border-stone-200/60">
               <button

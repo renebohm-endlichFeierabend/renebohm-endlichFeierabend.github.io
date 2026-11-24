@@ -4,6 +4,7 @@ import { Upload, AlertTriangle, Check, X } from 'lucide-react';
 import Header from '../../components/Header';
 import { useStore } from '../../data/store';
 import { getCurrentSchoolYear, getCurrentTerm, weightedAvg, avg } from './gradeUtils';
+import { imZeitraum, zeitraumName, somiSchnitt, zuStufe, type Zeitraum } from './somi';
 import type { Student } from '../../types';
 
 // Noten aus dem Lehrertool nach WebUntis übertragen (nur Cockpit-Fassung).
@@ -21,22 +22,6 @@ interface Matrix {
   schueler: USchueler[];
 }
 interface Ergebnis { studentId: number; name: string; note: string; status: string; fehler?: string }
-
-const SKALA: [number, string][] = [
-  [0.7, '1+'], [1, '1'], [1.3, '1-'], [1.7, '2+'], [2, '2'], [2.3, '2-'], [2.7, '3+'], [3, '3'], [3.3, '3-'],
-  [3.7, '4+'], [4, '4'], [4.3, '4-'], [4.7, '5+'], [5, '5'], [5.3, '5-'], [6, '6'],
-];
-
-/** Nächste Notenstufe; bei genauem Gleichstand die bessere, mit Hinweis. */
-function zuNote(v: number): { note: string; grenzfall: boolean } {
-  let best = SKALA[0], abstand = Infinity, grenzfall = false;
-  for (const s of SKALA) {
-    const d = Math.abs(s[0] - v);
-    if (d < abstand - 1e-9) { best = s; abstand = d; grenzfall = false; }
-    else if (Math.abs(d - abstand) < 1e-9) grenzfall = true;
-  }
-  return { note: best[1], grenzfall };
-}
 
 const norm = (s: string) => s.toLowerCase().replace(/[(),.]/g, ' ').replace(/\s+/g, ' ').trim();
 
@@ -92,7 +77,8 @@ export default function WebUntisTransfer() {
   const { classId } = useParams<{ classId: string }>();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { classes } = useStore();
+  const { classes, settings } = useStore();
+  const [zeitraum, setZeitraum] = useState<Zeitraum>('hj');
   const cls = classes.find((c) => c.id === classId);
   const termKey = searchParams.get('term') ?? `${getCurrentSchoolYear()}-${getCurrentTerm()}`;
 
@@ -113,30 +99,31 @@ export default function WebUntisTransfer() {
   const quellen: Quelle[] = useMemo(() => {
     if (!cls) return [];
     const aus: Quelle[] = [];
+    const drin = (g: { termKey: string; date: string; label: string; value: number }) => imZeitraum(g as never, termKey, zeitraum, settings);
     const somiLabels = new Set<string>(), examLabels = new Set<string>();
     for (const s of cls.students) {
-      for (const g of s.somiGrades ?? []) if (g.termKey === termKey) somiLabels.add(basisLabel(g.label));
-      for (const g of s.examGrades ?? []) if (g.termKey === termKey) examLabels.add(basisLabel(g.label));
+      for (const g of s.somiGrades ?? []) if (drin(g)) somiLabels.add(basisLabel(g.label));
+      for (const g of s.examGrades ?? []) if (drin(g)) examLabels.add(basisLabel(g.label));
     }
     const mitDatum = (gs: { value: number; date: string; weight?: number }[]) => {
       const tage = [...new Set(gs.map((g) => g.date.slice(0, 10)))];
       return { v: gs.length ? weightedAvg(gs) : null, datum: tage.length === 1 ? tage[0] : undefined };
     };
     for (const l of [...somiLabels].sort()) {
-      aus.push({ key: `somi:${l}`, titel: `SoMi: ${l}`, wert: (s) => mitDatum((s.somiGrades ?? []).filter((g) => g.termKey === termKey && basisLabel(g.label) === l)) });
+      aus.push({ key: `somi:${l}`, titel: `SoMi: ${l}`, wert: (s) => mitDatum((s.somiGrades ?? []).filter((g) => drin(g) && basisLabel(g.label) === l)) });
     }
     for (const l of [...examLabels].sort()) {
       aus.push({ key: `exam:${l}`, titel: `Klausur: ${l}`, wert: (s) => {
-        const gs = (s.examGrades ?? []).filter((g) => g.termKey === termKey && basisLabel(g.label) === l);
+        const gs = (s.examGrades ?? []).filter((g) => drin(g) && basisLabel(g.label) === l);
         const tage = [...new Set(gs.map((g) => g.date.slice(0, 10)))];
         return { v: avg(gs.map((g) => g.value)), datum: tage.length === 1 ? tage[0] : undefined };
       } });
     }
     if (somiLabels.size) {
-      aus.push({ key: 'somi-schnitt', titel: 'SoMi-Schnitt (alle SoMi-Noten des Halbjahres)', wert: (s) => ({ v: weightedAvg((s.somiGrades ?? []).filter((g) => g.termKey === termKey)) }) });
+      aus.push({ key: 'somi-schnitt', titel: `SoMi-Schnitt ${zeitraumName(termKey, zeitraum)}${cls.somiArten?.length ? ' (gewichtet)' : ''}`, wert: (s) => ({ v: somiSchnitt((s.somiGrades ?? []).filter(drin), cls.somiArten) }) });
     }
     return aus;
-  }, [cls, termKey]);
+  }, [cls, termKey, zeitraum, settings]);
 
   const quelle = quellen.find((q) => q.key === quelleKey);
   const pruefung = ziel.startsWith('p:') ? matrix?.pruefungen.find((p) => p.examId === Number(ziel.slice(2))) : undefined;
@@ -178,7 +165,7 @@ export default function WebUntisTransfer() {
     return cls.students.map((s) => {
       const u = findeSchueler(s.name, matrix.schueler);
       const { v, datum: d } = quelle.wert(s);
-      const vorschlag = v != null ? zuNote(v) : null;
+      const vorschlag = v != null ? zuStufe(v) : null;
       const vorhanden = !u || artId == null ? []
         : pruefung ? u.noten.filter((n) => n.examId === pruefung.examId)
         : u.noten.filter((n) => n.examTypeId === artId && !n.examId);
@@ -190,8 +177,8 @@ export default function WebUntisTransfer() {
   useEffect(() => {
     const w: Record<string, { an: boolean; note: string }> = {};
     for (const z of zeilen) {
-      const gleich = z.vorschlag && z.vorhanden.some((n) => n.note === z.vorschlag!.note);
-      w[z.s.id] = { an: !!(z.u && z.vorschlag && !gleich && z.vorhanden.length === 0), note: z.vorschlag?.note ?? '' };
+      const gleich = z.vorschlag?.note && z.vorhanden.some((n) => n.note === z.vorschlag!.note);
+      w[z.s.id] = { an: !!(z.u && z.vorschlag?.note && !gleich && z.vorhanden.length === 0), note: z.vorschlag?.note ?? '' };
     }
     setWahl(w);
     const tage = [...new Set(zeilen.map((z) => z.d).filter(Boolean))];
@@ -245,6 +232,17 @@ export default function WebUntisTransfer() {
             {(kurse ?? []).map((k) => <option key={k.lsId} value={k.lsId}>{k.klassen} · {k.fachname} ({k.gruppe})</option>)}
           </select>
         </label>
+
+        <div className="text-xs text-stone-500">Zeitraum
+          <div className="mt-1 grid grid-cols-3 gap-1">
+            {(['hj', 'q1', 'q2'] as Zeitraum[]).map((z) => (
+              <button key={z} onClick={() => setZeitraum(z)}
+                className={`p-2 rounded-lg border text-sm ${zeitraum === z ? 'bg-stone-800 text-stone-50 border-stone-800' : 'bg-white border-stone-300 text-stone-700'}`}>
+                {zeitraumName(termKey, z)}
+              </button>
+            ))}
+          </div>
+        </div>
 
         <label className="block text-xs text-stone-500">Was übertragen (aus dem Notenbuch)
           <select className="mt-1 w-full p-2 rounded-lg border border-stone-300 bg-white text-sm text-stone-800"
@@ -310,10 +308,14 @@ export default function WebUntisTransfer() {
                     <div className="text-sm truncate">{z.s.name}</div>
                     <div className="text-[11px] text-stone-500 truncate">
                       Notenbuch {z.v != null ? z.v.toFixed(2) : '–'}
-                      {z.vorschlag?.grenzfall && <span className="text-amber-700"> · Grenzfall, bitte prüfen</span>}
+                      {z.vorschlag?.wahl && !w.note && <span className="text-amber-700"> · genau dazwischen, bitte entscheiden</span>}
                       {vorhandenText && <span className="text-sky-700"> · WebUntis hat: {vorhandenText}</span>}
                     </div>
                   </div>
+                  {z.u && z.vorschlag?.wahl && z.vorschlag.wahl.map((n) => (
+                    <button key={n} onClick={() => setWahl({ ...wahl, [z.s.id]: { an: true, note: n } })}
+                      className={`px-2.5 py-1.5 rounded-lg border text-sm ${w.note === n ? 'bg-stone-800 text-stone-50 border-stone-800' : 'bg-amber-50 border-amber-300 text-amber-900'}`}>{n}</button>
+                  ))}
                   <select className="p-1.5 rounded-lg border border-stone-300 bg-white text-sm" value={w.note} disabled={!z.u}
                     onChange={(e) => setWahl({ ...wahl, [z.s.id]: { an: !!e.target.value, note: e.target.value } })}>
                     <option value="">–</option>
