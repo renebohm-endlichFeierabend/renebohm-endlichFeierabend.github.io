@@ -4,6 +4,7 @@ import { Copy, Check, Bookmark } from 'lucide-react';
 import Header from '../../components/Header';
 import { useStore } from '../../data/store';
 import { getCurrentSchoolYear, getCurrentTerm } from './gradeUtils';
+import QuartalsendeBox from './QuartalsendeBox';
 import { imZeitraum, zeitraumName, type Zeitraum } from './somi';
 
 // Übertragungscode für den WebUntis-Knopf (Lesezeichen). Der Knopf lädt webuntis-bruecke.js in die
@@ -23,7 +24,7 @@ export default function WebUntisCode() {
   const { classId } = useParams<{ classId: string }>();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { classes, settings } = useStore();
+  const { classes } = useStore();
   const [zeitraum, setZeitraum] = useState<Zeitraum>('hj');
   const cls = classes.find((c) => c.id === classId);
   const termKey = searchParams.get('term') ?? `${getCurrentSchoolYear()}-${getCurrentTerm()}`;
@@ -35,7 +36,7 @@ export default function WebUntisCode() {
 
   const code = useMemo(() => {
     if (!cls) return '';
-    const drin = (g: Parameters<typeof imZeitraum>[0]) => imZeitraum(g, termKey, zeitraum, settings);
+    const drin = (g: Parameters<typeof imZeitraum>[0]) => imZeitraum(g, termKey, zeitraum, cls);
     const daten = {
       v: 1, klasse: cls.name, termKey, zeitraum: zeitraumName(termKey, zeitraum),
       somiArten: cls.somiArten ?? [],
@@ -48,7 +49,7 @@ export default function WebUntisCode() {
       })),
     };
     return 'LT1:' + zuBase64(JSON.stringify(daten));
-  }, [cls, termKey, zeitraum, settings]);
+  }, [cls, termKey, zeitraum]);
 
   if (!cls) { navigate('/grades'); return null; }
 
@@ -63,7 +64,7 @@ export default function WebUntisCode() {
   };
 
   const anzahl = cls.students.reduce((a, s) => a + [...(s.somiGrades ?? []), ...(s.examGrades ?? [])]
-    .filter((g) => imZeitraum(g, termKey, zeitraum, settings)).length, 0);
+    .filter((g) => imZeitraum(g, termKey, zeitraum, cls)).length, 0);
 
   return (
     <div>
@@ -80,6 +81,7 @@ export default function WebUntisCode() {
               </button>
             ))}
           </div>
+          {zeitraum !== 'hj' && <div className="mb-3"><QuartalsendeBox cls={cls} termKey={termKey} /></div>}
           <p className="text-xs text-stone-500 mb-3">Der Code enthält Namen und Noten dieser Klasse. Er bleibt auf deinem Gerät, bis du ihn in WebUntis einfügst.</p>
           <button onClick={() => kopiere('code')} className="w-full flex items-center justify-center gap-2 p-3 rounded-xl bg-stone-800 text-stone-50 min-h-[48px]">
             {kopiert === 'code' ? <><Check size={16} /> Kopiert</> : <><Copy size={16} /> Code kopieren</>}

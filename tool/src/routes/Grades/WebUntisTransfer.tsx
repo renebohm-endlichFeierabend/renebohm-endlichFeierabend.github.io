@@ -4,6 +4,7 @@ import { Upload, AlertTriangle, Check, X } from 'lucide-react';
 import Header from '../../components/Header';
 import { useStore } from '../../data/store';
 import { getCurrentSchoolYear, getCurrentTerm, weightedAvg, avg } from './gradeUtils';
+import QuartalsendeBox from './QuartalsendeBox';
 import { imZeitraum, zeitraumName, somiSchnitt, zuStufe, type Zeitraum } from './somi';
 import type { Student } from '../../types';
 
@@ -77,7 +78,7 @@ export default function WebUntisTransfer() {
   const { classId } = useParams<{ classId: string }>();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { classes, settings } = useStore();
+  const { classes, setClasses } = useStore();
   const [zeitraum, setZeitraum] = useState<Zeitraum>('hj');
   const cls = classes.find((c) => c.id === classId);
   const termKey = searchParams.get('term') ?? `${getCurrentSchoolYear()}-${getCurrentTerm()}`;
@@ -99,7 +100,7 @@ export default function WebUntisTransfer() {
   const quellen: Quelle[] = useMemo(() => {
     if (!cls) return [];
     const aus: Quelle[] = [];
-    const drin = (g: { termKey: string; date: string; label: string; value: number }) => imZeitraum(g as never, termKey, zeitraum, settings);
+    const drin = (g: { termKey: string; date: string; label: string; value: number }) => imZeitraum(g as never, termKey, zeitraum, cls);
     const somiLabels = new Set<string>(), examLabels = new Set<string>();
     for (const s of cls.students) {
       for (const g of s.somiGrades ?? []) if (drin(g)) somiLabels.add(basisLabel(g.label));
@@ -123,7 +124,7 @@ export default function WebUntisTransfer() {
       aus.push({ key: 'somi-schnitt', titel: `SoMi-Schnitt ${zeitraumName(termKey, zeitraum)}${cls.somiArten?.length ? ' (gewichtet)' : ''}`, wert: (s) => ({ v: somiSchnitt((s.somiGrades ?? []).filter(drin), cls.somiArten) }) });
     }
     return aus;
-  }, [cls, termKey, zeitraum, settings]);
+  }, [cls, termKey, zeitraum]);
 
   const quelle = quellen.find((q) => q.key === quelleKey);
   const pruefung = ziel.startsWith('p:') ? matrix?.pruefungen.find((p) => p.examId === Number(ziel.slice(2))) : undefined;
@@ -208,6 +209,10 @@ export default function WebUntisTransfer() {
         body: JSON.stringify({ eintraege }),
       });
       setErgebnisse(j.ergebnisse);
+      // SoMi-Note für Quartal 1 bzw. 3 übertragen: damit endet das Quartal, wenn kein Datum gesetzt ist
+      if (j.ergebnisse.some((e) => e.status === 'ok') && /^SoMi\s*[13]\./i.test(art?.name ?? '') && !cls.quartalsende?.[termKey]) {
+        setClasses(classes.map((c) => (c.id === cls.id ? { ...c, quartalsende: { ...(c.quartalsende ?? {}), [termKey]: new Date().toISOString() } } : c)));
+      }
       ladeMatrix(matrix.lsId);
     } catch (e) {
       setFehler(String((e as Error).message || e));
@@ -242,6 +247,7 @@ export default function WebUntisTransfer() {
               </button>
             ))}
           </div>
+          {zeitraum !== 'hj' && <div className="mt-2"><QuartalsendeBox cls={cls} termKey={termKey} /></div>}
         </div>
 
         <label className="block text-xs text-stone-500">Was übertragen (aus dem Notenbuch)

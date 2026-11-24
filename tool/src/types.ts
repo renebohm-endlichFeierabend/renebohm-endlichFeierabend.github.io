@@ -34,6 +34,10 @@ export interface Class {
   students: Student[];
   createdAt: number;
   somiArten?: SomiArt[]; // fehlt = noch nicht eingerichtet (alle SoMi-Noten zählen gleich)
+  /** Ende des ersten Quartals je Halbjahr (termKey → ISO-Zeitpunkt oder Datum JJJJ-MM-TT, einschließlich).
+   *  Automatisch gesetzt, wenn die SoMi-Quartalsnote übertragen wird; von Hand änderbar. Fehlt es,
+   *  zählt alles zum ersten Quartal des Halbjahres. */
+  quartalsende?: Record<string, string>;
 }
 
 export interface Todo {
@@ -113,9 +117,6 @@ export interface YogaFlow {
 
 export interface AppSettings {
   somiWeight: number; // Anteil SoMi an der Zeugnisnote, 0–100
-  /** Beginn des 2. und 4. Quartals je Schuljahr ("2026/27" → { q2: "2026-11-16", q4: "2027-04-19" }).
-   *  Quartal 1 und 3 beginnen mit dem Halbjahr. */
-  quartale?: Record<string, { q2: string; q4: string }>;
 }
 
 export interface AppData {

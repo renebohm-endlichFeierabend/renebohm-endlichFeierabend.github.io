@@ -7,8 +7,6 @@ import Header from '../../components/Header';
 import { useStore } from '../../data/store';
 import { normalizeAppData } from '../../data/db';
 import { requestGoogleToken, isTokenValid } from '../../data/auth';
-import { quartalsgrenzen } from '../Grades/somi';
-import { getCurrentSchoolYear } from '../Grades/gradeUtils';
 
 export default function DriveSyncSettings() {
   const navigate = useNavigate();
@@ -199,28 +197,6 @@ export default function DriveSyncSettings() {
             <span>Klausuren {100 - settings.somiWeight} %</span>
           </div>
         </div>
-
-        {(() => {
-          const sj = getCurrentSchoolYear();
-          const g = quartalsgrenzen(settings, sj);
-          const setze = (feld: 'q2' | 'q4', wert: string) =>
-            setSettings({ ...settings, quartale: { ...(settings.quartale ?? {}), [sj]: { q2: g.q2, q4: g.q4, [feld]: wert } } });
-          return (
-            <div className="p-5 bg-white/60 rounded-2xl border border-stone-200/60">
-              <div className="text-sm font-medium text-stone-800 mb-1">Quartale {sj}</div>
-              <p className="text-xs text-stone-500 mb-3">Quartal 1 und 3 beginnen mit dem Halbjahr. Eine Note zählt nach ihrem Datum zum Quartal.
-                {g.geschaetzt && <span className="text-amber-700"> Noch nicht eingestellt, das sind Vorschläge.</span>}</p>
-              <div className="grid grid-cols-2 gap-2">
-                <label className="text-xs text-stone-500">Quartal 2 beginnt am
-                  <input type="date" value={g.q2} onChange={(e) => setze('q2', e.target.value)} className="mt-1 w-full p-2 rounded-lg border border-stone-300 bg-white text-sm" />
-                </label>
-                <label className="text-xs text-stone-500">Quartal 4 beginnt am
-                  <input type="date" value={g.q4} onChange={(e) => setze('q4', e.target.value)} className="mt-1 w-full p-2 rounded-lg border border-stone-300 bg-white text-sm" />
-                </label>
-              </div>
-            </div>
-          );
-        })()}
 
         <div className="p-5 bg-white/60 rounded-2xl border border-stone-200/60">
           <div className="text-sm font-medium text-stone-800 mb-1">Backup</div>

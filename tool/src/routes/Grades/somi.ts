@@ -1,4 +1,4 @@
-import type { AppSettings, Class, Grade, Student } from '../../types';
+import type { Class, Grade, Student } from '../../types';
 
 // SoMi-Schnitt mit Arten und Gewichten je Kurs, Quartale und Notenstufen.
 
@@ -44,38 +44,32 @@ export function somiSchnitt(grades: Grade[], arten?: { name: string; gewicht: nu
 
 // ---------------------------------------------------------------- Quartale
 
-export function schuljahrVon(termKey: string): string { return termKey.split('-')[0]; }
-
-/** Vorschlag, solange nichts eingestellt ist: Quartal 2 ab 16.11., Quartal 4 ab 19.04. */
-export function quartalsgrenzen(settings: AppSettings, schuljahr: string): { q2: string; q4: string; geschaetzt: boolean } {
-  const g = settings.quartale?.[schuljahr];
-  if (g) return { ...g, geschaetzt: false };
-  const start = Number(schuljahr.slice(0, 4));
-  return { q2: `${start}-11-16`, q4: `${start + 1}-04-19`, geschaetzt: true };
-}
-
-/** Quartal 1–4 einer Note (aus Halbjahr der Note und Datum). */
-export function quartalVon(g: Grade, settings: AppSettings): number {
-  const [sj, hj] = g.termKey.split('-');
-  const grenzen = quartalsgrenzen(settings, sj);
-  const tag = g.date.slice(0, 10);
-  if (hj === '2') return tag >= grenzen.q4 ? 4 : 3;
-  return tag >= grenzen.q2 ? 2 : 1;
+/** Gehört die Note zum ersten Quartal ihres Halbjahres? Grenze ist das Quartalsende der Klasse:
+ *  Datum (ganzer Tag zählt mit) oder genauer Zeitpunkt. Ohne Grenze: ja. */
+export function imErstenQuartal(g: Grade, cls: Class): boolean {
+  const ende = cls.quartalsende?.[g.termKey];
+  if (!ende) return true;
+  return ende.length === 10 ? g.date.slice(0, 10) <= ende : g.date <= ende;
 }
 
 export type Zeitraum = 'hj' | 'q1' | 'q2';
 /** Filter für ein Halbjahr bzw. dessen erstes oder zweites Quartal. */
-export function imZeitraum(g: Grade, termKey: string, zeitraum: Zeitraum, settings: AppSettings): boolean {
+export function imZeitraum(g: Grade, termKey: string, zeitraum: Zeitraum, cls: Class): boolean {
   if (g.termKey !== termKey) return false;
   if (zeitraum === 'hj') return true;
-  const q = quartalVon(g, settings);
-  return zeitraum === 'q1' ? q % 2 === 1 : q % 2 === 0;
+  return imErstenQuartal(g, cls) === (zeitraum === 'q1');
 }
 export function zeitraumName(termKey: string, zeitraum: Zeitraum): string {
   const hj = termKey.split('-')[1];
   if (zeitraum === 'hj') return `${hj}. Halbjahr`;
   const q = hj === '2' ? (zeitraum === 'q1' ? 3 : 4) : (zeitraum === 'q1' ? 1 : 2);
   return `Quartal ${q}`;
+}
+export function endeText(ende: string | undefined): string {
+  if (!ende) return 'noch offen';
+  const d = new Date(ende.length === 10 ? ende + 'T12:00:00' : ende);
+  const tag = d.toLocaleDateString('de-DE');
+  return ende.length === 10 ? `${tag} (einschließlich)` : `${tag}, ${d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' })} Uhr`;
 }
 
 // ---------------------------------------------------------------- Notenstufen
