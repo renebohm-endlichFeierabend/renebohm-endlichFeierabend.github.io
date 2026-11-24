@@ -58,6 +58,21 @@
     .me img{width:240px;height:290px;margin:0 auto;}
   }
   @media (max-width:680px){ .hero{padding:88px 0 104px;} .statwrap{margin-top:-44px;} }
+  /* ---- Community-Teaser ---- */
+  .community-teaser{padding:72px 0 8px;}
+  .ct-card{display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:center;
+    background:var(--surface);border:1.5px solid var(--gruen);border-radius:var(--r-lg);
+    padding:48px 44px;box-shadow:0 14px 40px rgba(26,107,60,.12);position:relative;}
+  .ct-card h2{font-size:clamp(28px,3.6vw,40px);}
+  .ct-card .lead{margin-top:16px;}
+  .ct-card .btn-row{margin-top:28px;}
+  .ct-forums{display:flex;flex-direction:column;gap:14px;}
+  .ct-forum{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;}
+  .ct-forum b{display:block;font-family:var(--display);font-size:19px;color:var(--ink);margin-bottom:4px;}
+  .ct-forum span{font-size:15px;color:var(--text-soft);line-height:1.55;display:block;}
+  .ct-forum--soon{background:transparent;border-style:dashed;}
+  @media (max-width:820px){ .ct-card{grid-template-columns:1fr;gap:28px;padding:34px 24px;} }
+  @media (max-width:680px){ .community-teaser{padding:52px 0 0;} }
 </style>
 </head>
 <body>
@@ -74,6 +89,7 @@
 </svg>
 
 <!-- NAV -->
+<div class="ef-bar"><a href="community.html"><span class="ef-bar__neu">Neu</span> <span class="ef-bar__lang">Die kostenlose Community für Lehrkräfte, die KI im Unterricht nutzen.</span><span class="ef-bar__kurz">Kostenlose KI-Community für Lehrkräfte</span> <span class="ef-bar__cta">Jetzt beitreten&nbsp;→</span></a></div>
 <nav class="ef-nav">
   <div class="ef-nav__in">
     <a href="index.html" class="ef-logo">
@@ -82,6 +98,7 @@
     </a>
     <ul class="ef-nav__menu" id="nav">
       <li><a href="index.html" class="active">Start</a></li>
+      <li><a href="community.html" class="nav-community">Community <span class="nav-frei">kostenlos</span></a></li>
       <li><a href="workshops.html">Workshops</a></li>
       <li><a href="erstgespraech.html">Schulleitungen</a></li>
           <li><a href="endlich-feierabend.html">Online-Kurs</a></li>
@@ -127,6 +144,29 @@
     </div>
   </div>
 </div>
+
+<!-- COMMUNITY -->
+<section class="community-teaser" id="community">
+  <div class="container">
+    <div class="ct-card">
+      <span class="badge">Neu · kostenlos</span>
+      <div>
+        <div class="eyebrow">Community</div>
+        <h2>Tausch dich mit Lehrkräften aus, die KI <em>wirklich</em> im Unterricht nutzen.</h2>
+        <p class="lead">Meine kostenlose Community auf einem eigenen Moodle in Deutschland: Fragen stellen, Ergebnisse zeigen, voneinander lernen. Ohne Hype, mit Blick auf den Datenschutz.</p>
+        <div class="btn-row">
+          <a href="https://moodle.endlich-feierabend-ki.de/login/signup.php" class="btn btn--primary btn--lg">Kostenlos beitreten <svg><use href="#i-arrow"/></svg></a>
+          <a href="community.html" class="btn btn--ghost btn--lg">Mehr erfahren</a>
+        </div>
+      </div>
+      <div class="ct-forums">
+        <div class="ct-forum"><b>Fragen &amp; Antworten</b><span>Prompt hakt, Moodle-Kurs klemmt, Erwartungshorizont unklar? Frag die anderen.</span></div>
+        <div class="ct-forum"><b>Zeig dein Ergebnis</b><span>Arbeitsblatt, Klausur, Moodle-Kurs: Zeig, was mit KI bei dir entstanden ist.</span></div>
+        <div class="ct-forum ct-forum--soon"><b>Kurse</b><span>Ein kostenloser Einstiegskurs ist in Vorbereitung.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- ANGEBOTE -->
 <section class="section">
@@ -233,6 +273,7 @@
       <div>
         <h4>Angebote</h4>
         <ul class="ef-footer__links">
+          <li><a href="community.html">Community (kostenlos)</a></li>
           <li><a href="assistenten.html">KI-Assistenten</a></li>
           <li><a href="ki-kickstart.html">KI-Kickstart PDF</a></li>
           <li><a href="workshops.html">Workshops</a></li>

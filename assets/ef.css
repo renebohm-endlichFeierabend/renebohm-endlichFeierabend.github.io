@@ -252,6 +252,14 @@ em,.amber-mark{font-style:normal;color:var(--ink);
 .eyebrow + h1, .eyebrow + h2{margin-top:0;}
 
 /* ---------- Responsive ---------- */
+/* Burger-Menü schon unterhalb 1180px: mit dem Menüpunkt „Community“ passt die volle Leiste sonst nicht */
+@media (max-width:1180px){
+  .ef-nav__menu{position:absolute;top:72px;left:0;right:0;flex-direction:column;align-items:flex-start;
+    background:var(--paper);border-bottom:1px solid var(--line);padding:18px var(--gut);gap:18px;
+    box-shadow:var(--shadow);display:none;}
+  .ef-nav__menu.open{display:flex;}
+  .ef-burger{display:inline-flex;}
+}
 @media (max-width:900px){
   .grid-3,.grid-4{grid-template-columns:repeat(2,1fr);}
   .stat-band{grid-template-columns:repeat(2,1fr);gap:36px 20px;}
@@ -261,10 +269,25 @@ em,.amber-mark{font-style:normal;color:var(--ink);
   body{font-size:17px;}
   .section{padding:64px 0;}
   .grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}
-  .ef-nav__menu{position:absolute;top:72px;left:0;right:0;flex-direction:column;align-items:flex-start;
-    background:var(--paper);border-bottom:1px solid var(--line);padding:18px var(--gut);gap:18px;
-    box-shadow:var(--shadow);display:none;}
-  .ef-nav__menu.open{display:flex;}
-  .ef-burger{display:inline-flex;}
   .ef-footer__bottom{flex-direction:column;align-items:flex-start;}
+}
+
+/* ---------- Community: Hinweisleiste, Menüpunkt ---------- */
+.ef-bar{background:var(--gruen-deep);color:#fff;font-size:14.5px;line-height:1.45;}
+.ef-bar a{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px 10px;
+  max-width:var(--maxw);margin:0 auto;padding:10px var(--gut);color:#fff;text-decoration:none;text-align:center;}
+.ef-bar__neu{font-family:var(--mono);font-weight:600;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--amber);color:#fff;padding:3px 8px;border-radius:var(--r-pill);line-height:1.2;}
+.ef-bar__cta{font-weight:600;text-decoration:underline;text-underline-offset:3px;white-space:nowrap;
+  display:inline-flex;align-items:center;gap:6px;}
+.ef-bar a:hover .ef-bar__cta{color:var(--amber-soft);}
+.ef-nav__menu a.nav-community{color:var(--gruen-deep);font-weight:600;display:inline-flex;align-items:center;gap:7px;}
+.nav-frei{font-family:var(--mono);font-weight:600;font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  background:var(--gruen-tint);color:var(--gruen-deep);padding:4px 7px;border-radius:var(--r-pill);line-height:1;}
+.ef-bar__kurz{display:none;}
+@media (max-width:680px){ .ef-bar{font-size:14px;} .ef-bar a{padding:9px 12px;gap:4px 8px;}
+  .ef-bar__lang{display:none;} .ef-bar__kurz{display:inline;} }
+@media (min-width:1181px){
+  .ef-nav__menu{gap:24px;}
+  .ef-nav__menu a,.ef-nav__right .btn{white-space:nowrap;}
 }
