@@ -6,6 +6,7 @@ import Header from '../../components/Header';
 import { useStore } from '../../data/store';
 import { toDateKey } from '../../data/dates';
 import type { Observation } from '../../types';
+import { somiQuartale } from './somi';
 import { getCurrentSchoolYear, getCurrentTerm, getTermData, formatGrade, gradeColorClass, roundToGrade } from './gradeUtils';
 
 type Tab = 'chart' | 'somi' | 'exams' | 'obs';
@@ -101,6 +102,9 @@ export default function StudentDetail() {
               <div className="text-[10px] uppercase tracking-wider text-stone-400">SoMi Ø</div>
               <div className="text-xl font-light font-display">{formatGrade(data.somiAvg)}</div>
               <div className="text-[10px] text-stone-500">{data.somi.length} Einträge</div>
+              {somiQuartale(student, cls, termKey).map((q) => (
+                <div key={q.zeitraum} className="text-[11px] text-stone-300 mt-1">SoMi {q.name}: {formatGrade(q.wert)} ({q.stufe})</div>
+              ))}
             </div>
             <div>
               <div className="text-[10px] uppercase tracking-wider text-stone-400">Klausuren Ø</div>

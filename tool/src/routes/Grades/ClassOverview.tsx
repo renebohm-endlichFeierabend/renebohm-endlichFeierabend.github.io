@@ -5,6 +5,7 @@ import Header from '../../components/Header';
 import { useStore } from '../../data/store';
 import { getCurrentSchoolYear, getCurrentTerm, getTermData, formatGrade, gradeColorClass, roundToGrade } from './gradeUtils';
 import type { Student } from '../../types';
+import { somiQuartale } from './somi';
 
 export default function ClassOverview() {
   const { classId } = useParams<{ classId: string }>();
@@ -163,6 +164,13 @@ export default function ClassOverview() {
                     <span>·</span>
                     <span>Kl: {formatGrade(data.examAvg)}</span>
                   </div>
+                  {somiQuartale(student, cls, activeTermKey).length > 0 && (
+                    <div className="text-xs text-cyan-700 flex flex-wrap gap-x-2" aria-label="SoMi-Quartalsnoten">
+                      {somiQuartale(student, cls, activeTermKey).map((q) => (
+                        <span key={q.zeitraum}>SoMi {q.name.replace('Quartal ', 'Q')}: {formatGrade(q.wert)} ({q.stufe})</span>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 {data.finalGrade !== null && (
                   <div className={`px-3 py-2 rounded-xl flex-shrink-0 ${gradeColorClass(data.finalGrade)}`}>

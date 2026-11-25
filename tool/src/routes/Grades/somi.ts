@@ -94,3 +94,22 @@ export function zuStufe(v: number): { note: string | null; wahl: [string, string
 export function klasseSomi(s: Student, cls: Class, filter: (g: Grade) => boolean): number | null {
   return somiSchnitt((s.somiGrades ?? []).filter(filter), cls.somiArten);
 }
+
+// ---------------------------------------------------------------- SoMi-Quartalsnoten (Anzeige)
+
+export interface SomiQuartal { zeitraum: 'q1' | 'q2'; name: string; wert: number; stufe: string }
+
+/** SoMi-Quartalsnoten einer Person im Halbjahr: erstes Quartal immer (sofern Noten da sind), zweites
+ *  nur, wenn das Quartalsende der Klasse gesetzt ist. Stufe wie beim Übertragen; liegt der Wert genau
+ *  zwischen zwei Stufen, stehen beide da („2/2-“) und die Lehrkraft entscheidet. */
+export function somiQuartale(s: Student, cls: Class, termKey: string): SomiQuartal[] {
+  const zeitraeume: ('q1' | 'q2')[] = cls.quartalsende?.[termKey] ? ['q1', 'q2'] : ['q1'];
+  const out: SomiQuartal[] = [];
+  for (const z of zeitraeume) {
+    const wert = klasseSomi(s, cls, (g) => imZeitraum(g, termKey, z, cls));
+    if (wert == null) continue;
+    const { note, wahl } = zuStufe(wert);
+    out.push({ zeitraum: z, name: zeitraumName(termKey, z), wert, stufe: note ?? (wahl ? wahl.join('/') : '') });
+  }
+  return out;
+}
