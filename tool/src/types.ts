@@ -23,11 +23,21 @@ export interface Observation {
   tag: 'positiv' | 'neutral' | 'hinweis';
 }
 
+export interface SomiArt {
+  name: string;    // z. B. „Test“; Noten zählen dazu, wenn ihre Bezeichnung so beginnt
+  gewicht: number; // Schieberegler 0–100, relativ zu den anderen Arten des Kurses
+}
+
 export interface Class {
   id: string;
   name: string;
   students: Student[];
   createdAt: number;
+  somiArten?: SomiArt[]; // fehlt = noch nicht eingerichtet (alle SoMi-Noten zählen gleich)
+  /** Ende des ersten Quartals je Halbjahr (termKey → ISO-Zeitpunkt oder Datum JJJJ-MM-TT, einschließlich).
+   *  Automatisch gesetzt, wenn die SoMi-Quartalsnote übertragen wird; von Hand änderbar. Fehlt es,
+   *  zählt alles zum ersten Quartal des Halbjahres. */
+  quartalsende?: Record<string, string>;
 }
 
 export interface Todo {

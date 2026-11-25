@@ -19,7 +19,7 @@ export default function ClassStats() {
   const termKey = searchParams.get('term') ?? `${getCurrentSchoolYear()}-${getCurrentTerm()}`;
   const [y, t] = termKey.split('-');
 
-  const rows = cls.students.map((s) => ({ student: s, data: getTermData(s, termKey, settings.somiWeight) }));
+  const rows = cls.students.map((s) => ({ student: s, data: getTermData(s, termKey, settings.somiWeight, cls.somiArten) }));
   const withFinal = rows.filter((r) => r.data.finalGrade !== null);
   const finals = withFinal.map((r) => r.data.finalGrade as number);
   const classAvg = avg(finals);

@@ -26,7 +26,7 @@ export default function StudentDetail() {
   if (!cls || !student) { navigate(`/grades/${classId}`); return null; }
 
   const termKey = searchParams.get('term') ?? `${getCurrentSchoolYear()}-${getCurrentTerm()}`;
-  const data = getTermData(student, termKey, settings.somiWeight);
+  const data = getTermData(student, termKey, settings.somiWeight, cls.somiArten);
   const [y, t] = termKey.split('-');
 
   const allGrades = [

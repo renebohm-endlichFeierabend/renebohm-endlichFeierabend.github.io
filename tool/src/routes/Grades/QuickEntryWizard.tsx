@@ -107,6 +107,16 @@ export default function QuickEntryWizard({ type }: QuickEntryWizardProps) {
               ? 'Schüler die gefehlt haben einfach überspringen'
               : `Wird für alle ${students.length} Schüler verwendet`}
           </p>
+          {!isExam && cls.somiArten && cls.somiArten.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-3">
+              {cls.somiArten.map((a) => (
+                <button key={a.name} type="button" onClick={() => setLabel(a.name)}
+                  className={`px-3 py-1.5 rounded-full text-sm border min-h-[36px] ${label.trim() === a.name ? 'bg-stone-800 text-stone-50 border-stone-800' : 'bg-white text-stone-600 border-stone-300'}`}>
+                  {a.name}
+                </button>
+              ))}
+            </div>
+          )}
           {!isExam && (
             <label className="flex items-center gap-3 mt-4 text-sm text-stone-700 min-h-[44px]">
               <input type="checkbox" checked={beobachtung} onChange={(e) => setBeobachtung(e.target.checked)} className="w-5 h-5" />
