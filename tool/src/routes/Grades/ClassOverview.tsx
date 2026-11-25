@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { MessageCircle, FileText, Plus, Trash2, ChevronRight, BarChart3, Upload, Copy } from 'lucide-react';
-import { COCKPIT } from '../../data/serverSync';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Header from '../../components/Header';
 import { useStore } from '../../data/store';
@@ -125,8 +124,8 @@ export default function ClassOverview() {
       )}
 
       {cls.students.length > 0 && (
-        <div className={`grid ${COCKPIT ? 'grid-cols-2' : 'grid-cols-1'} gap-2 mb-4`}>
-          {COCKPIT && (
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          {(
             <button
               onClick={() => navigate(`/grades/${cls.id}/webuntis?term=${activeTermKey}`)}
               className="flex items-center justify-center gap-2 p-3 bg-white border border-stone-200 text-stone-700 rounded-2xl min-h-[48px]"
