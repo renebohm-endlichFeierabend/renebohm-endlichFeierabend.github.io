@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { MessageCircle, FileText, Plus, Trash2, ChevronRight, BarChart3, Upload, Copy } from 'lucide-react';
-import { COCKPIT } from '../../data/serverSync';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Header from '../../components/Header';
 import { useStore } from '../../data/store';
 import { getCurrentSchoolYear, getCurrentTerm, getTermData, formatGrade, gradeColorClass, roundToGrade } from './gradeUtils';
 import type { Student } from '../../types';
+import { somiQuartale } from './somi';
 
 export default function ClassOverview() {
   const { classId } = useParams<{ classId: string }>();
@@ -125,8 +125,8 @@ export default function ClassOverview() {
       )}
 
       {cls.students.length > 0 && (
-        <div className={`grid ${COCKPIT ? 'grid-cols-2' : 'grid-cols-1'} gap-2 mb-4`}>
-          {COCKPIT && (
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          {(
             <button
               onClick={() => navigate(`/grades/${cls.id}/webuntis?term=${activeTermKey}`)}
               className="flex items-center justify-center gap-2 p-3 bg-white border border-stone-200 text-stone-700 rounded-2xl min-h-[48px]"
@@ -164,6 +164,13 @@ export default function ClassOverview() {
                     <span>·</span>
                     <span>Kl: {formatGrade(data.examAvg)}</span>
                   </div>
+                  {somiQuartale(student, cls, activeTermKey).length > 0 && (
+                    <div className="text-xs text-cyan-700 flex flex-wrap gap-x-2" aria-label="SoMi-Quartalsnoten">
+                      {somiQuartale(student, cls, activeTermKey).map((q) => (
+                        <span key={q.zeitraum}>SoMi {q.name.replace('Quartal ', 'Q')}: {formatGrade(q.wert)} ({q.stufe})</span>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 {data.finalGrade !== null && (
                   <div className={`px-3 py-2 rounded-xl flex-shrink-0 ${gradeColorClass(data.finalGrade)}`}>

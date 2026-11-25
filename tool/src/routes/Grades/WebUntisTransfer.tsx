@@ -7,11 +7,13 @@ import { getCurrentSchoolYear, getCurrentTerm, weightedAvg, avg } from './gradeU
 import QuartalsendeBox from './QuartalsendeBox';
 import { imZeitraum, zeitraumName, somiSchnitt, zuStufe, type Zeitraum } from './somi';
 import type { Student } from '../../types';
+import WebUntisAnmeldung from '../../components/WebUntisAnmeldung';
+import { brauchtAnmeldung, wuKurse, wuMatrix, wuEintragen } from '../../data/webuntisApi';
 
-// Noten aus dem Lehrertool nach WebUntis übertragen (nur Cockpit-Fassung).
-// Der Server (cockpit/webuntis.py) spricht mit WebUntis; hier wird ausgewählt und vorgeschaut.
+// Noten aus dem Notenbuch nach WebUntis übertragen. Mit WebUntis spricht im Cockpit der Server
+// (cockpit/webuntis.py), sonst die Brücke der Schule (relay/webuntis.php, siehe data/webuntisApi.ts).
 
-interface Kurs { lsId: number; klassen: string; gruppe: string; fach: string; fachname: string }
+import type { Kurs } from '../../data/webuntisApi';
 interface UNote { id: number; examTypeId: number; examId: number; art: string; note: string; datum: string; text: string }
 interface Pruefung { examId: number; name: string; datum: string; examTypeId: number; art: string }
 interface USchueler { id: number; name: string; noten: UNote[] }
@@ -40,13 +42,6 @@ const basisLabel = (l: string) => l.replace(/\s*\(.*\)\s*$/, '').trim();
 const heute = () => new Date().toISOString().slice(0, 10);
 const deDatum = (iso: string) => (iso ? `${iso.slice(8, 10)}.${iso.slice(5, 7)}.${iso.slice(0, 4)}` : '');
 
-async function hole<T>(url: string, init?: RequestInit): Promise<T> {
-  const r = await fetch(url, { credentials: 'same-origin', ...init });
-  if (r.status === 401) { location.href = '/login?weiter=/lehrertool/'; throw new Error('nicht angemeldet'); }
-  const j = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error(j.fehler || j.detail || `Server: ${r.status}`);
-  return j as T;
-}
 
 const SPEICHER_ZUORDNUNG = 'webuntis-kurs-zuordnung';
 
@@ -75,6 +70,21 @@ function rateKurs(klasse: string, kurse: Kurs[]): number | undefined {
 type Quelle = { key: string; titel: string; wert: (s: Student) => { v: number | null; datum?: string } };
 
 export default function WebUntisTransfer() {
+  const [angemeldet, setAngemeldet] = useState(!brauchtAnmeldung());
+  const navigate = useNavigate();
+  const { classId } = useParams<{ classId: string }>();
+  if (!angemeldet) {
+    return (
+      <div>
+        <Header title="Nach WebUntis" subtitle="Anmeldung" onBack={() => navigate(`/grades/${classId}`)} />
+        <WebUntisAnmeldung onFertig={() => setAngemeldet(true)} />
+      </div>
+    );
+  }
+  return <Uebertragen />;
+}
+
+function Uebertragen() {
   const { classId } = useParams<{ classId: string }>();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -131,7 +141,7 @@ export default function WebUntisTransfer() {
   const artId: number | null = pruefung ? pruefung.examTypeId : ziel.startsWith('a:') ? Number(ziel.slice(2)) : null;
 
   useEffect(() => {
-    hole<{ kurse: Kurs[] }>('/api/webuntis/kurse')
+    wuKurse()
       .then((j) => {
         setKurse(j.kurse);
         if (cls) {
@@ -145,7 +155,7 @@ export default function WebUntisTransfer() {
 
   const ladeMatrix = (id: number) => {
     setLaedt(true); setFehler(''); setErgebnisse(null);
-    hole<Matrix>(`/api/webuntis/matrix/${id}`)
+    wuMatrix<Matrix>(id)
       .then((m) => setMatrix(m))
       .catch((e) => { setMatrix(null); setFehler(String(e.message || e)); })
       .finally(() => setLaedt(false));
@@ -204,10 +214,7 @@ export default function WebUntisTransfer() {
         studentId: z.u!.id, examTypeId: artId, examId: pruefung ? pruefung.examId : -1, note: wahl[z.s.id].note, datum, text,
         gradeId: z.vorhanden.length === 1 ? z.vorhanden[0].id : -1,
       }));
-      const j = await hole<{ ergebnisse: Ergebnis[] }>(`/api/webuntis/eintragen/${matrix.lsId}`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Cockpit': '1' },
-        body: JSON.stringify({ eintraege }),
-      });
+      const j = await wuEintragen<{ ergebnisse: Ergebnis[] }>(matrix.lsId, eintraege);
       setErgebnisse(j.ergebnisse);
       // SoMi-Note für Quartal 1 bzw. 3 übertragen: damit endet das Quartal, wenn kein Datum gesetzt ist
       if (j.ergebnisse.some((e) => e.status === 'ok') && /^SoMi\s*[13]\./i.test(art?.name ?? '') && !cls.quartalsende?.[termKey]) {

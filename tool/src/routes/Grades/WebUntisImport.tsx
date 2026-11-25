@@ -3,14 +3,14 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { UserPlus, Check } from 'lucide-react';
 import Header from '../../components/Header';
 import { useStore } from '../../data/store';
-import { COCKPIT } from '../../data/serverSync';
+import WebUntisAnmeldung from '../../components/WebUntisAnmeldung';
+import { brauchtAnmeldung, wuKurse, wuSchueler, type Kurs } from '../../data/webuntisApi';
 import type { Class, Student } from '../../types';
 
-// Schülerliste aus WebUntis übernehmen: im Cockpit direkt, sonst über den Code "LS1:" aus dem
-// WebUntis-Knopf (Reiter „Schülerliste holen“). Legt eine Klasse an oder ergänzt eine vorhandene.
+// Schülerliste aus WebUntis übernehmen: direkt (Cockpit-Server bzw. Brücke der Schule nach Anmeldung) oder über
+// den Code "LS1:" aus dem WebUntis-Knopf (Reiter „Schülerliste holen“). Legt eine Klasse an oder ergänzt eine vorhandene.
 // Es wird nie jemand gelöscht; wer nur im Tool steht, wird nur angezeigt.
 
-interface Kurs { lsId: number; klassen: string; gruppe: string; fach: string; fachname: string }
 interface Liste { kurs: { klassen: string; fach: string; gruppe: string }; schueler: { nachname: string; vorname: string }[] }
 
 const norm = (s: string) => s.toLowerCase().replace(/[(),.]/g, ' ').replace(/\s+/g, ' ').trim();
@@ -42,20 +42,19 @@ export default function WebUntisImport() {
   const [ziel, setZiel] = useState(searchParams.get('klasse') ?? 'neu');
   const [name, setName] = useState('');
   const [fertig, setFertig] = useState('');
+  const [angemeldet, setAngemeldet] = useState(!brauchtAnmeldung());
 
   useEffect(() => {
-    if (!COCKPIT) return;
-    fetch('/api/webuntis/kurse', { credentials: 'same-origin' }).then((r) => r.json())
-      .then((j) => (j.kurse ? setKurse(j.kurse) : setFehler(j.fehler || 'WebUntis nicht erreichbar')))
-      .catch(() => setFehler('WebUntis nicht erreichbar'));
-  }, []);
+    if (!angemeldet) return;
+    wuKurse().then((j) => setKurse(j.kurse))
+      .catch((e) => setFehler(String(e.message || e) || 'WebUntis nicht erreichbar'));
+  }, [angemeldet]);
 
   useEffect(() => {
     if (!lsId || !kurse) return;
     const k = kurse.find((x) => x.lsId === Number(lsId));
     setFehler(''); setListe(null);
-    fetch(`/api/webuntis/schueler/${lsId}`, { credentials: 'same-origin' }).then((r) => r.json()).then((j) => {
-      if (!j.schueler) { setFehler(j.fehler || 'Fehler'); return; }
+    wuSchueler(Number(lsId)).then((j) => {
       setListe({ kurs: { klassen: k?.klassen ?? '', fach: k?.fachname ?? '', gruppe: k?.gruppe ?? '' },
         schueler: j.schueler.filter((s: { austritt: string }) => !s.austritt) });
     }).catch(() => setFehler('WebUntis nicht erreichbar'));
@@ -106,7 +105,8 @@ export default function WebUntisImport() {
       {fertig && <div className="mb-4 p-3 rounded-xl bg-emerald-50 text-emerald-700 text-sm flex gap-2"><Check size={16} />{fertig}</div>}
 
       <div className="space-y-3 mb-4 p-4 bg-white/80 rounded-2xl border border-stone-200/60">
-        {COCKPIT && (
+        {!angemeldet && <WebUntisAnmeldung kompakt onFertig={() => setAngemeldet(true)} />}
+        {angemeldet && (
           <label className="block text-xs text-stone-500">WebUntis-Kurs
             <select className="mt-1 w-full p-2 rounded-lg border border-stone-300 bg-white text-sm text-stone-800" value={lsId} onChange={(e) => { setCodeText(''); setLsId(e.target.value); }}>
               <option value="">{kurse ? 'bitte wählen' : 'lädt…'}</option>
@@ -114,7 +114,7 @@ export default function WebUntisImport() {
             </select>
           </label>
         )}
-        <label className="block text-xs text-stone-500">{COCKPIT ? 'oder ' : ''}Code aus dem WebUntis-Knopf (Reiter „Schülerliste holen“)
+        <label className="block text-xs text-stone-500">oder Code aus dem WebUntis-Knopf (Reiter „Schülerliste holen“)
           <textarea className="mt-1 w-full p-2 h-16 rounded-lg border border-stone-300 bg-white text-xs font-mono" value={codeText}
             onChange={(e) => { setLsId(''); setCodeText(e.target.value); }} placeholder="LS1:…" />
         </label>
