@@ -1,4 +1,4 @@
-import type { Class, Grade, Student } from '../../types';
+import type { Class, Grade, Quartalsnote, Student } from '../../types';
 
 // SoMi-Schnitt mit Arten und Gewichten je Kurs, Quartale und Notenstufen.
 
@@ -112,4 +112,32 @@ export function somiQuartale(s: Student, cls: Class, termKey: string): SomiQuart
     out.push({ zeitraum: z, name: zeitraumName(termKey, z), wert, stufe: note ?? (wahl ? wahl.join('/') : '') });
   }
   return out;
+}
+
+// ---------------------------------------------------------------- Quartalsnoten
+
+/** Entschiedene SoMi-Quartalsnote (Quartal 1 bzw. 3) eines Halbjahres, falls vorhanden. */
+export function quartalsnote(s: Student, termKey: string): Quartalsnote | null {
+  return s.quartalsnoten?.[termKey] ?? null;
+}
+
+/** Zahlenwert einer Notenstufe („2-“ → 2,3), sonst null. */
+export function notenwert(note: string): number | null {
+  const t = SKALA.find(([, n]) => n === note.trim());
+  return t ? t[0] : null;
+}
+
+/** Quartalsnoten in die Klasse schreiben (je Schüler-ID eine Note; leere Note löscht). */
+export function mitQuartalsnoten(cls: Class, termKey: string, noten: Record<string, { note: string; schnitt: number | null }>): Class {
+  const jetzt = new Date().toISOString();
+  return {
+    ...cls,
+    students: cls.students.map((s) => {
+      if (!(s.id in noten)) return s;
+      const q = { ...(s.quartalsnoten ?? {}) };
+      const n = noten[s.id];
+      if (n.note) q[termKey] = { note: n.note, schnitt: n.schnitt, datum: jetzt }; else delete q[termKey];
+      return { ...s, quartalsnoten: q };
+    }),
+  };
 }

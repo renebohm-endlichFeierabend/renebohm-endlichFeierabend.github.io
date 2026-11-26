@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { MessageCircle, FileText, Plus, Trash2, ChevronRight, BarChart3, Upload, Copy } from 'lucide-react';
+import { MessageCircle, FileText, Plus, Trash2, ChevronRight, BarChart3, Upload, Copy, Lock } from 'lucide-react';
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Header from '../../components/Header';
 import { useStore } from '../../data/store';
 import { getCurrentSchoolYear, getCurrentTerm, getTermData, formatGrade, gradeColorClass, roundToGrade } from './gradeUtils';
+import { quartalsnote, zeitraumName, somiQuartale } from './somi';
 import type { Student } from '../../types';
-import { somiQuartale } from './somi';
 
 export default function ClassOverview() {
   const { classId } = useParams<{ classId: string }>();
@@ -111,6 +111,17 @@ export default function ClassOverview() {
 
       {cls.students.length > 0 && (
         <button
+          onClick={() => navigate(`/grades/${cls.id}/quartal?term=${activeTermKey}`)}
+          className="w-full flex items-center justify-center gap-2 p-3 mb-2 bg-white border border-stone-200 text-stone-700 rounded-2xl min-h-[48px]"
+        >
+          <Lock size={16} /><span className="text-xs font-medium">
+            {cls.students.some((st) => quartalsnote(st, activeTermKey)) ? `${zeitraumName(activeTermKey, 'q1')}: Noten ansehen/ändern` : `${zeitraumName(activeTermKey, 'q1')} abschließen`}
+          </span>
+        </button>
+      )}
+
+      {cls.students.length > 0 && (
+        <button
           onClick={() => navigate(`/grades/${cls.id}/stats?term=${activeTermKey}`)}
           className="w-full flex items-center justify-center gap-2 p-3 mb-4 bg-white border border-stone-200 text-stone-700 rounded-2xl min-h-[48px]"
         >
@@ -151,6 +162,7 @@ export default function ClassOverview() {
         )}
         {cls.students.map((student) => {
           const data = getTermData(student, activeTermKey, settings.somiWeight, cls.somiArten);
+          const qn = quartalsnote(student, activeTermKey);
           return (
             <div key={student.id} className="flex items-center gap-2 p-4 bg-white/60 rounded-2xl border border-stone-200/60">
               <button
@@ -159,14 +171,14 @@ export default function ClassOverview() {
               >
                 <div className="flex-1 min-w-0">
                   <div className="font-medium text-stone-800 truncate">{student.name}</div>
-                  <div className="text-xs text-stone-500 flex gap-2">
-                    <span>SoMi: {formatGrade(data.somiAvg)}</span>
-                    <span>·</span>
-                    <span>Kl: {formatGrade(data.examAvg)}</span>
+                  <div className="text-xs text-stone-500 flex flex-wrap gap-x-2">
+                    <span className="whitespace-nowrap">SoMi: {formatGrade(data.somiAvg)}</span>
+                    {qn && <span className="whitespace-nowrap text-stone-700 font-medium">· {zeitraumName(activeTermKey, 'q1').replace('Quartal ', 'Q')}: {qn.note}</span>}
+                    <span className="whitespace-nowrap">· Kl: {formatGrade(data.examAvg)}</span>
                   </div>
-                  {somiQuartale(student, cls, activeTermKey).length > 0 && (
+                  {somiQuartale(student, cls, activeTermKey).filter((q) => !(qn && q.zeitraum === 'q1')).length > 0 && (
                     <div className="text-xs text-cyan-700 flex flex-wrap gap-x-2" aria-label="SoMi-Quartalsnoten">
-                      {somiQuartale(student, cls, activeTermKey).map((q) => (
+                      {somiQuartale(student, cls, activeTermKey).filter((q) => !(qn && q.zeitraum === 'q1')).map((q) => (
                         <span key={q.zeitraum}>SoMi {q.name.replace('Quartal ', 'Q')}: {formatGrade(q.wert)} ({q.stufe})</span>
                       ))}
                     </div>

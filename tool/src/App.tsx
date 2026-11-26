@@ -11,6 +11,7 @@ import StudentDetail from './routes/Grades/StudentDetail';
 import ClassStats from './routes/Grades/ClassStats';
 import WebUntisTransfer from './routes/Grades/WebUntisTransfer';
 import WebUntisCode from './routes/Grades/WebUntisCode';
+import QuartalAbschluss from './routes/Grades/QuartalAbschluss';
 import WebUntisImport from './routes/Grades/WebUntisImport';
 import SomiArten from './routes/Grades/SomiArten';
 import ExamPlanner from './routes/Exams/ExamPlanner';
@@ -36,6 +37,7 @@ function AppRoutes() {
         <Route path="/grades/:classId/somi" element={<SomiArten />} />
         <Route path="/grades/:classId/webuntis" element={<WebUntisTransfer />} />
         <Route path="/grades/:classId/webuntis-code" element={<WebUntisCode />} />
+        <Route path="/grades/:classId/quartal" element={<QuartalAbschluss />} />
         <Route path="/exams" element={<ExamPlanner />} />
         <Route path="/feierabend" element={<FeierabendCheck />} />
         <Route path="/todos" element={<TodosView />} />

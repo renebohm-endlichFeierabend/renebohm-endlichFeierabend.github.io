@@ -5,7 +5,7 @@ import Header from '../../components/Header';
 import { useStore } from '../../data/store';
 import { getCurrentSchoolYear, getCurrentTerm } from './gradeUtils';
 import QuartalsendeBox from './QuartalsendeBox';
-import { imZeitraum, zeitraumName, type Zeitraum } from './somi';
+import { imZeitraum, zeitraumName, quartalsnote, type Zeitraum } from './somi';
 
 // Übertragungscode für den WebUntis-Knopf (Lesezeichen). Der Knopf lädt webuntis-bruecke.js in die
 // geöffnete WebUntis-Seite; dort wird der Code eingefügt und eingetragen. Läuft ohne Server.
@@ -25,7 +25,7 @@ export default function WebUntisCode() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { classes } = useStore();
-  const [zeitraum, setZeitraum] = useState<Zeitraum>('hj');
+  const [zeitraum, setZeitraum] = useState<Zeitraum>((searchParams.get('zeitraum') as Zeitraum) || 'hj');
   const cls = classes.find((c) => c.id === classId);
   const termKey = searchParams.get('term') ?? `${getCurrentSchoolYear()}-${getCurrentTerm()}`;
   const [kopiert, setKopiert] = useState<'' | 'code' | 'knopf'>('');
@@ -42,6 +42,7 @@ export default function WebUntisCode() {
       somiArten: cls.somiArten ?? [],
       schueler: cls.students.map((s) => ({
         name: s.name,
+        ...(zeitraum === 'q1' && quartalsnote(s, termKey) ? { quartalsnote: quartalsnote(s, termKey)!.note } : {}),
         noten: [
           ...(s.somiGrades ?? []).filter(drin).map((g) => ({ typ: 'somi', label: g.label, value: g.value, date: g.date, weight: g.weight })),
           ...(s.examGrades ?? []).filter(drin).map((g) => ({ typ: 'exam', label: g.label, value: g.value, date: g.date })),

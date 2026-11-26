@@ -14,6 +14,15 @@ export interface Student {
   examGrades: Grade[];
   notes?: string;
   observations?: Observation[];
+  /** Entschiedene SoMi-Quartalsnoten (Quartal 1 bzw. 3), Schlüssel = termKey des Halbjahres.
+   *  Gesetzt beim Abschließen des Quartals oder beim Übertragen der SoMi-Quartalsnote nach WebUntis. */
+  quartalsnoten?: Record<string, Quartalsnote>;
+}
+
+export interface Quartalsnote {
+  note: string;          // entschiedene Note, z. B. „2-“
+  schnitt: number | null; // berechneter SoMi-Schnitt zum Zeitpunkt der Entscheidung
+  datum: string;         // ISO-Zeitpunkt der Entscheidung
 }
 
 export interface Observation {

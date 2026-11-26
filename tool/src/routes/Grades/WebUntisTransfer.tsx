@@ -5,7 +5,7 @@ import Header from '../../components/Header';
 import { useStore } from '../../data/store';
 import { getCurrentSchoolYear, getCurrentTerm, weightedAvg, avg } from './gradeUtils';
 import QuartalsendeBox from './QuartalsendeBox';
-import { imZeitraum, zeitraumName, somiSchnitt, zuStufe, type Zeitraum } from './somi';
+import { imZeitraum, zeitraumName, somiSchnitt, zuStufe, quartalsnote, notenwert, mitQuartalsnoten, klasseSomi, type Zeitraum } from './somi';
 import type { Student } from '../../types';
 import WebUntisAnmeldung from '../../components/WebUntisAnmeldung';
 import { brauchtAnmeldung, wuKurse, wuMatrix, wuEintragen } from '../../data/webuntisApi';
@@ -67,7 +67,7 @@ function rateKurs(klasse: string, kurse: Kurs[]): number | undefined {
   return undefined;
 }
 
-type Quelle = { key: string; titel: string; wert: (s: Student) => { v: number | null; datum?: string } };
+type Quelle = { key: string; titel: string; wert: (s: Student) => { v: number | null; datum?: string; note?: string } };
 
 export default function WebUntisTransfer() {
   const [angemeldet, setAngemeldet] = useState(!brauchtAnmeldung());
@@ -89,7 +89,7 @@ function Uebertragen() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { classes, setClasses } = useStore();
-  const [zeitraum, setZeitraum] = useState<Zeitraum>('hj');
+  const [zeitraum, setZeitraum] = useState<Zeitraum>((searchParams.get('zeitraum') as Zeitraum) || 'hj');
   const cls = classes.find((c) => c.id === classId);
   const termKey = searchParams.get('term') ?? `${getCurrentSchoolYear()}-${getCurrentTerm()}`;
 
@@ -110,6 +110,13 @@ function Uebertragen() {
   const quellen: Quelle[] = useMemo(() => {
     if (!cls) return [];
     const aus: Quelle[] = [];
+    // Abgeschlossenes Quartal: die entschiedene Note, nicht der Schnitt
+    if (zeitraum === 'q1' && cls.students.some((s) => quartalsnote(s, termKey))) {
+      aus.push({ key: 'quartal', titel: `SoMi ${zeitraumName(termKey, 'q1')} (abgeschlossen, deine Noten)`, wert: (s) => {
+        const q = quartalsnote(s, termKey);
+        return q ? { v: notenwert(q.note) ?? q.schnitt, note: q.note } : { v: null };
+      } });
+    }
     const drin = (g: { termKey: string; date: string; label: string; value: number }) => imZeitraum(g as never, termKey, zeitraum, cls);
     const somiLabels = new Set<string>(), examLabels = new Set<string>();
     for (const s of cls.students) {
@@ -137,6 +144,9 @@ function Uebertragen() {
   }, [cls, termKey, zeitraum]);
 
   const quelle = quellen.find((q) => q.key === quelleKey);
+  useEffect(() => {
+    if (quellen.some((q) => q.key === 'quartal') && (!quelleKey || !quellen.some((q) => q.key === quelleKey))) setQuelleKey('quartal');
+  }, [quellen]); // eslint-disable-line react-hooks/exhaustive-deps
   const pruefung = ziel.startsWith('p:') ? matrix?.pruefungen.find((p) => p.examId === Number(ziel.slice(2))) : undefined;
   const artId: number | null = pruefung ? pruefung.examTypeId : ziel.startsWith('a:') ? Number(ziel.slice(2)) : null;
 
@@ -175,8 +185,8 @@ function Uebertragen() {
     if (!cls || !matrix || !quelle) return [];
     return cls.students.map((s) => {
       const u = findeSchueler(s.name, matrix.schueler);
-      const { v, datum: d } = quelle.wert(s);
-      const vorschlag = v != null ? zuStufe(v) : null;
+      const { v, datum: d, note } = quelle.wert(s);
+      const vorschlag = note ? { note, wahl: null } : v != null ? zuStufe(v) : null;
       const vorhanden = !u || artId == null ? []
         : pruefung ? u.noten.filter((n) => n.examId === pruefung.examId)
         : u.noten.filter((n) => n.examTypeId === artId && !n.examId);
@@ -217,8 +227,16 @@ function Uebertragen() {
       const j = await wuEintragen<{ ergebnisse: Ergebnis[] }>(matrix.lsId, eintraege);
       setErgebnisse(j.ergebnisse);
       // SoMi-Note für Quartal 1 bzw. 3 übertragen: damit endet das Quartal, wenn kein Datum gesetzt ist
-      if (j.ergebnisse.some((e) => e.status === 'ok') && /^SoMi\s*[13]\./i.test(art?.name ?? '') && !cls.quartalsende?.[termKey]) {
-        setClasses(classes.map((c) => (c.id === cls.id ? { ...c, quartalsende: { ...(c.quartalsende ?? {}), [termKey]: new Date().toISOString() } } : c)));
+      // und die übertragenen Noten gelten als entschiedene Quartalsnoten (gespeichert im Notenbuch)
+      if (j.ergebnisse.some((e) => e.status === 'ok') && /^SoMi\s*[13]\./i.test(art?.name ?? '')) {
+        const ok = new Set(j.ergebnisse.filter((e) => e.status === 'ok').map((e) => e.studentId));
+        const noten = Object.fromEntries(ausgewaehlt.filter((z) => ok.has(z.u!.id)).map((z) => [z.s.id, {
+          note: wahl[z.s.id].note, schnitt: klasseSomi(z.s, cls, (g) => imZeitraum(g, termKey, 'q1', cls)) }]));
+        setClasses(classes.map((c) => {
+          if (c.id !== cls.id) return c;
+          const neu = mitQuartalsnoten(c, termKey, noten);
+          return c.quartalsende?.[termKey] ? neu : { ...neu, quartalsende: { ...(neu.quartalsende ?? {}), [termKey]: new Date().toISOString() } };
+        }));
       }
       ladeMatrix(matrix.lsId);
     } catch (e) {

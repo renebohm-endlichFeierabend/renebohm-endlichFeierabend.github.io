@@ -140,6 +140,10 @@
       return wi ? su / wi : null;
     };
     const q = [];
+    // Abgeschlossenes Quartal: die im Notenbuch entschiedene Note
+    if (code.schueler.some((s) => s.quartalsnote)) q.push({ key: 'quartal', titel: 'SoMi ' + (code.zeitraum || 'Quartal') + ' (abgeschlossen, deine Noten)', wert: (s) => {
+      const t = s.quartalsnote ? SKALA.find((x) => x[1] === s.quartalsnote) : null;
+      return { v: t ? t[0] : null, d: '', note: s.quartalsnote || '' }; } });
     [...somi].sort().forEach((l) => q.push({ key: 's:' + l, titel: 'SoMi: ' + l, wert: (s) => {
       const gs = s.noten.filter((g) => g.typ !== 'exam' && basisLabel(g.label) === l); return { v: schnitt(gs), d: eintagig(gs) }; } }));
     [...exam].sort().forEach((l) => q.push({ key: 'e:' + l, titel: 'Klausur: ' + l, wert: (s) => {
@@ -244,9 +248,9 @@
     const tage = new Set();
     code.schueler.forEach((s) => {
       const u = finde(s.name, M.schueler);
-      const { v, d } = q.wert(s);
+      const { v, d, note } = q.wert(s);
       if (d) tage.add(d);
-      const vs = v != null ? zuNote(v) : null;
+      const vs = note ? { note, wahl: null } : v != null ? zuNote(v) : null;
       const vorh = !u ? [] : z.examId > 0 ? u.noten.filter((n) => n.examId === z.examId) : u.noten.filter((n) => n.examTypeId === z.examTypeId && !n.examId);
       const gleich = vs && vs.note && vorh.some((n) => n.note === vs.note);
       zeilen.push({ s, u, v, vs, vorh, an: !!(u && vs && vs.note && !gleich && !vorh.length), note: vs ? vs.note : '' });
@@ -309,7 +313,9 @@
       kursListe = await kurse();
     } catch (e) { meldung(esc(e.message)); return; }
     Q = quellen(code);
+    const vor = Q.some((x) => x.key === 'quartal') ? 'quartal' : '';
     $('quelle').innerHTML = '<option value="">bitte wählen</option>' + Q.map((q) => `<option value="${esc(q.key)}">${esc(q.titel)}</option>`).join('');
+    if (vor) $('quelle').value = vor;
     $('kurs').innerHTML = kursListe.map((k) => `<option value="${k.lsId}">${esc(k.klassen)} · ${esc(k.fachname)} (${esc(k.gruppe)})</option>`).join('');
     const geraten = rateKurs(code.klasse || '');
     if (geraten) $('kurs').value = geraten;

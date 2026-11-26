@@ -5,8 +5,8 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import Header from '../../components/Header';
 import { useStore } from '../../data/store';
 import { toDateKey } from '../../data/dates';
+import { quartalsnote, zeitraumName, somiQuartale } from './somi';
 import type { Observation } from '../../types';
-import { somiQuartale } from './somi';
 import { getCurrentSchoolYear, getCurrentTerm, getTermData, formatGrade, gradeColorClass, roundToGrade } from './gradeUtils';
 
 type Tab = 'chart' | 'somi' | 'exams' | 'obs';
@@ -28,6 +28,7 @@ export default function StudentDetail() {
 
   const termKey = searchParams.get('term') ?? `${getCurrentSchoolYear()}-${getCurrentTerm()}`;
   const data = getTermData(student, termKey, settings.somiWeight, cls.somiArten);
+  const qn = quartalsnote(student, termKey);
   const [y, t] = termKey.split('-');
 
   const allGrades = [
@@ -102,7 +103,12 @@ export default function StudentDetail() {
               <div className="text-[10px] uppercase tracking-wider text-stone-400">SoMi Ø</div>
               <div className="text-xl font-light font-display">{formatGrade(data.somiAvg)}</div>
               <div className="text-[10px] text-stone-500">{data.somi.length} Einträge</div>
-              {somiQuartale(student, cls, termKey).map((q) => (
+              {qn && (
+                <div className="text-[10px] text-stone-300 mt-1">
+                  {zeitraumName(termKey, 'q1')}: <b className="text-stone-50">{qn.note}</b>{qn.schnitt != null && <> (Schnitt {formatGrade(qn.schnitt)})</>}
+                </div>
+              )}
+              {somiQuartale(student, cls, termKey).filter((q) => !(qn && q.zeitraum === 'q1')).map((q) => (
                 <div key={q.zeitraum} className="text-[11px] text-stone-300 mt-1">SoMi {q.name}: {formatGrade(q.wert)} ({q.stufe})</div>
               ))}
             </div>
