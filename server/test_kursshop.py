@@ -489,7 +489,7 @@ def test_produktliste_und_frei_schalter(shop, monkeypatch):
     assert d["kostenlos"] == [] and d["buchung_offen"] is True
     monkeypatch.setenv("KURSSHOP_FREI_AKTIV", "1")
     d = shop.c.get("/api/kauf/produkte").json()
-    assert d["kostenlos"][0]["link"].endswith("/course/view.php?id=30")
+    assert d["kostenlos"][0]["link"].endswith("/course/view.php?id=38")
     assert shop.c.get("/api/health").json()["kursshop"]["frei"] is True
 
 

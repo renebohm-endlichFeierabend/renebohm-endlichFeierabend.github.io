@@ -48,9 +48,9 @@
   },
   "kostenlos": [
     {
-      "titel": "Einstieg: KI im Schulalltag",
-      "beschreibung": "Der kostenlose Einstiegskurs: erste Schritte mit KI im Unterricht und in der Vorbereitung.",
-      "moodle_kurs_id": 30
+      "titel": "ChatGPT für Einsteiger",
+      "beschreibung": "Der kostenlose Einstieg in 45 Minuten, komplett am Handy: Konto sicher einrichten, ein Prompt-Muster für gute Antworten, drei Aufgaben aus dem Schulalltag und wo KI sich irrt.",
+      "moodle_kurs_id": 38
     }
   ]
 }
