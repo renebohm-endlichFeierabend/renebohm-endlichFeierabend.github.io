@@ -13,6 +13,26 @@
       "moodle_kurs_id": 31,
       "stripe_preis_env": "STRIPE_PRICE_MOODLE_KURSE_MIT_KI"
     },
+    "differenzieren-mit-ki": {
+      "art": "einzelkurs",
+      "aktiv": true,
+      "sichtbar": false,
+      "titel": "Ein Arbeitsblatt, drei Niveaus – differenzieren mit KI",
+      "beschreibung": "Aus Ihrem eigenen Arbeitsblatt werden drei Niveaus mit gleichem Lernziel, dazu gestufte Tippkarten und ein Lösungsblatt. Für alle Fächer, ca. 90 Minuten. Einmal zahlen, dauerhaft Zugang im Moodle.",
+      "preis_cent": 1200,
+      "moodle_kurs_id": 36,
+      "stripe_preis_env": "STRIPE_PRICE_KURS_DIFFERENZIEREN"
+    },
+    "elternbriefe-einfache-sprache": {
+      "art": "einzelkurs",
+      "aktiv": true,
+      "sichtbar": false,
+      "titel": "Elternbriefe und einfache Sprache mit KI",
+      "beschreibung": "Ihr nächster Elternbrief klar formuliert und in einfacher Sprache, mit Prüfpunkten für Übersetzungen und einer eigenen Prompt-Vorlage. Ca. 60 Minuten. Einmal zahlen, dauerhaft Zugang im Moodle.",
+      "preis_cent": 900,
+      "moodle_kurs_id": 37,
+      "stripe_preis_env": "STRIPE_PRICE_KURS_ELTERNBRIEFE"
+    },
     "abo-alle-kurse": {
       "art": "abo",
       "aktiv": true,

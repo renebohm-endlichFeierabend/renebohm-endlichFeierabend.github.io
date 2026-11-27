@@ -120,7 +120,7 @@ Die Vorlage `deploy/website.env.vorlage` enthält alle neuen Zeilen; eine besteh
 |---|---|
 | `STRIPE_SECRET_KEY` | zuerst der **Test**-Schlüssel `sk_test_…` (besser: eingeschränkter Schlüssel `rk_test_…` mit Schreibrecht auf Checkout Sessions und Subscriptions, Leserecht auf Prices und Charges) |
 | `STRIPE_WEBHOOK_SECRET` | `whsec_…` des Webhook-Endpunkts (von bohm aus dem Dashboard) |
-| `STRIPE_PRICE_MOODLE_KURSE_MIT_KI` (`STRIPE_PRICE_ABO_ALLE_KURSE` erst, wenn das Abo sichtbar wird) | Preis-IDs `price_…` |
+| `STRIPE_PRICE_MOODLE_KURSE_MIT_KI`, `STRIPE_PRICE_KURS_DIFFERENZIEREN`, `STRIPE_PRICE_KURS_ELTERNBRIEFE` (`STRIPE_PRICE_ABO_ALLE_KURSE` erst, wenn das Abo sichtbar wird) | Preis-IDs `price_…` |
 | `MOODLE_KURSSHOP_TOKEN` | aus `/var/lib/moodle-kursbau/.kursshop-token` |
 | `MOODLE_ABO_KOHORTE_ID` | `1` (ID der Kohorte `abo-alle-kurse` laut root; zum Entfernen nötig, `core_cohort_delete_cohort_members` will die ID) |
 | `KURSSHOP_ADMIN_MAIL` | Adresse von bohm für Meldungen |
