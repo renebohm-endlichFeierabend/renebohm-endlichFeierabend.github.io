@@ -204,10 +204,10 @@
       }
       const k=d.kaufbar||[];
       document.getElementById('kaufbar').innerHTML=k.length?k.map(p=>{
-        const abo=p.art==='abo';
-        return `<article class="card kurs">${abo?'<span class="badge">Alle Kurse</span>':''}
-          <div class="tags"><span class="tag ${abo?'tag--amber':'tag--ink'}">${abo?'Abo':'Einzelkurs'}</span>${p.platzhalter?'<span class="tag tag--rot">Platzhalter</span>':''}</div>
-          <h3>${esc(p.titel)}</h3><p>${esc(p.beschreibung)}</p>
+        const abo=p.art==='abo', paket=!!p.paket;
+        return `<article class="card kurs">${abo?'<span class="badge">Alle Kurse</span>':''}${paket&&p.ersparnis?`<span class="badge">Du sparst ${esc(p.ersparnis)}</span>`:''}
+          <div class="tags"><span class="tag ${abo?'tag--amber':paket?'tag--gruen':'tag--ink'}">${abo?'Abo':paket?'Paket':'Einzelkurs'}</span>${p.platzhalter?'<span class="tag tag--rot">Platzhalter</span>':''}</div>
+          <h3>${esc(p.titel)}</h3><p>${esc(p.beschreibung)}</p>${p.hinweis?`<p class="muted" style="font-size:14px;">${esc(p.hinweis)}</p>`:''}
           <ul class="ticks"><li>${haken}Zugang sofort nach der Zahlung</li>
           <li>${haken}${abo?'Jederzeit zum Ende des Abrechnungszeitraums kündbar':'Dauerhaft, ohne Abo'}</li></ul>
           <div class="preis">${esc(p.preis).replace(' ','&nbsp;')}<small>${esc(p.preis_zusatz)}</small></div>

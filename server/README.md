@@ -120,7 +120,7 @@ Die Vorlage `deploy/website.env.vorlage` enthält alle neuen Zeilen; eine besteh
 |---|---|
 | `STRIPE_SECRET_KEY` | zuerst der **Test**-Schlüssel `sk_test_…` (besser: eingeschränkter Schlüssel `rk_test_…` mit Schreibrecht auf Checkout Sessions und Subscriptions, Leserecht auf Prices und Charges) |
 | `STRIPE_WEBHOOK_SECRET` | `whsec_…` des Webhook-Endpunkts (von bohm aus dem Dashboard) |
-| `STRIPE_PRICE_MOODLE_KURSE_MIT_KI`, `STRIPE_PRICE_KURS_DIFFERENZIEREN`, `STRIPE_PRICE_KURS_ELTERNBRIEFE` (`STRIPE_PRICE_ABO_ALLE_KURSE` erst, wenn das Abo sichtbar wird) | Preis-IDs `price_…` |
+| `STRIPE_PRICE_MOODLE_KURSE_MIT_KI`, `STRIPE_PRICE_KURS_DIFFERENZIEREN`, `STRIPE_PRICE_KURS_ELTERNBRIEFE`, `STRIPE_PRICE_PAKET_ALLE_3` (`STRIPE_PRICE_ABO_ALLE_KURSE` erst, wenn das Abo sichtbar wird) | Preis-IDs `price_…` |
 | `MOODLE_KURSSHOP_TOKEN` | aus `/var/lib/moodle-kursbau/.kursshop-token` |
 | `MOODLE_ABO_KOHORTE_ID` | `1` (ID der Kohorte `abo-alle-kurse` laut root; zum Entfernen nötig, `core_cohort_delete_cohort_members` will die ID) |
 | `KURSSHOP_ADMIN_MAIL` | Adresse von bohm für Meldungen |
@@ -242,3 +242,11 @@ Die Belege selbst liegen bei Stripe bzw. in der Buchhaltung.
 - Instagram-Routine (Repo KI-Fortbildung) holt Medien aus `assets/social/` über die GitHub-Pages-Adresse; beim
   Abschalten von Pages auf die neue Domain umstellen.
 - Versand eines Newsletters an die Liste: noch nicht gebaut (Export als CSV ist vorhanden).
+
+## Paket „Alle 3 Kurse“ (bohm 27.11.2026)
+
+Ein Paket ist ein Einzelkauf (`art: einzelkurs`) mit `enthaelt` (Produktschlüssel). Ein Kauf schreibt in alle
+enthaltenen Moodle-Kurse ein (`kurs_ids`), eine Erstattung oder Rückbuchung trägt aus allen aus. Die Ersparnis
+(„Du sparst 11 €“) wird aus den Einzelpreisen berechnet; auf `/kurse/` steht das Paket vor den Einzelkursen. Eine
+Anrechnung bereits gekaufter Einzelkurse gibt es nicht (Hinweis in `paket_hinweis`). Sichtbar erst, wenn alle drei
+Kurse abgenommen sind: dann `sichtbar: true` und den statischen Rückfall in `kurse/index.html` ergänzen.

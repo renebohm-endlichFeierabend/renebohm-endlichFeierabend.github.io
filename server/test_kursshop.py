@@ -41,13 +41,13 @@ class FakeMoodle:
             self.users[u["id"]] = u
             return [{"id": u["id"], "username": u["username"]}]
         if funktion == "enrol_manual_enrol_users":
-            e = params["enrolments"][0]
-            assert e["roleid"] == 5
-            self.enrol.add((e["userid"], e["courseid"]))
+            for e in params["enrolments"]:
+                assert e["roleid"] == 5
+                self.enrol.add((e["userid"], e["courseid"]))
             return None
         if funktion == "enrol_manual_unenrol_users":
-            e = params["enrolments"][0]
-            self.enrol.discard((e["userid"], e["courseid"]))
+            for e in params["enrolments"]:
+                self.enrol.discard((e["userid"], e["courseid"]))
             return None
         if funktion == "core_cohort_add_cohort_members":
             m = params["members"][0]
@@ -585,3 +585,32 @@ def test_moodle_http(monkeypatch):
         srv.server_close()
     with pytest.raises(kursshop.VoruebergehenderFehler):
         kursshop.moodle_aufruf("core_webservice_get_site_info")  # Server ist weg
+
+
+# --------------------------------------------------------------------------- Paket „Alle 3 Kurse“ (bohm 27.11.2026)
+
+def test_paket_einschreiben_erstatten_und_liste(shop, monkeypatch):
+    import kursshop
+    for k in ("STRIPE_PRICE_PAKET_ALLE_3", "STRIPE_PRICE_KURS_DIFFERENZIEREN", "STRIPE_PRICE_KURS_ELTERNBRIEFE"):
+        monkeypatch.setenv(k, "price_einzel")
+    p = kursshop.produkte()["paket-alle-3"]
+    assert kursshop.kurs_ids(p) == [31, 36, 37] and kursshop.ersparnis_cent(p) == 2900 + 1200 + 900 - 3900
+    # Kauf wie aus einem Checkout (Paket ist noch ausgeblendet)
+    nr, t = kursshop.neue_bestellnr(), int(time.time())
+    daten = kursshop.checkout_daten(nr, "paket-alle-3", p, "price_einzel", t)
+    assert senden(shop, checkout_event(nr, daten, eid="evt_paket")).json()["ergebnis"] == "freigeschaltet"
+    (u,) = shop.moodle.users.values()
+    assert shop.moodle.enrol == {(u["id"], 31), (u["id"], 36), (u["id"], 37)}
+    (kunde,) = shop.kunde()
+    assert all(f"course/view.php?id={k}" in kunde[2] for k in (31, 36, 37)) and "Paket" in kunde[2]
+    # Erstattung trägt aus allen drei aus
+    ch = {"id": "ch_9", "payment_intent": "pi_1", "refunded": True, "amount_refunded": 3900}
+    r = senden(shop, {"id": "evt_r", "type": "charge.refunded", "data": {"object": ch}}).json()["ergebnis"]
+    assert "allen Kursen" in r and shop.moodle.enrol == set()
+    # Sichtbar: steht vor den Einzelkursen, mit Ersparnis und Hinweis
+    monkeypatch.setitem(kursshop.konfig()["produkte"]["paket-alle-3"], "sichtbar", True)
+    d = shop.c.get("/api/kauf/produkte").json()
+    assert d["kaufbar"][0]["produkt"] == "paket-alle-3" and d["kaufbar"][0]["ersparnis"] == "11 €"
+    assert "Anrechnung" in d["kaufbar"][0]["hinweis"]
+    seite = shop.c.get("/api/kauf/bestellen?produkt=paket-alle-3").text
+    assert "Du sparst 11,00 €" in seite and "Elternbriefe" in seite and "allen Kursen des Pakets" in seite

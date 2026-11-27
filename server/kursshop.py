@@ -173,6 +173,22 @@ def kostenlose_kurse() -> list[dict]:
     return list(konfig().get("kostenlos", [])) if schalter("KURSSHOP_FREI_AKTIV") else []
 
 
+def kurs_ids(p: dict) -> list[int]:
+    """Moodle-Kurse eines Einzelkaufs: ein Kurs, beim Paket alle enthaltenen (Paket „Alle 3 Kurse“, bohm 27.11.2026)."""
+    if p.get("enthaelt"):
+        alle = konfig()["produkte"]
+        return [alle[k]["moodle_kurs_id"] for k in p["enthaelt"]]
+    return [p["moodle_kurs_id"]]
+
+
+def ersparnis_cent(p: dict) -> int:
+    """Beim Paket: Summe der Einzelpreise minus Paketpreis, sonst 0."""
+    if not p.get("enthaelt"):
+        return 0
+    alle = konfig()["produkte"]
+    return max(0, sum(alle[k]["preis_cent"] for k in p["enthaelt"]) - p["preis_cent"])
+
+
 def moodle_url() -> str:
     return os.environ.get("MOODLE_URL") or konfig().get("moodle_url", "https://moodle.endlich-feierabend-ki.de")
 
@@ -383,7 +399,12 @@ def gruss() -> str:
 def kundenmail(b: sqlite3.Row, p: dict, username: str, passwort: str | None, konto_neu: bool) -> None:
     m = moodle_url().rstrip("/")
     site = w.cfg("SITE_URL").rstrip("/")
-    if p["art"] == "einzelkurs":
+    if p["art"] == "einzelkurs" and p.get("enthaelt"):
+        alle = konfig()["produkte"]
+        was = f"Dein Paket „{p['titel']}“ ist freigeschaltet."
+        direkt = "Deine Kurse:\n" + "".join(f"  {alle[k]['titel']}: {m}/course/view.php?id={alle[k]['moodle_kurs_id']}\n"
+                                            for k in p["enthaelt"])
+    elif p["art"] == "einzelkurs":
         was = f"Dein Kurs „{p['titel']}“ ist freigeschaltet."
         direkt = f"Direkt zum Kurs: {m}/course/view.php?id={p['moodle_kurs_id']}\n"
     else:
@@ -568,7 +589,7 @@ def checkout_fertig(con: sqlite3.Connection, s: dict) -> str:
     bestellung_setzen(con, nr, moodle_userid=userid, moodle_username=username, konto_neu=int(bool(konto_neu)))
     if p["art"] == "einzelkurs":
         moodle_aufruf("enrol_manual_enrol_users",
-                      enrolments=[{"roleid": 5, "userid": userid, "courseid": p["moodle_kurs_id"]}])
+                      enrolments=[{"roleid": 5, "userid": userid, "courseid": k} for k in kurs_ids(p)])
     else:
         kohorte_hinzufuegen(p, userid)
     bestellung_setzen(con, nr, status="aktiv", bezahlt_am=w.jetzt())
@@ -649,8 +670,8 @@ def abo_geaendert(con: sqlite3.Connection, sub: dict) -> str:
 def austragen_melden(b: sqlite3.Row, p: dict, anlass: str, warum: str) -> None:
     admin_melden(f"Bitte austragen: {anlass} ({b['bestellnr']})",
                  f"{anlass} zu Bestellung {b['bestellnr']} ({p['titel']}, {b['email']}).\n{warum}\n"
-                 f"Bitte im Moodle Benutzer {b['moodle_username']} (id {b['moodle_userid']}) aus Kurs "
-                 f"{p['moodle_kurs_id']} austragen: {moodle_url()}/user/index.php?id={p['moodle_kurs_id']}\n")
+                 f"Bitte im Moodle Benutzer {b['moodle_username']} (id {b['moodle_userid']}) austragen aus:\n"
+                 + "".join(f"  Kurs {k}: {moodle_url()}/user/index.php?id={k}\n" for k in kurs_ids(p)))
 
 
 def abo_sofort_beenden(b: sqlite3.Row, anlass: str) -> str:
@@ -702,8 +723,8 @@ def zahlung_zurueck(con: sqlite3.Connection, obj: dict, typ: str) -> str:
     elif schalter("KURSSHOP_AUSTRAGEN", standard=True):
         try:
             moodle_aufruf("enrol_manual_unenrol_users", enrolments=[
-                {"roleid": 5, "userid": b["moodle_userid"], "courseid": p["moodle_kurs_id"]}])
-            ergebnis = "aus dem Kurs ausgetragen"
+                {"roleid": 5, "userid": b["moodle_userid"], "courseid": k} for k in kurs_ids(p)])
+            ergebnis = "aus dem Kurs ausgetragen" if len(kurs_ids(p)) == 1 else "aus allen Kursen des Pakets ausgetragen"
             admin_melden(f"{anlass}: ausgetragen ({b['bestellnr']})", f"{b['email']}: {ergebnis}.\n")
         except Klaerung as e:
             ergebnis = "Austragen fehlgeschlagen, Verwaltung benachrichtigt"
@@ -817,8 +838,14 @@ def bestellseite(key: str, p: dict, fehler: str = "", status: int = 200):
     e = html.escape
     abo = p["art"] == "abo"
     hinweis = f'<p class="kauf-fehler">{e(fehler)}</p>' if fehler else ""
+    paket = ""
+    if p.get("enthaelt"):
+        alle = konfig()["produkte"]
+        paket = ("<ul>" + "".join(f"<li>{e(alle[k]['titel'])} ({e(euro(alle[k]['preis_cent']))} einzeln)</li>"
+                                  for k in p["enthaelt"]) + "</ul>"
+                 + f"<p><strong>Du sparst {e(euro(ersparnis_cent(p)))}.</strong> {e(p.get('paket_hinweis', ''))}</p>")
     laufzeit = (f"Das Abo verlängert sich jeden {e(p['intervall'])} automatisch und ist jederzeit zum Ende des "
-                f"laufenden Abrechnungszeitraums kündbar.") if abo else "Einmalige Zahlung, dauerhafter Zugang zum Kurs."
+                f"laufenden Abrechnungszeitraums kündbar.") if abo else ("Einmalige Zahlung, dauerhafter Zugang zu allen Kursen des Pakets." if p.get("enthaelt") else "Einmalige Zahlung, dauerhafter Zugang zum Kurs.")
     inhalt = f"""<style>.kauf{{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
 padding:24px;margin:20px 0;box-shadow:var(--shadow-sm)}}.kauf .preis{{font-family:var(--display);font-weight:800;
 font-size:30px;color:var(--ink)}}.kauf p{{color:var(--text-soft);font-size:16px}}.kauf-check{{display:flex;gap:12px;
@@ -827,7 +854,7 @@ width:20px;height:20px;flex-shrink:0}}.kauf-fehler{{background:var(--rot-tint);c
 border-radius:var(--r)}}.klein{{font-size:14px;color:var(--text-soft);margin-top:14px}}
 .hp{{position:absolute;left:-9999px}}</style>
 {hinweis}
-<div class="kauf"><h3>{e(p['titel'])}</h3><p>{e(p['beschreibung'])}</p>
+<div class="kauf"><h3>{e(p['titel'])}</h3><p>{e(p['beschreibung'])}</p>{paket}
 <div class="preis">{e(preis_text(p))}</div>
 <p>Nach § 19 Abs. 1 UStG wird keine Umsatzsteuer berechnet. {laufzeit}</p></div>
 <form method="post" action="/api/kauf/bestellen">
@@ -866,7 +893,11 @@ def einbinden(app: FastAPI) -> None:
                          "preis": euro(p["preis_cent"]),
                          "preis_zusatz": f"pro {p['intervall']}" if p["art"] == "abo" else "einmalig",
                          "platzhalter": bool(p.get("platzhalter")),
-                         "link": f"/api/kauf/bestellen?produkt={k}"} for k, p in kaufbar().items()],
+                         "paket": bool(p.get("enthaelt")),
+                         "ersparnis": euro(ersparnis_cent(p)).replace(",00", "") if ersparnis_cent(p) else "",
+                         "hinweis": p.get("paket_hinweis", ""),
+                         "link": f"/api/kauf/bestellen?produkt={k}"}
+                        for k, p in sorted(kaufbar().items(), key=lambda kp: not kp[1].get("enthaelt"))],
             "kostenlos": [{"titel": f["titel"], "beschreibung": f["beschreibung"],
                            "link": f"{m}/course/view.php?id={f['moodle_kurs_id']}"} for f in kostenlose_kurse()],
         }, headers={"Cache-Control": "no-cache"})
